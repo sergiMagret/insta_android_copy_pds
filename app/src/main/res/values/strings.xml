@@ -24,5 +24,8 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_splash_screen">TODO</string>
     <string name="splash_content">TODO</string>
+    <string name="tag_publications">Publications</string>
+    <string name="tag_followers">Followers</string>
+    <string name="tag_following">Following</string>
 
 </resources>
