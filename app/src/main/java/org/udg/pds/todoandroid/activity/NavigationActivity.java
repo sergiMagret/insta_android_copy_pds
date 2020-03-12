@@ -1,6 +1,5 @@
 package org.udg.pds.todoandroid.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -30,10 +29,10 @@ public class NavigationActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(
-                item -> {
-                    switchView(item.getItemId());
-                    return true;
-                });
+            item -> {
+                switchView(item.getItemId());
+                return true;
+            });
 
         switchView(bottomNavigationView.getSelectedItemId());
     }
@@ -44,9 +43,9 @@ public class NavigationActivity extends AppCompatActivity {
             case R.id.action_favorites:
                 content.removeAllViews();
                 getFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.main_content, new FavoritesFragment())
-                        .commit();
+                    .beginTransaction()
+                    .replace(R.id.main_content, new FavoritesFragment())
+                    .commit();
                 break;
             case R.id.action_schedules:
                 content.removeAllViews();
@@ -55,9 +54,9 @@ public class NavigationActivity extends AppCompatActivity {
             case R.id.action_tasks:
                 content.removeAllViews();
                 getFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.main_content, new TaskList())
-                        .commit();
+                    .beginTransaction()
+                    .replace(R.id.main_content, new TaskList())
+                    .commit();
                 break;
         }
     }

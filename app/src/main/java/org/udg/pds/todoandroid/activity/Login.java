@@ -1,6 +1,5 @@
 package org.udg.pds.todoandroid.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,11 +7,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.entity.User;
 import org.udg.pds.todoandroid.entity.UserLogin;
 import org.udg.pds.todoandroid.rest.TodoApi;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,19 +37,20 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
-        mTodoService = ((TodoApp)this.getApplication()).getAPI();
+        mTodoService = ((TodoApp) this.getApplication()).getAPI();
 
-        Button b = (Button)findViewById(R.id.login_button);
+        Button b = findViewById(R.id.login_button);
         // This is teh listener that will be used when the user presses the "Login" button
         b.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                EditText u = (EditText) Login.this.findViewById(R.id.login_username);
-                EditText p = (EditText) Login.this.findViewById(R.id.login_password);
+                EditText u = Login.this.findViewById(R.id.login_username);
+                EditText p = Login.this.findViewById(R.id.login_password);
                 Login.this.checkCredentials(u.getText().toString(), p.getText().toString());
             }
         });
 
     }
+
     // This method is called when the "Login" button is pressed in the Login fragment
     public void checkCredentials(String username, String password) {
         UserLogin ul = new UserLogin();
