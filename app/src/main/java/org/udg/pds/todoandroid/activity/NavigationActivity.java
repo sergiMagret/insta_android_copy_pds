@@ -8,6 +8,7 @@ import android.widget.FrameLayout;
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.fragment.FavoritesFragment;
+import org.udg.pds.todoandroid.fragment.SearchFragment;
 import org.udg.pds.todoandroid.fragment.TaskList;
 import org.udg.pds.todoandroid.rest.TodoApi;
 
@@ -55,7 +56,7 @@ public class NavigationActivity extends AppCompatActivity {
                 content.removeAllViews();
                 getFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.main_content, new TaskList())
+                    .replace(R.id.main_content, new SearchFragment())
                     .commit();
                 break;
         }
