@@ -38,26 +38,33 @@ public class NavigationActivity extends AppCompatActivity {
         switchView(bottomNavigationView.getSelectedItemId());
     }
 
-    private void switchView(int itemId) {
+    private void switchView(int itemId) { //Definim que fa quan s'apreten els botons home, add, search i profile del menu
         final FrameLayout content = findViewById(R.id.main_content);
         switch (itemId) {
-            case R.id.action_favorites:
+            case R.id.action_home: //On anem quan s'apreta home
                 content.removeAllViews();
                 getFragmentManager()
                     .beginTransaction()
                     .replace(R.id.main_content, new FavoritesFragment())
                     .commit();
                 break;
-            case R.id.action_schedules:
+            case R.id.action_add://On anem quan s'apreta add
                 content.removeAllViews();
                 getLayoutInflater().inflate(R.layout.content_schedules, content);
                 break;
-            case R.id.action_tasks:
+            case R.id.action_search://On anem quan s'apreta search
                 content.removeAllViews();
                 getFragmentManager()
                     .beginTransaction()
                     .replace(R.id.main_content, new SearchFragment())
                     .commit();
+                break;
+            case R.id.action_profile://On anem quan s'apreta profile
+               /* content.removeAllViews();
+                getFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.main_content, new SearchFragment())
+                    .commit();*/
                 break;
         }
     }
