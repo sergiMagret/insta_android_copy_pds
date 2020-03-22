@@ -2,22 +2,28 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-            android:id="@+id/action_favorites"
+            android:id="@+id/action_home"
             android:enabled="true"
-            android:icon="@drawable/ic_favorite_white_24dp"
-            android:title="@string/text_favorites"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="@string/text_home"
             app:showAsAction="ifRoom" />
     <item
-            android:id="@+id/action_schedules"
-            android:checked="true"
-            android:enabled="true"
-            android:icon="@drawable/ic_schedule_white_24dp"
-            android:title="@string/text_schedules"
-            app:showAsAction="ifRoom" />
+        android:id="@+id/action_add"
+        android:checked="true"
+        android:enabled="true"
+        android:icon="@drawable/ic_add_circle_outline_black_24dp"
+        android:title="@string/text_add"
+        app:showAsAction="ifRoom" />
     <item
-            android:id="@+id/action_tasks"
-            android:enabled="true"
-            android:icon="@drawable/ic_task_list_24dp"
-            android:title="@string/text_tasks"
-            app:showAsAction="ifRoom" />
+        android:id="@+id/action_search"
+        android:enabled="true"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="@string/text_search"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_profile"
+        android:enabled="true"
+        android:icon="@drawable/ic_person_black_24dp"
+        android:title="@string/text_profile"
+        app:showAsAction="ifRoom" />
 </menu>
