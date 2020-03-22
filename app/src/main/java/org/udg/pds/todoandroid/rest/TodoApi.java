@@ -26,8 +26,12 @@ public interface TodoApi {
     @POST("/tasks")
     Call<IdObject> addTask(@Body Task task);
 
+
     @GET("/tasks")
     Call<List<Task>> getTasks();
+
+    @GET("/users")
+    Call<List<User>> getUsers();
 
     @GET("/tasks/{id}")
     Call<Task> getTask(@Path("id") String id);

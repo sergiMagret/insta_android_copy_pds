@@ -24,6 +24,10 @@
     <string name="text_description">Description</string>
     <string name="text_profile_picture">User profile picture</string>
 
+    <string name="text_home">Home</string>
+    <string name="text_add">Add</string>
+    <string name="text_search">Search</string>
+    <string name="text_profile">Profile</string>
     <string name="title_activity_nd">NDActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
