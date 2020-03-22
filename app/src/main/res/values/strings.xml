@@ -15,9 +15,15 @@
     <string name="button_set">Set</string>
     <string name="time_limit">Time limit:</string>
     <string name="button_save">Save</string>
+
     <string name="text_favorites">Favorites</string>
     <string name="text_schedules">Schedules</string>
     <string name="text_tasks">Tasks</string>
+    <string name="text_zero">0</string>
+    <string name="text_username">Username</string>
+    <string name="text_description">Description</string>
+    <string name="text_profile_picture">User profile picture</string>
+
     <string name="title_activity_nd">NDActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

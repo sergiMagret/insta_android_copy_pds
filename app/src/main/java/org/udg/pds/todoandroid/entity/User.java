@@ -14,8 +14,9 @@ public class User {
     public Long id;
     public String username;
     public String email;
+    public String name;
     public String description;
-    // public Image user_picture; ????
+    public String profilePicture;
     // No sé si s'ha de fer servir aquesta classe.
     public List<Integer> followers;
     public List<Integer> following;

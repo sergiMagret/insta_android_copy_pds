@@ -37,6 +37,6 @@ public interface TodoApi {
     Call<User> getUserProfile();
 
     @GET("/users/{id}")
-    Call<User> getUserProfileByID(@Path("id") String id);
+    Call<User> getUserProfileByID(@Path("id") int id);
 }
 
