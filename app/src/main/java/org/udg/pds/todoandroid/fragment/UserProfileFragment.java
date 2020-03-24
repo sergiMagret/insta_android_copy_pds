@@ -127,9 +127,16 @@ public class UserProfileFragment extends Fragment {
 
     public void updateProfileInfo(Response<User> response){
         User u = response.body();
+        // Per al nom de l'usuari
         TextView userName = view.findViewById(R.id.user_name);
-        userName.setText(u.username);
+        userName.setText(u.name);
 
+        // Per al username de l'usuari
+        TextView userUsername = view.findViewById(R.id.user_username);
+        String s = "@" + u.username;
+        userUsername.setText(s); // Done this way to avoid a warning
+
+        // Per la descripció de l'usuari
         TextView userDesc = view.findViewById(R.id.user_description);
         userDesc.setText(u.description);
 
@@ -221,7 +228,7 @@ public class UserProfileFragment extends Fragment {
                 }
             });
 
-            animate(holder);
+            //animate(holder);
         }
 
         @Override
