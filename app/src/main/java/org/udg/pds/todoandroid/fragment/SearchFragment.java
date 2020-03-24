@@ -1,5 +1,6 @@
 package org.udg.pds.todoandroid.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -148,10 +149,13 @@ public class SearchFragment extends Fragment {
             holder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int duration = Toast.LENGTH_LONG;
-
-                    Toast toast = Toast.makeText(context, String.format("Hey, I'm item %1d", position), duration);
-                    toast.show();
+                    Activity activity  = (Activity) view.getContext();
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("is_private", false);
+                    bundle.putLong("user_to_search", list.get(position).id);
+                    UserProfileFragment userProf = new UserProfileFragment();
+                    userProf.setArguments(bundle);
+                    activity.getFragmentManager().beginTransaction().replace(R.id.main_content, userProf).commit();
                 }
             });
 

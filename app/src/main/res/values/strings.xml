@@ -37,5 +37,5 @@
     <string name="tag_publications">Publications</string>
     <string name="tag_followers">Followers</string>
     <string name="tag_following">Following</string>
-
+    <string name="item_description">Description</string>
 </resources>

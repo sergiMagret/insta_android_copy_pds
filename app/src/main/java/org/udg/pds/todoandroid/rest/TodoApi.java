@@ -1,6 +1,7 @@
 package org.udg.pds.todoandroid.rest;
 
 import org.udg.pds.todoandroid.entity.IdObject;
+import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.entity.Task;
 import org.udg.pds.todoandroid.entity.User;
 import org.udg.pds.todoandroid.entity.UserLogin;
@@ -41,6 +42,12 @@ public interface TodoApi {
     Call<User> getUserProfile();
 
     @GET("/users/{id}")
-    Call<User> getUserProfileByID(@Path("id") int id);
+    Call<User> getUserProfileByID(@Path("id") Long id);
+
+    @GET("/users/self/publications")
+    Call<List<Publication>> getUserPublications();
+
+    @GET("/users/{id}/publications")
+    Call<List<Publication>> getUserPublicationsByID(@Path("id") Long id);
 }
 

@@ -62,7 +62,7 @@ public class UserProfile extends AppCompatActivity {
             });
 
         }else{ // If the user is trying to see another user's profile
-            int idToSearch = -1;
+            long idToSearch = -1;
             try {
                 idToSearch = b.getInt("user_to_search");
             }catch(NullPointerException e) { // If there's no user to search

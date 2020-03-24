@@ -17,6 +17,7 @@ public class User {
     public String name;
     public String description;
     public String profilePicture;
+    public Integer numberPublications;
     // No sé si s'ha de fer servir aquesta classe.
     public List<Integer> followers;
     public List<Integer> following;
