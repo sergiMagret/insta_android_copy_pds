@@ -182,7 +182,7 @@ public class SearchFragment extends Fragment {
                     Activity activity  = (Activity) view.getContext();
                     Bundle bundle = new Bundle();
                     bundle.putBoolean("is_private", false);
-                    bundle.putLong("user_to_search", list.get(position).id);
+                    bundle.putLong("user_to_search", listFiltered.get(position).id);
                     UserProfileFragment userProf = new UserProfileFragment();
                     userProf.setArguments(bundle);
                     activity.getFragmentManager().beginTransaction().replace(R.id.main_content, userProf).commit();
