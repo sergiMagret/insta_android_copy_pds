@@ -20,4 +20,8 @@ public class User {
     public Integer numberPublications;
     public List<Integer> followers;
     public List<Integer> following;
+
+    public String getUsername() {
+        return username;
+    }
 }
