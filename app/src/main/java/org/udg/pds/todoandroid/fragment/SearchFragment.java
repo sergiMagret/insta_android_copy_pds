@@ -1,6 +1,7 @@
 package org.udg.pds.todoandroid.fragment;
 
 import android.app.Fragment;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,9 +38,10 @@ import retrofit2.Response;
 public class SearchFragment extends Fragment {
 
     TodoApi mTodoService;
-
+    SearchView mSearchView;
     RecyclerView mRecyclerView;
     private TRAdapter mAdapter;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,9 +57,33 @@ public class SearchFragment extends Fragment {
         mTodoService = ((TodoApp) this.getActivity().getApplication()).getAPI();
 
         mRecyclerView = getView().findViewById(R.id.recyclerView1);
+
         mAdapter = new TRAdapter(this.getActivity().getApplication());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+
+        SearchView searchView = (SearchView) getView().findViewById(R.id.action_search);
+
+
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+
+        // listening to search query text change
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // filter recycler view when query submitted
+                mAdapter.getFilter().filter(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                // filter recycler view when text is changed
+                mAdapter.getFilter().filter(query);
+                return false;
+            }
+        });
+
 
        // Button b = getView().findViewById(R.id.b_add_task_rv);
         // This is the listener to the "Add Task" button
@@ -123,9 +152,10 @@ public class SearchFragment extends Fragment {
         }
     }
 
-    static class TRAdapter extends RecyclerView.Adapter<UserViewHolder> {
+    static class TRAdapter extends RecyclerView.Adapter<UserViewHolder> implements Filterable {
 
         List<User> list = new ArrayList<>();
+        List<User> listFiltered = new ArrayList<>();
         Context context;
 
         public TRAdapter(Context context) {
@@ -142,7 +172,7 @@ public class SearchFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(UserViewHolder holder, final int position) {
-            holder.username.setText(list.get(position).username); //list.get(position).username
+            holder.username.setText(listFiltered.get(position).username); //list.get(position).username
 
 
             holder.view.setOnClickListener(new View.OnClickListener() {
@@ -162,7 +192,7 @@ public class SearchFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return list.size();
+            return listFiltered.size();
         }
 
         @Override
@@ -174,6 +204,7 @@ public class SearchFragment extends Fragment {
         // Insert a new item to the RecyclerView
         public void insert(int position, User data) {
             list.add(position, data);
+            listFiltered.add(position, data);
             notifyItemInserted(position);
         }
 
@@ -181,6 +212,8 @@ public class SearchFragment extends Fragment {
         public void remove(User data) {
             int position = list.indexOf(data);
             list.remove(position);
+            position = listFiltered.indexOf(data);
+            listFiltered.remove(position);
             notifyItemRemoved(position);
         }
 
@@ -191,13 +224,53 @@ public class SearchFragment extends Fragment {
 
         public void add(User t) {
             list.add(t);
-            this.notifyItemInserted(list.size() - 1);
+            listFiltered.add(t);
+            this.notifyItemInserted(listFiltered.size() - 1);
         }
 
         public void clear() {
             int size = list.size();
             list.clear();
+            listFiltered.clear();
             this.notifyItemRangeRemoved(0, size);
+        }
+        @Override
+        public Filter getFilter() {
+            return new Filter() {
+
+
+                @Override
+                protected FilterResults performFiltering(CharSequence charSequence) {
+                    String charString = charSequence.toString();
+                    if (charString.isEmpty()) {
+                        listFiltered = list;
+                    } else {
+                        List<User> filteredList = new ArrayList<>();
+                        for (User row : list) {
+
+                            // name match condition. this might differ depending on your requirement
+                            // here we are looking for name or phone number match
+                            if (row.getUsername().toLowerCase().contains(charString.toLowerCase())) {
+                                filteredList.add(row);
+                            }
+                        }
+
+                        listFiltered = filteredList;
+                    }
+
+                    FilterResults filterResults = new FilterResults();
+                    filterResults.values = listFiltered;
+                    return filterResults;
+                }
+
+                @Override
+                protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                    listFiltered = (ArrayList<User>) filterResults.values;
+
+                    // refresh the list with filtered data
+                    notifyDataSetChanged();
+                }
+            };
         }
     }
 }
