@@ -10,6 +10,7 @@ import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.fragment.FavoritesFragment;
 import org.udg.pds.todoandroid.fragment.SearchFragment;
 import org.udg.pds.todoandroid.fragment.TaskList;
+import org.udg.pds.todoandroid.fragment.UserProfileFragment;
 import org.udg.pds.todoandroid.rest.TodoApi;
 
 // FragmentActivity is a base class for activities that want to use the support-based Fragment and Loader APIs.
@@ -38,25 +39,36 @@ public class NavigationActivity extends AppCompatActivity {
         switchView(bottomNavigationView.getSelectedItemId());
     }
 
-    private void switchView(int itemId) {
+    private void switchView(int itemId) { //Definim que fa quan s'apreten els botons home, add, search i profile del menu
         final FrameLayout content = findViewById(R.id.main_content);
         switch (itemId) {
-            case R.id.action_favorites:
+            case R.id.action_home: //On anem quan s'apreta home
                 content.removeAllViews();
                 getFragmentManager()
                     .beginTransaction()
                     .replace(R.id.main_content, new FavoritesFragment())
                     .commit();
                 break;
-            case R.id.action_schedules:
+            case R.id.action_add://On anem quan s'apreta add
                 content.removeAllViews();
                 getLayoutInflater().inflate(R.layout.content_schedules, content);
                 break;
-            case R.id.action_tasks:
+            case R.id.action_search://On anem quan s'apreta search
                 content.removeAllViews();
                 getFragmentManager()
                     .beginTransaction()
                     .replace(R.id.main_content, new SearchFragment())
+                    .commit();
+                break;
+            case R.id.action_profile://On anem quan s'apreta profile
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("is_private", true);
+                UserProfileFragment userProf = new UserProfileFragment();
+                userProf.setArguments(bundle);
+                content.removeAllViews();
+                getFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.main_content, userProf)
                     .commit();
                 break;
         }

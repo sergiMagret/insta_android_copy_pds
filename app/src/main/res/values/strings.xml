@@ -15,14 +15,28 @@
     <string name="button_set">Set</string>
     <string name="time_limit">Time limit:</string>
     <string name="button_save">Save</string>
+
     <string name="text_favorites">Favorites</string>
     <string name="text_schedules">Schedules</string>
     <string name="text_tasks">Tasks</string>
+    <string name="text_zero">0</string>
+    <string name="text_user_name">Name</string>
+    <string name="text_user_username">Username</string>
+    <string name="text_user_description">Description</string>
+    <string name="text_user_profile_picture">User profile picture</string>
+
+    <string name="text_home">Home</string>
+    <string name="text_add">Add</string>
+    <string name="text_search">Search</string>
+    <string name="text_profile">Profile</string>
     <string name="title_activity_nd">NDActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_splash_screen">TODO</string>
     <string name="splash_content">TODO</string>
-
+    <string name="tag_publications">Publications</string>
+    <string name="tag_followers">Followers</string>
+    <string name="tag_following">Following</string>
+    <string name="item_description">Description</string>
 </resources>

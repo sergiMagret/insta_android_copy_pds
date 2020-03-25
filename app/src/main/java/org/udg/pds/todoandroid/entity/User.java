@@ -3,6 +3,8 @@ package org.udg.pds.todoandroid.entity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import java.util.List;
+
 /**
  * Created by imartin on 12/02/16.
  */
@@ -12,6 +14,16 @@ public class User {
     public Long id;
     public String username;
     public String email;
+    public String name;
+    public String description;
+    public String profilePicture;
+    public Integer numberPublications;
+    // No sé si s'ha de fer servir aquesta classe.
+    public List<Integer> followers;
+    public List<Integer> following;
+    // public List<Publication> publications; ??
+    // S'ha de crear la classe publication
+
 
     public String getUsername() {
         return username;
