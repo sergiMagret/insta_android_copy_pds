@@ -35,7 +35,7 @@ public class TimelineFragment extends Fragment {
     View view;
 
     RecyclerView mRecyclerView;
-    private UserProfileFragment.TRAdapter mAdapter;
+    private TRAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
@@ -52,7 +52,7 @@ public class TimelineFragment extends Fragment {
         mTodoService = ((TodoApp) this.getActivity().getApplication()).getAPI();
 
         mRecyclerView = getView().findViewById(R.id.RecyclerView_timeline);
-        mAdapter = new UserProfileFragment.TRAdapter(this.getActivity().getApplication());
+        mAdapter = new TimelineFragment.TRAdapter(this.getActivity().getApplication());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 
@@ -141,7 +141,6 @@ public class TimelineFragment extends Fragment {
             holder.owner.setText(list.get(position).userUsername);
             Picasso.get().load(list.get(position).photo).into(holder.publication);
             holder.description.setText(list.get(position).description);
-            System.out.println("teeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeext"+list.get(position).userUsername);
 
             holder.view.setOnClickListener(new View.OnClickListener(){
                 @Override
