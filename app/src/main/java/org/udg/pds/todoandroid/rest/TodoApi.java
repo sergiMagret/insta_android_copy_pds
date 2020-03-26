@@ -49,5 +49,9 @@ public interface TodoApi {
 
     @GET("/users/{id}/publications")
     Call<List<Publication>> getUserPublicationsByID(@Path("id") Long id);
+
+    @GET("/publications")
+    Call<List<Publication>> getPublications();
+
 }
 
