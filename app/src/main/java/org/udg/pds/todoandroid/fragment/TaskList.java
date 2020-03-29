@@ -18,6 +18,7 @@ import android.widget.Toast;
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.activity.AddTask;
+import org.udg.pds.todoandroid.activity.UserProfile;
 import org.udg.pds.todoandroid.entity.Task;
 import org.udg.pds.todoandroid.rest.TodoApi;
 import org.udg.pds.todoandroid.util.Global;
@@ -68,6 +69,23 @@ public class TaskList extends Fragment {
             // we will update the list to show the new task.
             startActivityForResult(i, Global.RQ_ADD_TASK);
         });
+
+        b = getView().findViewById(R.id.show_user_profile_1);
+        b.setOnClickListener(view -> {
+            Intent i = new Intent(TaskList.this.getContext(), UserProfile.class);
+            i.putExtra("is_private", false);
+            i.putExtra("user_to_search", 1);
+            startActivity(i);
+        });
+
+        b = getView().findViewById(R.id.show_user_profile_2);
+        b.setOnClickListener(view -> {
+            Intent i = new Intent(TaskList.this.getContext(), UserProfile.class);
+            i.putExtra("is_private", false);
+            i.putExtra("user_to_search", 2);
+            startActivity(i);
+        });
+
     }
 
     @Override
@@ -163,6 +181,15 @@ public class TaskList extends Fragment {
 
                     Toast toast = Toast.makeText(context, "adios!", duration);
                     toast.show();
+                }
+            });
+
+            holder.description.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view){
+                    int duration = Toast.LENGTH_LONG;
+
+                    Toast.makeText(context, "I'm the description", duration).show();
                 }
             });
 

@@ -10,6 +10,8 @@ import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.fragment.FavoritesFragment;
 import org.udg.pds.todoandroid.fragment.SearchFragment;
 import org.udg.pds.todoandroid.fragment.TaskList;
+import org.udg.pds.todoandroid.fragment.TimelineFragment;
+import org.udg.pds.todoandroid.fragment.UserProfileFragment;
 import org.udg.pds.todoandroid.rest.TodoApi;
 
 // FragmentActivity is a base class for activities that want to use the support-based Fragment and Loader APIs.
@@ -45,7 +47,7 @@ public class NavigationActivity extends AppCompatActivity {
                 content.removeAllViews();
                 getFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.main_content, new FavoritesFragment())
+                    .replace(R.id.main_content, new TimelineFragment())
                     .commit();
                 break;
             case R.id.action_add://On anem quan s'apreta add
@@ -60,11 +62,15 @@ public class NavigationActivity extends AppCompatActivity {
                     .commit();
                 break;
             case R.id.action_profile://On anem quan s'apreta profile
-               /* content.removeAllViews();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("is_private", true);
+                UserProfileFragment userProf = new UserProfileFragment();
+                userProf.setArguments(bundle);
+                content.removeAllViews();
                 getFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.main_content, new SearchFragment())
-                    .commit();*/
+                    .replace(R.id.main_content, userProf)
+                    .commit();
                 break;
         }
     }
