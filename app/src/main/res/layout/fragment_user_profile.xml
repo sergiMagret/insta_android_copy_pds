@@ -9,7 +9,7 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/profile_info_layout"
         android:layout_width="match_parent"
-        android:layout_height="234dp"
+        android:layout_height="270dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -32,6 +32,18 @@
             app:layout_constraintStart_toStartOf="@+id/user_name"
             app:layout_constraintTop_toBottomOf="@+id/user_name" />
 
+        <Button
+            android:id="@+id/logout_interface_button"
+            android:layout_width="85dp"
+            android:layout_height="26dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/white"
+            android:text="@string/button_logout"
+            android:textAllCaps="false"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@+id/user_description"
+            app:layout_constraintTop_toBottomOf="@+id/user_description" />
         <ImageView
             android:id="@+id/user_profile_picture"
             android:layout_width="93dp"
@@ -124,7 +136,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="234dp" />
+            app:layout_constraintGuide_begin="270dp" />
 
         <TextView
             android:id="@+id/user_name"

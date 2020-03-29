@@ -1,9 +1,14 @@
 package org.udg.pds.todoandroid.fragment;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,9 +25,12 @@ import com.squareup.picasso.Picasso;
 
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
+import org.udg.pds.todoandroid.activity.Login;
+import org.udg.pds.todoandroid.activity.UserProfile;
 import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.entity.User;
 import org.udg.pds.todoandroid.rest.TodoApi;
+import org.udg.pds.todoandroid.util.Dialog;
 import org.udg.pds.todoandroid.util.Global;
 
 import java.util.ArrayList;
@@ -39,13 +48,68 @@ public class UserProfileFragment extends Fragment {
     RecyclerView mRecyclerView;
     private TRAdapter mAdapter;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
+
         super.onCreate(savedInstance);
         view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
+        Button logout_interface_btn = (Button) view.findViewById(R.id.logout_interface_button);
+        logout_interface_btn.setOnClickListener(new View.OnClickListener(){
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v){
+                AlertDialog.Builder logout_dialog = new AlertDialog.Builder(getContext());
+                View dialog_view = getLayoutInflater().inflate(R.layout.logout_layout, null);
+                Button logout_btn = (Button) dialog_view.findViewById(R.id.logout_button);
+                logout_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        UserProfileFragment.this.checkCredentials();
+                    }
+                });
+
+                logout_dialog.setView(dialog_view);
+                AlertDialog dialog = logout_dialog.create();
+                dialog.show();
+                Button logout_cancel_btn = (Button) dialog_view.findViewById(R.id.logout_cancel_button);
+
+                logout_cancel_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.cancel();
+                    }
+                });
+            }
+        });
         return view;
     }
+
+    public void checkCredentials() {
+        Call<String> call = mTodoService.logout();
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+
+                if (response.isSuccessful()) {
+                    UserProfileFragment.this.startActivity(new Intent(getContext(), Login.class));
+
+                } else {
+                    Toast toast = Toast.makeText(getContext(), "Error logging out", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t){
+                Toast toast = Toast.makeText(getContext(), "Error logging out", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
+    }
+
+
 
     @Override
     public void onStart(){
