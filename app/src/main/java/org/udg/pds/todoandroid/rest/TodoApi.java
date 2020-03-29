@@ -5,6 +5,7 @@ import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.entity.Task;
 import org.udg.pds.todoandroid.entity.User;
 import org.udg.pds.todoandroid.entity.UserLogin;
+import org.udg.pds.todoandroid.entity.UserToReg;
 
 import java.util.List;
 
@@ -20,6 +21,12 @@ import retrofit2.http.Path;
 public interface TodoApi {
     @POST("/users/login")
     Call<User> login(@Body UserLogin login);
+
+    @POST("/users/register")
+    Call<User> register(@Body UserToReg register);
+
+    @POST("/users/logout")
+    Call<String> logout();
 
     @GET("/users/check")
     Call<String> check();
@@ -49,5 +56,9 @@ public interface TodoApi {
 
     @GET("/users/{id}/publications")
     Call<List<Publication>> getUserPublicationsByID(@Path("id") Long id);
+
+    @GET("/publications")
+    Call<List<Publication>> getPublications();
+
 }
 
