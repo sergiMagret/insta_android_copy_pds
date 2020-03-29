@@ -13,5 +13,6 @@ public class Publication {
     public String description;
     public Date date;
     public Long userId;
+    public String userUsername;
 
 }

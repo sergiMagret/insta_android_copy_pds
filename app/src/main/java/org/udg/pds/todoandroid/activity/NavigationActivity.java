@@ -10,6 +10,7 @@ import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.fragment.FavoritesFragment;
 import org.udg.pds.todoandroid.fragment.SearchFragment;
 import org.udg.pds.todoandroid.fragment.TaskList;
+import org.udg.pds.todoandroid.fragment.TimelineFragment;
 import org.udg.pds.todoandroid.fragment.UserProfileFragment;
 import org.udg.pds.todoandroid.rest.TodoApi;
 
@@ -46,7 +47,7 @@ public class NavigationActivity extends AppCompatActivity {
                 content.removeAllViews();
                 getFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.main_content, new FavoritesFragment())
+                    .replace(R.id.main_content, new TimelineFragment())
                     .commit();
                 break;
             case R.id.action_add://On anem quan s'apreta add

@@ -24,4 +24,8 @@ public class User {
     // public List<Publication> publications; ??
     // S'ha de crear la classe publication
 
+
+    public String getUsername() {
+        return username;
+    }
 }
