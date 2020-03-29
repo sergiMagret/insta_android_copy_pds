@@ -24,6 +24,7 @@
     <string name="text_user_username">Username</string>
     <string name="text_user_description">Description</string>
     <string name="text_user_profile_picture">User profile picture</string>
+    <string name="button_logout">Log out</string>
 
     <string name="text_home">Home</string>
     <string name="text_add">Add</string>

@@ -1,11 +1,14 @@
 package org.udg.pds.todoandroid.activity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
@@ -35,6 +38,8 @@ public class UserProfile extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
+
+
         Bundle b = getIntent().getExtras();
         boolean private_profile = false;
         if(b != null) {
@@ -87,6 +92,7 @@ public class UserProfile extends AppCompatActivity {
                 }
             });
         }
+
 
 
     }
