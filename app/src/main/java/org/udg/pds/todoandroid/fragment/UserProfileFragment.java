@@ -26,7 +26,6 @@ import com.squareup.picasso.Picasso;
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.activity.Login;
-import org.udg.pds.todoandroid.activity.UserProfile;
 import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.entity.User;
 import org.udg.pds.todoandroid.rest.TodoApi;
