@@ -11,9 +11,12 @@ import org.udg.pds.todoandroid.TodoApp;
 
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.entity.Publication;
+import org.udg.pds.todoandroid.entity.PublicationPost;
 import org.udg.pds.todoandroid.rest.TodoApi;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Calendar;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,14 +39,18 @@ public class AddPhoto extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener(){
             public void onClick (View v){
                 EditText c = AddPhoto.this.findViewById(R.id.comentari);
-                AddPhoto.this.afegir(c.getText().toString());
+                EditText i = AddPhoto.this.findViewById(R.id.imatge);
+                AddPhoto.this.afegir(i.getText().toString(), c.getText().toString());
             }
         });
     }
 
-    public void afegir (String comentari){
-
-        Call<Publication> call = mTodoService.postPublication(comentari); // mirarlo bien
+    public void afegir (String imatge, String comentari){
+        PublicationPost p= new PublicationPost();
+        p.photo = imatge;
+        p.description = comentari;
+        p.date = new Date(2020, Calendar.APRIL, 28);
+        Call<Publication> call = mTodoService.postPublication(p); // mirarlo bien
         call.enqueue(new Callback<Publication>() {
             @Override
             public void onResponse(Call<Publication> call, Response<Publication> response) {
