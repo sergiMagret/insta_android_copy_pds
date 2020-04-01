@@ -18,12 +18,8 @@ public class User {
     public String description;
     public String profilePicture;
     public Integer numberPublications;
-    // No sé si s'ha de fer servir aquesta classe.
     public List<Integer> followers;
     public List<Integer> following;
-    // public List<Publication> publications; ??
-    // S'ha de crear la classe publication
-
 
     public String getUsername() {
         return username;

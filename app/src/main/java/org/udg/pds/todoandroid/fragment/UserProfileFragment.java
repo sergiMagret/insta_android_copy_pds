@@ -26,7 +26,6 @@ import com.squareup.picasso.Picasso;
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.activity.Login;
-import org.udg.pds.todoandroid.activity.UserProfile;
 import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.entity.User;
 import org.udg.pds.todoandroid.rest.TodoApi;
@@ -56,33 +55,40 @@ public class UserProfileFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
         Button logout_interface_btn = (Button) view.findViewById(R.id.logout_interface_button);
-        logout_interface_btn.setOnClickListener(new View.OnClickListener(){
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onClick(View v){
-                AlertDialog.Builder logout_dialog = new AlertDialog.Builder(getContext());
-                View dialog_view = getLayoutInflater().inflate(R.layout.logout_layout, null);
-                Button logout_btn = (Button) dialog_view.findViewById(R.id.logout_button);
-                logout_btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        UserProfileFragment.this.checkCredentials();
-                    }
-                });
+        boolean private_profile = getArguments().getBoolean("is_private");
+        if(private_profile){
+            logout_interface_btn.setVisibility(View.VISIBLE);
+            logout_interface_btn.setOnClickListener(new View.OnClickListener(){
+                @RequiresApi(api = Build.VERSION_CODES.O)
+                @Override
+                public void onClick(View v){
+                    AlertDialog.Builder logout_dialog = new AlertDialog.Builder(getContext());
+                    View dialog_view = getLayoutInflater().inflate(R.layout.logout_layout, null);
+                    Button logout_btn = (Button) dialog_view.findViewById(R.id.logout_button);
+                    logout_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            UserProfileFragment.this.checkCredentials();
+                        }
+                    });
 
-                logout_dialog.setView(dialog_view);
-                AlertDialog dialog = logout_dialog.create();
-                dialog.show();
-                Button logout_cancel_btn = (Button) dialog_view.findViewById(R.id.logout_cancel_button);
+                    logout_dialog.setView(dialog_view);
+                    AlertDialog dialog = logout_dialog.create();
+                    dialog.show();
+                    Button logout_cancel_btn = (Button) dialog_view.findViewById(R.id.logout_cancel_button);
 
-                logout_cancel_btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialog.cancel();
-                    }
-                });
-            }
-        });
+                    logout_cancel_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            dialog.cancel();
+                        }
+                    });
+                }
+            });
+        }
+        else{
+            logout_interface_btn.setVisibility(View.GONE);
+        }
         return view;
     }
 
