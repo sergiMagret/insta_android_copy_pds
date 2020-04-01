@@ -6,7 +6,9 @@ import org.udg.pds.todoandroid.entity.Task;
 import org.udg.pds.todoandroid.entity.User;
 import org.udg.pds.todoandroid.entity.UserLogin;
 import org.udg.pds.todoandroid.entity.UserToReg;
+import org.udg.pds.todoandroid.entity.PublicationPost;
 
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -60,5 +62,7 @@ public interface TodoApi {
     @GET("/publications")
     Call<List<Publication>> getPublications();
 
+    @POST("/publications")
+    Call<Publication> postPublication(@Body PublicationPost p);
 }
 

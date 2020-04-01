@@ -1,6 +1,9 @@
 package org.udg.pds.todoandroid.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.internal.NavigationMenuItemView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.FrameLayout;
@@ -52,7 +55,7 @@ public class NavigationActivity extends AppCompatActivity {
                 break;
             case R.id.action_add://On anem quan s'apreta add
                 content.removeAllViews();
-                getLayoutInflater().inflate(R.layout.content_schedules, content);
+                NavigationActivity.this.startActivity(new Intent(NavigationActivity.this, AddPhoto.class));
                 break;
             case R.id.action_search://On anem quan s'apreta search
                 content.removeAllViews();
