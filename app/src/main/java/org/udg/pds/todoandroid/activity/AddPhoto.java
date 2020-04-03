@@ -1,22 +1,22 @@
 package org.udg.pds.todoandroid.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.udg.pds.todoandroid.TodoApp;
+import androidx.appcompat.app.AppCompatActivity;
 
 import org.udg.pds.todoandroid.R;
+import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.entity.PublicationPost;
 import org.udg.pds.todoandroid.rest.TodoApi;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Calendar;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;

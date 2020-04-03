@@ -1,16 +1,15 @@
 package org.udg.pds.todoandroid.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.internal.NavigationMenuItemView;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.FrameLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
-import org.udg.pds.todoandroid.fragment.FavoritesFragment;
 import org.udg.pds.todoandroid.fragment.SearchFragment;
 import org.udg.pds.todoandroid.fragment.TaskList;
 import org.udg.pds.todoandroid.fragment.TimelineFragment;
