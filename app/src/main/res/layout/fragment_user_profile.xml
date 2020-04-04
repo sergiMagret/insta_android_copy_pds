@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.Constraints
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.UserProfileFragment">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.Constraints
         android:id="@+id/profile_info_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,7 +24,7 @@
             app:layout_constraintStart_toStartOf="@+id/user_profile_picture"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -63,7 +64,7 @@
             app:layout_constraintStart_toEndOf="@+id/user_profile_picture"
             app:layout_constraintTop_toTopOf="@+id/guideline">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.Constraints
                 android:id="@+id/layout_number_publications"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -94,9 +95,9 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/user_number_publications" />
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.Constraints>
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.Constraints
                 android:id="@+id/layout_number_following"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -126,9 +127,9 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/user_number_following" />
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.Constraints>
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.Constraints
                 android:id="@+id/layout_number_followers"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -158,7 +159,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/user_number_followers" />
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.Constraints>
         </LinearLayout>
 
         <TextView
@@ -187,9 +188,9 @@
             app:layout_constraintTop_toBottomOf="@+id/user_profile_picture"
             tools:text="@string/text_user_name" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.Constraints>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_publication"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
@@ -199,4 +200,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profile_info_layout" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.Constraints>
