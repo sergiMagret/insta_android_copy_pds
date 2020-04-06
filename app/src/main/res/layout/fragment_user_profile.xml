@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.Constraints
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".fragment.UserProfileFragment">
 
-    <androidx.constraintlayout.widget.Constraints
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/profile_info_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
             app:layout_constraintStart_toEndOf="@+id/user_profile_picture"
             app:layout_constraintTop_toTopOf="@+id/guideline">
 
-            <androidx.constraintlayout.widget.Constraints
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_number_publications"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -95,9 +95,9 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/user_number_publications" />
-            </androidx.constraintlayout.widget.Constraints>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.Constraints
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_number_following"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -127,9 +127,9 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/user_number_following" />
-            </androidx.constraintlayout.widget.Constraints>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.Constraints
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_number_followers"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -159,7 +159,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/user_number_followers" />
-            </androidx.constraintlayout.widget.Constraints>
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 
         <TextView
@@ -188,7 +188,7 @@
             app:layout_constraintTop_toBottomOf="@+id/user_profile_picture"
             tools:text="@string/text_user_name" />
 
-    </androidx.constraintlayout.widget.Constraints>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_publication"
@@ -200,4 +200,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profile_info_layout" />
 
-</androidx.constraintlayout.widget.Constraints>
+</androidx.constraintlayout.widget.ConstraintLayout>
