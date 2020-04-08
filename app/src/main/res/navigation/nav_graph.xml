@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/action_home">
+    <fragment
+        android:id="@+id/action_home"
+        android:name="org.udg.pds.todoandroid.fragment.TimelineFragment"
+        android:label="fragment_timeline"
+        tools:layout="@layout/fragment_timeline" />
+
+    <fragment
+        android:id="@+id/action_profile"
+        android:name="org.udg.pds.todoandroid.fragment.UserProfileFragment"
+        android:label="fragment_user_profile"
+        tools:layout="@layout/fragment_user_profile" />
+
+    <fragment
+        android:id="@+id/action_search"
+        android:name="org.udg.pds.todoandroid.fragment.SearchFragment"
+        android:label="search_list"
+        tools:layout="@layout/search_list" >
+        <action
+            android:id="@+id/action_action_search_to_action_profile"
+            app:destination="@id/action_profile" />
+    </fragment>
+
+</navigation>

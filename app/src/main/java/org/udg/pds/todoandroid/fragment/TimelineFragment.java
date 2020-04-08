@@ -1,6 +1,5 @@
 package org.udg.pds.todoandroid.fragment;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,8 +12,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 
 import com.squareup.picasso.Picasso;
 
@@ -37,21 +42,25 @@ public class TimelineFragment extends Fragment {
 
     RecyclerView mRecyclerView;
     private TRAdapter mAdapter;
+    NavController navController = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
         super.onCreate(savedInstance);
         view = inflater.inflate(R.layout.fragment_timeline, container, false);
-
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        navController = Navigation.findNavController(view);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-
         mTodoService = ((TodoApp) this.getActivity().getApplication()).getAPI();
-
         mRecyclerView = getView().findViewById(R.id.RecyclerView_timeline);
         mAdapter = new TimelineFragment.TRAdapter(this.getActivity().getApplication());
         mRecyclerView.setAdapter(mAdapter);
