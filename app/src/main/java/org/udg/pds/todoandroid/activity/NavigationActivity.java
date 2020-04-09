@@ -33,20 +33,20 @@ public class NavigationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         setUpNavigation();
-        mTodoService = ((TodoApp) this.getApplication()).getAPI();
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        //mTodoService = ((TodoApp) this.getApplication()).getAPI();
+        /*BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(
+        bottomNavigationView.addOnDestinationChangedListener(
             item -> {
                 switchView(item.getItemId());
                 return true;
             });
 
-        switchView(bottomNavigationView.getSelectedItemId());
+        switchView(bottomNavigationView.getSelectedItemId());*/
     }
 
-    private void switchView(int itemId) { //Definim que fa quan s'apreten els botons home, add, search i profile del menu
+    /*private void switchView(int itemId) { //Definim que fa quan s'apreten els botons home, add, search i profile del menu
         final FrameLayout content = findViewById(R.id.main_content);
         switch (itemId) {
            /* case R.id.action_home: //On anem quan s'apreta home
@@ -55,17 +55,26 @@ public class NavigationActivity extends AppCompatActivity {
                     .beginTransaction()
                     .replace(R.id.main_content, new TimelineFragment())
                     .commit();
-                break;*/
+                break;
             case R.id.action_add://On anem quan s'apreta add
                 content.removeAllViews();
                 NavigationActivity.this.startActivity(new Intent(NavigationActivity.this, AddPhoto.class));
                 break;
         }
-    }
+    }*/
 
     public void setUpNavigation(){
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         NavHostFragment navHostFragment = (NavHostFragment)getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         NavigationUI.setupWithNavController(bottomNavigationView,navHostFragment.getNavController());
+       /* navHostFragment.getNavController().addOnDestinationChangedListener(((controller, destination, arguments) -> {
+            if(destination.getId()==R.id.action_add){
+                final FrameLayout content = findViewById(R.id.nav_host_fragment);
+                content.removeAllViews();
+                Intent i = new Intent(NavigationActivity.this, AddPhoto.class);
+                startActivity(i);
+                NavigationActivity.this.finish();
+            }
+        }));*/
     }
 }
