@@ -1,7 +1,6 @@
 package org.udg.pds.todoandroid.fragment;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +15,12 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,6 +44,10 @@ public class SearchFragment extends Fragment {
 
     TodoApi mTodoService;
     SearchView mSearchView;
+    View view;
+
+    NavController navController = null;
+
     RecyclerView mRecyclerView;
     private TRAdapter mAdapter;
 
@@ -47,7 +56,14 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        return inflater.inflate(R.layout.search_list, container, false);
+        view = inflater.inflate(R.layout.search_list, container, false);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        navController = Navigation.findNavController(view);
     }
 
     @Override
@@ -178,13 +194,24 @@ public class SearchFragment extends Fragment {
             holder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Activity activity  = (Activity) view.getContext();
+                    /*Activity activity  = (Activity) view.getContext();
                     Bundle bundle = new Bundle();
                     bundle.putBoolean("is_private", false);
                     bundle.putLong("user_to_search", listFiltered.get(position).id);
                     UserProfileFragment userProf = new UserProfileFragment();
                     userProf.setArguments(bundle);
-                    activity.getFragmentManager().beginTransaction().replace(R.id.main_content, userProf).commit();
+                    NavDirections action =
+                        SearchFragmentDirections
+                            .actionActionSearchToActionProfile();
+                    Navigation.findNavController(view).navigate(action);*/
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("is_private", false);
+                    bundle.putLong("user_to_search", listFiltered.get(position).id);
+                   SearchFragmentDirections.ActionActionSearchToActionProfile action =
+                        SearchFragmentDirections.actionActionSearchToActionProfile();
+                   action.setIsPrivate(bundle.getBoolean("is_private"));
+                   action.setUserToSearch(bundle.getLong("user_to_search"));
+                   Navigation.findNavController(view).navigate(action);
                 }
             });
 

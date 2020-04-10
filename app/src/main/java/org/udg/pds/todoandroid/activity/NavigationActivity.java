@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -22,30 +24,32 @@ public class NavigationActivity extends AppCompatActivity {
 
     private TaskList mTaskList;
 
+    private BottomNavigationView bottomNavigationView;
+
     TodoApi mTodoService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        setUpNavigation();
 
-        mTodoService = ((TodoApp) this.getApplication()).getAPI();
+        //mTodoService = ((TodoApp) this.getApplication()).getAPI();
+        /*BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(
+        bottomNavigationView.addOnDestinationChangedListener(
             item -> {
                 switchView(item.getItemId());
                 return true;
             });
 
-        switchView(bottomNavigationView.getSelectedItemId());
+        switchView(bottomNavigationView.getSelectedItemId());*/
     }
 
-    private void switchView(int itemId) { //Definim que fa quan s'apreten els botons home, add, search i profile del menu
+    /*private void switchView(int itemId) { //Definim que fa quan s'apreten els botons home, add, search i profile del menu
         final FrameLayout content = findViewById(R.id.main_content);
         switch (itemId) {
-            case R.id.action_home: //On anem quan s'apreta home
+           /* case R.id.action_home: //On anem quan s'apreta home
                 content.removeAllViews();
                 getFragmentManager()
                     .beginTransaction()
@@ -56,24 +60,21 @@ public class NavigationActivity extends AppCompatActivity {
                 content.removeAllViews();
                 NavigationActivity.this.startActivity(new Intent(NavigationActivity.this, AddPhoto.class));
                 break;
-            case R.id.action_search://On anem quan s'apreta search
-                content.removeAllViews();
-                getFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.main_content, new SearchFragment())
-                    .commit();
-                break;
-            case R.id.action_profile://On anem quan s'apreta profile
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("is_private", true);
-                UserProfileFragment userProf = new UserProfileFragment();
-                userProf.setArguments(bundle);
-                content.removeAllViews();
-                getFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.main_content, userProf)
-                    .commit();
-                break;
         }
+    }*/
+
+    public void setUpNavigation(){
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        NavHostFragment navHostFragment = (NavHostFragment)getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        NavigationUI.setupWithNavController(bottomNavigationView,navHostFragment.getNavController());
+       /* navHostFragment.getNavController().addOnDestinationChangedListener(((controller, destination, arguments) -> {
+            if(destination.getId()==R.id.action_add){
+                final FrameLayout content = findViewById(R.id.nav_host_fragment);
+                content.removeAllViews();
+                Intent i = new Intent(NavigationActivity.this, AddPhoto.class);
+                startActivity(i);
+                NavigationActivity.this.finish();
+            }
+        }));*/
     }
 }
