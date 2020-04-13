@@ -1,6 +1,5 @@
 package org.udg.pds.todoandroid.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +10,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,10 +19,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
 
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
@@ -157,14 +158,16 @@ public class SearchFragment extends Fragment {
 
     static class UserViewHolder extends RecyclerView.ViewHolder {
         TextView username;
-
+        TextView name;
+        ImageView  profilePicture;
         View view;
 
         UserViewHolder(View itemView) {
             super(itemView);
             view = itemView;
             username = itemView.findViewById(R.id.itemUsername);
-
+            name = itemView.findViewById(R.id.itemName);
+             profilePicture = itemView.findViewById(R.id.item_profile_picture);
         }
     }
 
@@ -188,7 +191,10 @@ public class SearchFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(UserViewHolder holder, final int position) {
-            holder.username.setText(listFiltered.get(position).username); //list.get(position).username
+
+            holder.name.setText(listFiltered.get(position).name); //list.get(position).username
+            holder.username.setText("@"+listFiltered.get(position).username); //list.get(position).username
+            Picasso.get().load(listFiltered.get(position).profilePicture).into(holder.profilePicture );
 
 
             holder.view.setOnClickListener(new View.OnClickListener() {
@@ -280,7 +286,7 @@ public class SearchFragment extends Fragment {
 
                             // name match condition. this might differ depending on your requirement
                             // here we are looking for name or phone number match
-                            if (row.getUsername().toLowerCase().contains(charString.toLowerCase())) {
+                            if (row.getUsername().toLowerCase().contains(charString.toLowerCase()) || row.getName().toLowerCase().contains(charString.toLowerCase())) {
                                 filteredList.add(row);
                             }
                         }

@@ -1,29 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-    <androidx.cardview.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/user_view"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/user_view"
 
-        android:layout_width="fill_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:measureWithLargestChild="true"
+    android:orientation="vertical"
+    android:padding="0dp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="0dp"
+        android:background="#3F51B5"
+        android:paddingBottom="@dimen/nav_header_vertical_spacing">
+
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/itemRelLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:measureWithLargestChild="true"
-        android:orientation="vertical"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginBottom="2dp"
+        android:layout_weight="1"
+        android:background="#E2FFFFFF"
         android:padding="3dp">
 
-        <RelativeLayout
-            android:id="@+id/itemRelLayout"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/itemName"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="3dp">
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="40dp"
+            android:layout_toEndOf="@+id/item_profile_picture" />
 
-            <TextView
-                android:id="@+id/itemUsername"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="top" />
+        <ImageView
+            android:id="@+id/item_profile_picture"
+            android:layout_width="53dp"
+            android:layout_height="53dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="23dp"
+            android:layout_marginTop="3dp"
+            android:contentDescription="@string/text_user_profile_picture"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline"
+            tools:srcCompat="@tools:sample/avatars" />
 
-        </RelativeLayout>
-    </androidx.cardview.widget.CardView>
+        <TextView
+            android:id="@+id/itemUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/itemName"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="0dp"
+            android:layout_toEndOf="@+id/item_profile_picture"
+            android:gravity="top" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
 
