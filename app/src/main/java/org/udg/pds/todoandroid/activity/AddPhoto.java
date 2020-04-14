@@ -1,5 +1,6 @@
 package org.udg.pds.todoandroid.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -50,12 +51,12 @@ public class AddPhoto extends AppCompatActivity {
         p.photo = imatge;
         p.description = comentari;
         p.date = new Date(2020, Calendar.APRIL, 28);
-        Call<Publication> call = mTodoService.postPublication(p); // mirarlo bien
+        Call<Publication> call = mTodoService.postPublication(p);
         call.enqueue(new Callback<Publication>() {
             @Override
             public void onResponse(Call<Publication> call, Response<Publication> response) {
                 if(response.isSuccessful()){
-                    //AddPhoto.this.startActivity(new Intent(AddPhoto.this, NavigationActivity.class));
+                    AddPhoto.this.startActivity(new Intent(AddPhoto.this, NavigationActivity.class));
                     AddPhoto.this.finish();
                 }
                 else{
