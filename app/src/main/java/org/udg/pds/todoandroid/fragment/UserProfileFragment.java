@@ -268,12 +268,14 @@ public class UserProfileFragment extends Fragment {
     static class PublicationViewHolder extends RecyclerView.ViewHolder {
         ImageView publication;
         TextView description;
+        TextView owner;
 
         View view;
 
         PublicationViewHolder(View itemView) {
             super(itemView);
             view = itemView;
+            owner = itemView.findViewById(R.id.item_owner);
             publication = itemView.findViewById(R.id.item_publication);
             description = itemView.findViewById(R.id.item_description);
         }
@@ -299,6 +301,7 @@ public class UserProfileFragment extends Fragment {
         public void onBindViewHolder(PublicationViewHolder holder, final int position){
             Picasso.get().load(list.get(position).photo).into(holder.publication);
             holder.description.setText(list.get(position).description);
+            holder.owner.setText(list.get(position).userUsername);
 
             holder.view.setOnClickListener(new View.OnClickListener(){
                 @Override
