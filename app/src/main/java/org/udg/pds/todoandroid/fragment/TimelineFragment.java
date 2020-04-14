@@ -159,7 +159,15 @@ public class TimelineFragment extends Fragment {
                 }
             });
 
-            //animate(holder);
+            holder.owner.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view) {
+                    TimelineFragmentDirections.ActionActionHomeToActionProfile action = TimelineFragmentDirections.actionActionHomeToActionProfile();
+                    action.setIsPrivate(false);
+                    action.setUserToSearch(list.get(position).userId);
+                    Navigation.findNavController(view).navigate(action);
+                }
+            });
         }
 
         @Override

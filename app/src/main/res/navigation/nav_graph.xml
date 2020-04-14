@@ -8,7 +8,22 @@
         android:id="@+id/action_home"
         android:name="org.udg.pds.todoandroid.fragment.TimelineFragment"
         android:label="fragment_timeline"
-        tools:layout="@layout/fragment_timeline" />
+        tools:layout="@layout/fragment_timeline" >
+        <action
+            android:id="@+id/action_action_home_to_action_profile"
+            app:destination="@id/action_profile" >
+            <argument
+                android:name="is_private"
+                app:argType="boolean"
+                android:defaultValue="true" />
+            <!-- <argument
+                 android:name="user_to_search"
+                 app:argType="Long"
+                 app:nullable="true"
+                 android:defaultValue="@null" /> -->
+        </action>
+    </fragment>
+
 
     <fragment
         android:id="@+id/action_profile"
