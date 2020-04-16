@@ -20,6 +20,11 @@ public class User {
     public Integer numberPublications;
     public Integer numberFollowers;
     public Integer numberFollowed;
+    public Boolean followsUser;
+    /* followsUser is used to know if the logged user is following the asked user. */
+    /* Let's say you are the logged user A, and you request for the profile of user B, then if you are following B,
+        the value of followsUser will be true because you (A) are following B. */
+    /* If the request is for the logged user profile, followsUser will be false. */
 
     public String getUsername() {
         return username;

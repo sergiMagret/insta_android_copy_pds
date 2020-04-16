@@ -3,6 +3,7 @@ package org.udg.pds.todoandroid.fragment;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -64,9 +65,10 @@ public class UserProfileFragment extends Fragment {
 
         super.onCreate(savedInstance);
         view = inflater.inflate(R.layout.fragment_user_profile, container, false);
-
-        Button logout_interface_btn = (Button) view.findViewById(R.id.logout_interface_button);
         boolean private_profile = getArguments().getBoolean("is_private");
+
+        // Configuració botó de logout
+        Button logout_interface_btn = (Button) view.findViewById(R.id.logout_interface_button);
         if(private_profile){
             logout_interface_btn.setVisibility(View.VISIBLE);
             logout_interface_btn.setOnClickListener(new View.OnClickListener(){
@@ -100,6 +102,7 @@ public class UserProfileFragment extends Fragment {
         else{
             logout_interface_btn.setVisibility(View.GONE);
         }
+
         return view;
     }
 
@@ -125,7 +128,6 @@ public class UserProfileFragment extends Fragment {
             }
         });
     }
-
 
 
     @Override
@@ -225,11 +227,11 @@ public class UserProfileFragment extends Fragment {
 
         // Per al nombre de seguidors
         TextView userFollowers = view.findViewById(R.id.user_number_followers);
-        userFollowers.setText(Integer.toString(u.numberFollowers));
+        userFollowers.setText(Integer.toString(u.numberFollowers)); // setText requires to be text
 
         // Per al nombre de seguits
         TextView userFollowing = view.findViewById(R.id.user_number_following);
-        userFollowing.setText(Integer.toString(u.numberFollowed));
+        userFollowing.setText(Integer.toString(u.numberFollowed)); // setText requires to be text
 
         // Per el nombre de publicacions que tingui l'usuari.
         TextView userPublications = view.findViewById(R.id.user_number_publications);
@@ -238,6 +240,46 @@ public class UserProfileFragment extends Fragment {
         // Per posar la foto de perfil.
         ImageView profilePicture = view.findViewById(R.id.user_profile_picture);
         Picasso.get().load(u.profilePicture).into(profilePicture);
+
+        // Per al boto de follow/unfollow
+        boolean private_profile = getArguments().getBoolean("is_private");
+        Button follow_button = view.findViewById(R.id.follow_unfollow_button);
+        if(private_profile) {
+            follow_button.setVisibility(View.INVISIBLE);
+        }else{
+            if(u.followsUser) { // If the logged user is following the displayed user
+                follow_button.setBackgroundResource(R.drawable.button_unfollow);
+                follow_button.setTextColor(Color.WHITE);
+                follow_button.setText(R.string.button_following);
+                follow_button.setClickable(false);
+            }else{
+                follow_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) { // On click send call to server to update status
+                        Call<String> call = mTodoService.addFollowed(getArguments().getLong("user_to_search")); // The new follow is the user's profile you just searched
+                        call.enqueue(new Callback<String>() {
+                            @Override
+                            public void onResponse(Call<String> call, Response<String> response) {
+                                if(response.isSuccessful()) {
+                                    follow_button.setBackgroundResource(R.drawable.button_unfollow);
+                                    follow_button.setTextColor(Color.WHITE);
+                                    follow_button.setText(R.string.button_following);
+                                    follow_button.setClickable(false);
+                                    Toast.makeText(UserProfileFragment.this.getContext(), "You are now following @" + u.username, Toast.LENGTH_LONG).show();
+                                }else{
+                                    Toast.makeText(UserProfileFragment.this.getContext(), "Error following the user", Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<String> call, Throwable t) {
+                                UserProfileFragment.this.launchErrorConnectingToServer();
+                            }
+                        });
+                    }
+                });
+            }
+        }
     }
 
     public void launchErrorConnectingToServer(){
