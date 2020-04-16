@@ -3,11 +3,13 @@ package org.udg.pds.todoandroid.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -114,10 +116,12 @@ public class TimelineFragment extends Fragment {
         });
     }
 
-    static class PublicationViewHolder extends RecyclerView.ViewHolder {
+    class PublicationViewHolder extends RecyclerView.ViewHolder {
         TextView owner;
         ImageView publication;
         TextView description;
+        EditText nLikes;
+        ImageView likeImage;
 
         View view;
 
@@ -127,10 +131,12 @@ public class TimelineFragment extends Fragment {
             owner = itemView.findViewById(R.id.item_owner);
             publication = itemView.findViewById(R.id.item_publication);
             description = itemView.findViewById(R.id.item_description);
+            nLikes = itemView.findViewById(R.id.item_nLikes);
+            likeImage = itemView.findViewById(R.id.item_likeImage);
         }
     }
 
-    static class TRAdapter extends RecyclerView.Adapter<TimelineFragment.PublicationViewHolder>{
+    class TRAdapter extends RecyclerView.Adapter<TimelineFragment.PublicationViewHolder>{
         List<Publication> list = new ArrayList<>();
         Context context;
 
@@ -148,14 +154,99 @@ public class TimelineFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(TimelineFragment.PublicationViewHolder holder, final int position){
+            Call<Integer> call = null;
+            call = mTodoService.getLikes(list.get(position).id);
+
+            call.enqueue(new Callback<Integer>() {
+                @Override
+                public void onResponse(Call<Integer> call, Response<Integer> response) {
+                    if (response.isSuccessful()) {
+                        holder.nLikes.setText(String.valueOf(response.body()));
+                    } else {
+                        Toast.makeText(TimelineFragment.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Integer> call, Throwable t) {
+                    TimelineFragment.this.launchErrorConnectingToServer();
+                }
+            });
             holder.owner.setText(list.get(position).userUsername);
             Picasso.get().load(list.get(position).photo).into(holder.publication);
             holder.description.setText(list.get(position).description);
 
-            holder.view.setOnClickListener(new View.OnClickListener(){
+            /*holder.view.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view){
                     Toast.makeText(context, "Hey! I'm publication " + position,  Toast.LENGTH_LONG).show();
+                }
+            });*/
+
+            holder.publication.setOnClickListener(new View.OnClickListener(){
+                int i = 0;
+                public void onClick(View view){
+                    i++;
+
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable(){
+                        @Override
+                        public void run() {
+                            if (i == 1){
+                                Toast.makeText(TimelineFragment.this.getContext(), "Double click to like", Toast.LENGTH_LONG).show();
+                            } else if (i == 2){
+                                Call<Publication> call = null;
+                                call = mTodoService.addLike(list.get(position).id);
+
+                                call.enqueue(new Callback<Publication>() {
+                                    @Override
+                                    public void onResponse(Call<Publication> call, Response<Publication> response) {
+                                        if (response.isSuccessful()) {
+                                            //holder.likeImage.setImageResource(R.drawable.ic_like_pink_24dp);
+                                            Toast.makeText(TimelineFragment.this.getContext(), "You liked this photo", Toast.LENGTH_LONG).show();
+                                            Publication pb = response.body();
+                                        } else {
+                                            Toast.makeText(TimelineFragment.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Publication> call, Throwable t) {
+                                        TimelineFragment.this.launchErrorConnectingToServer();
+                                    }
+                                });
+                                updatePublicationList();
+                            }
+                            i = 0;
+                        }
+                    }, 500);
+                }
+            });
+
+            holder.likeImage.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view){
+                    Call<Publication> call = null;
+                    call = mTodoService.addLike(list.get(position).id);
+
+                    call.enqueue(new Callback<Publication>() {
+                        @Override
+                        public void onResponse(Call<Publication> call, Response<Publication> response) {
+                            if (response.isSuccessful()) {
+                                //holder.likeImage.setImageResource(R.drawable.ic_like_pink_24dp);
+                                Publication pb = response.body();
+                                Toast.makeText(TimelineFragment.this.getContext(), "You liked this photo", Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(TimelineFragment.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Publication> call, Throwable t) {
+                            TimelineFragment.this.launchErrorConnectingToServer();
+                        }
+                    });
+                    updatePublicationList();
                 }
             });
 
