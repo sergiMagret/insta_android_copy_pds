@@ -64,6 +64,6 @@ public interface TodoApi {
     Call<List<Publication>> getPublications();
 
     @POST("/publications")
-    Call<Publication> postPublication(@Body PublicationPost p);
+    Call<String> postPublication(@Body PublicationPost p);
 }
 

@@ -51,10 +51,10 @@ public class AddPhoto extends AppCompatActivity {
         p.photo = imatge;
         p.description = comentari;
         p.date = new Date(2020, Calendar.APRIL, 28);
-        Call<Publication> call = mTodoService.postPublication(p);
-        call.enqueue(new Callback<Publication>() {
+        Call<String> call = mTodoService.postPublication(p);
+        call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<Publication> call, Response<Publication> response) {
+            public void onResponse(Call<String> call, Response<String> response) {
                 if(response.isSuccessful()){
                     AddPhoto.this.startActivity(new Intent(AddPhoto.this, NavigationActivity.class));
                     AddPhoto.this.finish();
@@ -66,7 +66,7 @@ public class AddPhoto extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Publication> call, Throwable t) {
+            public void onFailure(Call<String> call, Throwable t) {
                 Toast toast = Toast.makeText(AddPhoto.this, "Error addPhoto no response", Toast.LENGTH_SHORT);
                 toast.show();
             }
