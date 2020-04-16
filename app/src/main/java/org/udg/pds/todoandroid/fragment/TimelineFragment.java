@@ -1,7 +1,9 @@
 package org.udg.pds.todoandroid.fragment;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -106,6 +109,7 @@ public class TimelineFragment extends Fragment {
     }
 
     static class PublicationViewHolder extends RecyclerView.ViewHolder {
+        ImageButton more_btn;
         TextView owner;
         ImageView publication;
         TextView description;
@@ -115,6 +119,7 @@ public class TimelineFragment extends Fragment {
         PublicationViewHolder(View itemView) {
             super(itemView);
             view = itemView;
+            more_btn = itemView.findViewById(R.id.more_publication_button);
             owner = itemView.findViewById(R.id.item_owner);
             publication = itemView.findViewById(R.id.item_publication);
             description = itemView.findViewById(R.id.item_description);
@@ -142,7 +147,26 @@ public class TimelineFragment extends Fragment {
             holder.owner.setText(list.get(position).userUsername);
             Picasso.get().load(list.get(position).photo).into(holder.publication);
             holder.description.setText(list.get(position).description);
+            holder.more_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AlertDialog.Builder more_publication_dialog = new AlertDialog.Builder(context);
+                    more_publication_dialog.setTitle("titol");
+                    more_publication_dialog.setMessage("missatge");
+                    //View dialog_view = getLayoutInflater().inflate(R.layout.more_publication_layout, null);
+                    more_publication_dialog.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Toast.makeText(context, "funciona ",  Toast.LENGTH_LONG).show();
+                        }
+                    });
 
+                    // Toast.makeText(context, "funciona ",  Toast.LENGTH_LONG).show();
+
+                    AlertDialog dialog = more_publication_dialog.create();
+                    dialog.show();
+                }
+            });
             holder.view.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view){

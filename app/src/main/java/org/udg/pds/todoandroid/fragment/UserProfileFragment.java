@@ -3,6 +3,7 @@ package org.udg.pds.todoandroid.fragment;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,7 +13,9 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +31,7 @@ import org.udg.pds.todoandroid.activity.Login;
 import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.entity.User;
 import org.udg.pds.todoandroid.rest.TodoApi;
+import org.udg.pds.todoandroid.util.Dialog;
 import org.udg.pds.todoandroid.util.Global;
 
 import java.util.ArrayList;
@@ -229,6 +233,8 @@ public class UserProfileFragment extends Fragment {
         Toast.makeText(UserProfileFragment.this.getContext(), "Error connecting to server.", Toast.LENGTH_LONG).show();
     }
 
+
+
     public void updatePublicationList(long idToSearch){
         Call<List<Publication>> call = null;
         if(idToSearch == -1) {
@@ -254,17 +260,23 @@ public class UserProfileFragment extends Fragment {
         });
     }
 
+
+
     static class PublicationViewHolder extends RecyclerView.ViewHolder {
         ImageView publication;
         TextView description;
-
+        ImageButton more_btn;
         View view;
+
+        TodoApi mTodoService2;
 
         PublicationViewHolder(View itemView) {
             super(itemView);
             view = itemView;
+            more_btn = itemView.findViewById(R.id.more_publication_button);
             publication = itemView.findViewById(R.id.item_publication);
             description = itemView.findViewById(R.id.item_description);
+          //  mTodoService2 = itemView.findViewById(R.)
         }
     }
 
@@ -279,6 +291,7 @@ public class UserProfileFragment extends Fragment {
         @Override
         public PublicationViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.publication_layout, parent, false);
+
             PublicationViewHolder holder = new PublicationViewHolder(v);
 
             return holder;
@@ -289,6 +302,24 @@ public class UserProfileFragment extends Fragment {
             Picasso.get().load(list.get(position).photo).into(holder.publication);
             holder.description.setText(list.get(position).description);
 
+            holder.more_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AlertDialog.Builder more_publication_dialog = new AlertDialog.Builder(holder.itemView.getContext());
+                    LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View v = inflater.inflate(R.layout.more_publication_layout,null);
+                    Button delete_btn = (Button) v.findViewById(R.id.delete_publication_button);
+                    delete_btn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            delete_publication(holder, list.get(position).id);
+                        }
+                    });
+                    more_publication_dialog.setView(v);
+                    AlertDialog dialog = more_publication_dialog.create();
+                    dialog.show();
+                }
+            });
             holder.view.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view){
@@ -297,6 +328,30 @@ public class UserProfileFragment extends Fragment {
             });
 
             //animate(holder);
+        }
+
+        public void delete_publication(PublicationViewHolder holder, Long id){
+            TodoApi mTodoService = (TodoApi) holder.itemView.getContext().getApplicationContext();
+            Call<String> call = mTodoService.deletePublication(id);
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+
+                    if (response.isSuccessful()) {
+                        Toast toast = Toast.makeText(context, "Foto borrada", Toast.LENGTH_SHORT);
+                        toast.show();
+                    } else {
+                        Toast toast = Toast.makeText(context, "Error deleting publication", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t){
+                    Toast toast = Toast.makeText(context, "Error deleting publication", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            });
         }
 
         @Override
