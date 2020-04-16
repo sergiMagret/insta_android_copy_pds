@@ -103,7 +103,9 @@
                 android:id="@+id/layout_number_following"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true">
 
                 <TextView
                     android:id="@+id/user_number_following"
@@ -135,7 +137,9 @@
                 android:id="@+id/layout_number_followers"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true">
 
                 <TextView
                     android:id="@+id/user_number_followers"

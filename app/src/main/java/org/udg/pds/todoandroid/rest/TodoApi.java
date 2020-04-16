@@ -56,6 +56,18 @@ public interface TodoApi {
     @POST("/users/self/followed")
     Call<String> addFollowed(@Body Long user);
 
+    @GET("/users/self/followed")
+    Call<List<User>> getFollowed();
+
+    @GET("/users/self/followers")
+    Call<List<User>> getFollowers();
+
+    @GET("/users/{id}/followed")
+    Call<List<User>> getFollowedById(@Path("id") Long id);
+
+    @GET("/users/{id}/followers")
+    Call<List<User>> getFollowersById(@Path("id") Long id);
+
     @GET("/users/self/publications")
     Call<List<Publication>> getUserPublications();
 

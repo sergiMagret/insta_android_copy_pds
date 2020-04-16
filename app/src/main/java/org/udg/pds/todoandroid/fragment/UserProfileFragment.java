@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -54,6 +56,9 @@ public class UserProfileFragment extends Fragment {
 
     NavController navController = null;
 
+    private boolean private_profile;
+    long idToSearch;
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -65,7 +70,12 @@ public class UserProfileFragment extends Fragment {
 
         super.onCreate(savedInstance);
         view = inflater.inflate(R.layout.fragment_user_profile, container, false);
-        boolean private_profile = getArguments().getBoolean("is_private");
+        try {
+            private_profile = getArguments().getBoolean("is_private");
+            idToSearch = getArguments().getLong("user_to_search");
+        }catch (NullPointerException e){
+            Toast.makeText(UserProfileFragment.this.getContext(), "Error loading user profile, no arguments", Toast.LENGTH_LONG).show();
+        }
 
         // Configuració botó de logout
         Button logout_interface_btn = (Button) view.findViewById(R.id.logout_interface_button);
@@ -141,8 +151,13 @@ public class UserProfileFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 
-        boolean private_profile = getArguments().getBoolean("is_private");
-        long idToSearch = -1;
+        try {
+            private_profile = getArguments().getBoolean("is_private");
+            idToSearch = getArguments().getLong("user_to_search");
+        }catch (NullPointerException e){
+            Toast.makeText(UserProfileFragment.this.getContext(), "Error loading user profile, no arguments", Toast.LENGTH_LONG).show();
+        }
+
         if(private_profile) {
             Button follow_button = view.findViewById(R.id.follow_unfollow_button);
             follow_button.setVisibility(View.INVISIBLE);
@@ -163,12 +178,6 @@ public class UserProfileFragment extends Fragment {
                 }
             });
         }else{
-            try {
-                idToSearch = getArguments().getLong("user_to_search");
-            }catch(NullPointerException e) { // If there's no user to search
-                Toast.makeText(UserProfileFragment.this.getContext(), "Error loading user profile, there's no id user to search.", Toast.LENGTH_LONG).show();
-            }
-
             Call<User> call = mTodoService.getUserProfileByID(idToSearch);
             call.enqueue(new Callback<User>() {
                 @Override
@@ -187,7 +196,7 @@ public class UserProfileFragment extends Fragment {
             });
         }
 
-        updatePublicationList(idToSearch);
+        updatePublicationList();
     }
 
     @Override
@@ -212,6 +221,7 @@ public class UserProfileFragment extends Fragment {
 
     public void updateProfileInfo(Response<User> response){
         User u = response.body();
+
         // Per al nom de l'usuari
         TextView userName = view.findViewById(R.id.user_name);
         userName.setText(u.name);
@@ -228,10 +238,32 @@ public class UserProfileFragment extends Fragment {
         // Per al nombre de seguidors
         TextView userFollowers = view.findViewById(R.id.user_number_followers);
         userFollowers.setText(Integer.toString(u.numberFollowers)); // setText requires to be text
+        ConstraintLayout layoutFollowers = view.findViewById(R.id.layout_number_followers);
+        layoutFollowers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserProfileFragmentDirections.ActionActionProfileToFollowingList action = UserProfileFragmentDirections.actionActionProfileToFollowingList();
+                action.setIsPrivate(private_profile);
+                action.setUsersToShow("followers");
+                action.setUserToSearch(idToSearch);
+                Navigation.findNavController(view).navigate(action);
+            }
+        });
 
         // Per al nombre de seguits
         TextView userFollowing = view.findViewById(R.id.user_number_following);
         userFollowing.setText(Integer.toString(u.numberFollowed)); // setText requires to be text
+        ConstraintLayout layoutFollowed = view.findViewById(R.id.layout_number_following);
+        layoutFollowed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserProfileFragmentDirections.ActionActionProfileToFollowingList action = UserProfileFragmentDirections.actionActionProfileToFollowingList();
+                action.setIsPrivate(private_profile);
+                action.setUsersToShow("followed");
+                action.setUserToSearch(idToSearch);
+                Navigation.findNavController(view).navigate(action);
+            }
+        });
 
         // Per el nombre de publicacions que tingui l'usuari.
         TextView userPublications = view.findViewById(R.id.user_number_publications);
@@ -242,7 +274,6 @@ public class UserProfileFragment extends Fragment {
         Picasso.get().load(u.profilePicture).into(profilePicture);
 
         // Per al boto de follow/unfollow
-        boolean private_profile = getArguments().getBoolean("is_private");
         Button follow_button = view.findViewById(R.id.follow_unfollow_button);
         if(private_profile) {
             follow_button.setVisibility(View.INVISIBLE);
@@ -256,7 +287,7 @@ public class UserProfileFragment extends Fragment {
                 follow_button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) { // On click send call to server to update status
-                        Call<String> call = mTodoService.addFollowed(getArguments().getLong("user_to_search")); // The new follow is the user's profile you just searched
+                        Call<String> call = mTodoService.addFollowed(idToSearch); // The new follow is the user's profile you just searched
                         call.enqueue(new Callback<String>() {
                             @Override
                             public void onResponse(Call<String> call, Response<String> response) {
@@ -286,7 +317,7 @@ public class UserProfileFragment extends Fragment {
         Toast.makeText(UserProfileFragment.this.getContext(), "Error connecting to server.", Toast.LENGTH_LONG).show();
     }
 
-    public void updatePublicationList(long idToSearch){
+    public void updatePublicationList(){
         Call<List<Publication>> call = null;
         if(idToSearch == -1) {
             call = mTodoService.getUserPublications();
@@ -411,7 +442,7 @@ public class UserProfileFragment extends Fragment {
                                         UserProfileFragment.this.launchErrorConnectingToServer();
                                     }
                                 });
-                                updatePublicationList(-1);
+                                updatePublicationList();
                             }
                             i = 0;
                         }
@@ -442,7 +473,7 @@ public class UserProfileFragment extends Fragment {
                             UserProfileFragment.this.launchErrorConnectingToServer();
                         }
                     });
-                    updatePublicationList(-1);
+                    updatePublicationList();
                 }
             });
 

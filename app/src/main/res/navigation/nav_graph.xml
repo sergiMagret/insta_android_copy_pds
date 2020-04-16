@@ -39,6 +39,9 @@
             android:name="user_to_search"
             app:argType="long"
             android:defaultValue="1L" />
+        <action
+            android:id="@+id/action_action_profile_to_followingList"
+            app:destination="@id/followingList" />
         <!-- <argument
              android:name="user_to_search"
              app:argType="Long"
@@ -71,5 +74,28 @@
         android:name="org.udg.pds.todoandroid.activity.AddPhoto"
         android:label="activity_add_photo"
         tools:layout="@layout/activity_add_photo" />
+
+    <fragment
+        android:id="@+id/followingList"
+        android:name="org.udg.pds.todoandroid.fragment.FollowingList"
+        android:label="fragment_following_list"
+        tools:layout="@layout/fragment_following_list" >
+
+        <action
+            android:id="@+id/action_followingList_to_action_profile"
+            app:destination="@id/action_profile" />
+        <argument
+            android:name="is_private"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <argument
+            android:name="user_to_search"
+            app:argType="long"
+            android:defaultValue="-1L" />
+        <argument
+            android:name="users_to_show"
+            app:argType="string"
+            android:defaultValue="error" />
+    </fragment>
 
 </navigation>
