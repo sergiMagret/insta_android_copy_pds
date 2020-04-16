@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/user_view"
 
@@ -60,6 +61,15 @@
             android:layout_marginTop="0dp"
             android:layout_marginBottom="8dp"
             android:background="@android:color/background_dark" />
+
+        <ImageButton
+            android:id="@+id/more_publication_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="8dp"
+            android:background="@null"
+            app:srcCompat="@drawable/ic_publication_more" />
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
