@@ -12,6 +12,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -71,5 +72,8 @@ public interface TodoApi {
 
     @POST("/publications/{id}/like")
     Call <Publication> addLike(@Path("id") Long id);
+
+    @DELETE("/publications/{id}")
+    Call<String> deletePublication(@Path("id") Long id);
 }
 
