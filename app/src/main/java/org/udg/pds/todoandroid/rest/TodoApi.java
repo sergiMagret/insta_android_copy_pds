@@ -64,5 +64,11 @@ public interface TodoApi {
 
     @POST("/publications")
     Call<Publication> postPublication(@Body PublicationPost p);
+
+    @GET("/publications/{id}/likes")
+    Call <Integer> getLikes(@Path("id") Long id);
+
+    @POST("/publications/{id}/like")
+    Call <Publication> addLike(@Path("id") Long id);
 }
 
