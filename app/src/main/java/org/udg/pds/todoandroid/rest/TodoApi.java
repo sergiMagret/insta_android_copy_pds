@@ -2,13 +2,12 @@ package org.udg.pds.todoandroid.rest;
 
 import org.udg.pds.todoandroid.entity.IdObject;
 import org.udg.pds.todoandroid.entity.Publication;
+import org.udg.pds.todoandroid.entity.PublicationPost;
 import org.udg.pds.todoandroid.entity.Task;
 import org.udg.pds.todoandroid.entity.User;
 import org.udg.pds.todoandroid.entity.UserLogin;
 import org.udg.pds.todoandroid.entity.UserToReg;
-import org.udg.pds.todoandroid.entity.PublicationPost;
 
-import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -16,6 +15,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by imartin on 13/02/17.
@@ -40,8 +40,9 @@ public interface TodoApi {
     @GET("/tasks")
     Call<List<Task>> getTasks();
 
+
     @GET("/users")
-    Call<List<User>> getUsers();
+    Call<List<User>> getUsers(@Query("text") String text, @Query("page") Integer page, @Query("size") Integer size);
 
     @GET("/tasks/{id}")
     Call<Task> getTask(@Path("id") String id);
