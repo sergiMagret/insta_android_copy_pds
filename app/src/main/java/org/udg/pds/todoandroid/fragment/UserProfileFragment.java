@@ -140,6 +140,8 @@ public class UserProfileFragment extends Fragment {
         boolean private_profile = getArguments().getBoolean("is_private");
         long idToSearch = -1;
         if(private_profile) {
+            Button follow_button = view.findViewById(R.id.follow_unfollow_button);
+            follow_button.setVisibility(View.INVISIBLE);
             Call<User> call = mTodoService.getUserProfile();
             call.enqueue(new Callback<User>() {
                 @Override
@@ -220,12 +222,12 @@ public class UserProfileFragment extends Fragment {
         userDesc.setText(u.description);
 
         // Per al nombre de seguidors
-        //TextView userFollowers = UserProfile.this.findViewById(R.id.user_number_followers);
-        //userFollowers.setText(u.followers.size());
+        TextView userFollowers = view.findViewById(R.id.user_number_followers);
+        userFollowers.setText(Integer.toString(u.numberFollowers));
 
         // Per al nombre de seguits
-        //TextView userFollowing = UserProfile.this.findViewById(R.id.user_number_following);
-        //userFollowing.setText(u.following.size());
+        TextView userFollowing = view.findViewById(R.id.user_number_following);
+        userFollowing.setText(Integer.toString(u.numberFollowed));
 
         // Per el nombre de publicacions que tingui l'usuari.
         TextView userPublications = view.findViewById(R.id.user_number_publications);

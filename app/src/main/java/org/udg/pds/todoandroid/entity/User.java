@@ -18,8 +18,8 @@ public class User {
     public String description;
     public String profilePicture;
     public Integer numberPublications;
-    public List<Integer> followers;
-    public List<Integer> following;
+    public Integer numberFollowers;
+    public Integer numberFollowed;
 
     public String getUsername() {
         return username;
