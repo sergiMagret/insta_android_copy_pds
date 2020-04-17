@@ -13,6 +13,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -273,6 +274,7 @@ public class UserProfileFragment extends Fragment {
         TextView owner;
         EditText nLikes;
         ImageView likeImage;
+        ImageButton more_btn;
 
         View view;
 
@@ -284,6 +286,7 @@ public class UserProfileFragment extends Fragment {
             description = itemView.findViewById(R.id.item_description);
             nLikes = itemView.findViewById(R.id.item_nLikes);
             likeImage = itemView.findViewById(R.id.item_likeImage);
+            more_btn = itemView.findViewById(R.id.more_publication_button);
         }
     }
 
@@ -402,7 +405,56 @@ public class UserProfileFragment extends Fragment {
                 }
             });
 
+            moreOptions(holder,position);
+
             //animate(holder);
+
+        }
+
+
+        public void moreOptions(PublicationViewHolder holder, final int position){
+            holder.more_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view){
+                    AlertDialog.Builder more_publication_dialog = new AlertDialog.Builder(holder.itemView.getContext());
+                    LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View v = inflater.inflate(R.layout.more_publication_layout,null);
+                    Button delete_btn = (Button) v.findViewById(R.id.delete_publication_button);
+                    more_publication_dialog.setView(v);
+                    AlertDialog dialog = more_publication_dialog.create();
+                    dialog.show();
+                    dialog.getWindow().setLayout(600,220);
+                    delete_btn.setOnClickListener(new View.OnClickListener(){
+                        @Override
+                        public void onClick(View view){
+                            Call<String> call = mTodoService.deletePublication(list.get(position).id);
+                            call.enqueue(new Callback<String>() {
+                                @Override
+                                public void onResponse(Call<String> call, Response<String> response) {
+
+                                    if (response.isSuccessful()) {
+                                        updatePublicationList(-1);
+                                        dialog.cancel();
+                                        Toast toast = Toast.makeText(context, "Publication deleted", Toast.LENGTH_SHORT);
+                                        toast.show();
+                                    } else {
+                                        Toast toast = Toast.makeText(context, "Error deleting publication", Toast.LENGTH_SHORT);
+                                        toast.show();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<String> call, Throwable t){
+                                    Toast toast = Toast.makeText(context, "Error deleting publication", Toast.LENGTH_SHORT);
+                                    toast.show();
+                                }
+                            });
+                            remove(list.get(position));
+                        }
+                    });
+
+                }
+            });
         }
 
         @Override
