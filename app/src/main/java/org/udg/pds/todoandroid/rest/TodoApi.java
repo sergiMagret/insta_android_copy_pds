@@ -67,7 +67,7 @@ public interface TodoApi {
     Call<List<Publication>> getPublications();
 
     @POST("/publications")
-    Call<Publication> postPublication(@Body PublicationPost p);
+    Call<String> postPublication(@Body PublicationPost p);
 
     @GET("/publications/{id}/likes")
     Call <List<Integer>> getLikes(@Path("id") Long id);
@@ -77,5 +77,8 @@ public interface TodoApi {
 
     @DELETE("/publications/{id}/delLike")
     Call <Publication> deleteLike(@Path("id") Long id);
+
+    @DELETE("/publications/{id}")
+    Call<String> deletePublication(@Path("id") Long id);
 }
 
