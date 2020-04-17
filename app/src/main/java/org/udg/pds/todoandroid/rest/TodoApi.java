@@ -89,5 +89,8 @@ public interface TodoApi {
 
     @POST("/publications/{id}/like")
     Call <Publication> addLike(@Path("id") Long id);
+
+    @DELETE("/publications/{id}")
+    Call<String> deletePublication(@Path("id") Long id);
 }
 
