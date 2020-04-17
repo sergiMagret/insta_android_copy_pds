@@ -43,11 +43,11 @@
             android:id="@+id/item_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/item_nLikes"
+            android:layout_below="@+id/item_likeImage"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="13dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="15dp"
             android:layout_marginBottom="8dp"
             android:text="@string/item_description" />
@@ -61,19 +61,6 @@
             android:layout_marginBottom="8dp"
             android:background="@android:color/background_dark" />
 
-        <EditText
-            android:id="@+id/item_nLikes"
-            android:layout_width="71dp"
-            android:layout_height="41dp"
-            android:layout_below="@+id/item_publication"
-            android:layout_marginStart="-3dp"
-            android:layout_marginTop="7dp"
-            android:layout_toEndOf="@+id/item_likeImage"
-            android:background="#00FFFFFF"
-            android:ems="10"
-            android:inputType="numberSigned"
-            android:text="@string/item_likes" />
-
         <ImageView
             android:id="@+id/item_likeImage"
             android:layout_width="57dp"
@@ -83,6 +70,16 @@
             android:layout_marginStart="-1dp"
             android:layout_marginTop="8dp"
             app:srcCompat="@drawable/ic_favorite_border_black_24dp" />
+
+        <TextView
+            android:id="@+id/item_nLikes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/item_publication"
+            android:layout_marginStart="-6dp"
+            android:layout_marginTop="18dp"
+            android:layout_toEndOf="@+id/item_likeImage"
+            android:text="@string/item_likes" />
 
         <ImageButton
             android:id="@+id/more_publication_button"
