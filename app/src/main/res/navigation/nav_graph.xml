@@ -42,6 +42,9 @@
         <action
             android:id="@+id/action_action_profile_to_followingList"
             app:destination="@id/followingList" />
+        <action
+            android:id="@+id/action_action_profile_self"
+            app:destination="@id/action_profile" />
         <!-- <argument
              android:name="user_to_search"
              app:argType="Long"

@@ -34,6 +34,7 @@ import com.squareup.picasso.Picasso;
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.activity.Login;
+import org.udg.pds.todoandroid.entity.IdObject;
 import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.entity.User;
 import org.udg.pds.todoandroid.rest.TodoApi;
@@ -219,7 +220,7 @@ public class UserProfileFragment extends Fragment {
         }
     }
 
-    public void updateProfileInfo(Response<User> response){
+    private void updateProfileInfo(Response<User> response){
         User u = response.body();
 
         // Per al nom de l'usuari
@@ -275,45 +276,77 @@ public class UserProfileFragment extends Fragment {
 
         // Per al boto de follow/unfollow
         Button follow_button = view.findViewById(R.id.follow_unfollow_button);
-        if(private_profile) {
-            follow_button.setVisibility(View.INVISIBLE);
+        if(private_profile) { // If you are watching your own profile
+            follow_button.setVisibility(View.GONE);
         }else{
-            if(u.followsUser) { // If the logged user is following the displayed user
-                follow_button.setBackgroundResource(R.drawable.button_unfollow);
-                follow_button.setTextColor(Color.WHITE);
-                follow_button.setText(R.string.button_following);
-                follow_button.setClickable(false);
-            }else{
-                follow_button.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) { // On click send call to server to update status
-                        Call<String> call = mTodoService.addFollowed(idToSearch); // The new follow is the user's profile you just searched
-                        call.enqueue(new Callback<String>() {
-                            @Override
-                            public void onResponse(Call<String> call, Response<String> response) {
-                                if(response.isSuccessful()) {
-                                    follow_button.setBackgroundResource(R.drawable.button_unfollow);
-                                    follow_button.setTextColor(Color.WHITE);
-                                    follow_button.setText(R.string.button_following);
-                                    follow_button.setClickable(false);
-                                    Toast.makeText(UserProfileFragment.this.getContext(), "You are now following @" + u.username, Toast.LENGTH_LONG).show();
-                                }else{
-                                    Toast.makeText(UserProfileFragment.this.getContext(), "Error following the user", Toast.LENGTH_LONG).show();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<String> call, Throwable t) {
-                                UserProfileFragment.this.launchErrorConnectingToServer();
-                            }
-                        });
-                    }
-                });
-            }
+            updateFollowStatus(u.followsUser);
         }
     }
 
-    public void launchErrorConnectingToServer(){
+    private void updateFollowStatus(boolean followed) {
+        Button follow_button = view.findViewById(R.id.follow_unfollow_button);
+        if(followed) { // If following, show the unfollow button
+            follow_button.setBackgroundResource(R.drawable.button_unfollow);
+            follow_button.setTextColor(Color.WHITE);
+            follow_button.setText(R.string.button_unfollow);
+            follow_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Call<String> call = mTodoService.deleteFollowed(idToSearch); // The new follow is the user's profile you just searched
+                    call.enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+                            if(response.isSuccessful()){
+                                UserProfileFragmentDirections.ActionActionProfileSelf action = UserProfileFragmentDirections.actionActionProfileSelf();
+                                action.setIsPrivate(private_profile);
+                                action.setUserToSearch(idToSearch);
+                                Navigation.findNavController(view).navigate(action); // Update the profile with the new followers and button
+                            }else{
+                                Toast.makeText(UserProfileFragment.this.getContext(), "Error unfollowing the user.", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+                            UserProfileFragment.this.launchErrorConnectingToServer();
+                        }
+                    });
+                }
+            });
+        }else{ // If not following show the follow button
+            follow_button.setBackgroundResource(R.drawable.button_follow);
+            follow_button.setTextColor(Color.BLACK);
+            follow_button.setText(R.string.button_follow);
+            follow_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    IdObject id = new IdObject();
+                    id.id = idToSearch;
+                    Call<String> call = mTodoService.addFollowed(id); // The new follow is the user's profile you just searched
+                    call.enqueue(new Callback<String>() {
+                        @Override
+                        public void onResponse(Call<String> call, Response<String> response) {
+                            if(response.isSuccessful()){
+                                UserProfileFragmentDirections.ActionActionProfileSelf action = UserProfileFragmentDirections.actionActionProfileSelf();
+                                action.setIsPrivate(private_profile);
+                                action.setUserToSearch(idToSearch);
+                                Navigation.findNavController(view).navigate(action); // Update the profile with the new followers and button
+                            }else{
+                                Toast.makeText(UserProfileFragment.this.getContext(), "Error following the user.", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<String> call, Throwable t) {
+                            UserProfileFragment.this.launchErrorConnectingToServer();
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+    private void launchErrorConnectingToServer(){
         Toast.makeText(UserProfileFragment.this.getContext(), "Error connecting to server.", Toast.LENGTH_LONG).show();
     }
 

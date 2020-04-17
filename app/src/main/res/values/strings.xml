@@ -26,7 +26,7 @@
     <string name="text_user_profile_picture">User profile picture</string>
     <string name="button_logout">Log out</string>
     <string name="button_follow">Follow user</string>
-    <string name="button_unfollow">Unfollow user</string>
+    <string name="button_unfollow">Unfollow</string>
     <string name="button_following">Following</string>
 
     <string name="text_home">Home</string>
