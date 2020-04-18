@@ -35,6 +35,7 @@ import com.squareup.picasso.Picasso;
 
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
+import org.udg.pds.todoandroid.activity.AddComment;
 import org.udg.pds.todoandroid.activity.Login;
 import org.udg.pds.todoandroid.entity.IdObject;
 import org.udg.pds.todoandroid.entity.Publication;
@@ -383,6 +384,7 @@ public class UserProfileFragment extends Fragment {
         TextView owner;
         TextView nLikes;
         ImageView likeImage;
+        ImageView comment;
         boolean haDonatLike = false;
         ImageButton more_btn;
 
@@ -397,6 +399,7 @@ public class UserProfileFragment extends Fragment {
             nLikes = itemView.findViewById(R.id.item_nLikes);
             likeImage = itemView.findViewById(R.id.item_likeImage);
             more_btn = itemView.findViewById(R.id.more_publication_button);
+            comment = itemView.findViewById(R.id.comment_button);
         }
     }
 
@@ -563,6 +566,17 @@ public class UserProfileFragment extends Fragment {
                         });
                     }
                     updatePublicationList();
+                }
+            });
+
+            holder.comment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getActivity(), AddComment.class);
+                    Bundle b = new Bundle();
+                    b.putLong("id",list.get(position).id);
+                    intent.putExtras(b);
+                    startActivity(intent);
                 }
             });
 
