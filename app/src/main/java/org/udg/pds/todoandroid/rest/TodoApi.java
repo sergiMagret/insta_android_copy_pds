@@ -50,12 +50,29 @@ public interface TodoApi {
     @GET("/tasks/{id}")
     Call<Task> getTask(@Path("id") String id);
 
-    // Com saber quan cridar a un /self o a un /{id} des de l'aplicació??
     @GET("/users/self")
     Call<User> getUserProfile();
 
     @GET("/users/{id}")
     Call<User> getUserProfileByID(@Path("id") Long id);
+
+    @POST("/users/self/followed")
+    Call<String> addFollowed(@Body IdObject id);
+
+    @DELETE("/users/self/followed/{id}")
+    Call<String> deleteFollowed(@Path("id") Long user);
+
+    @GET("/users/self/followed")
+    Call<List<User>> getFollowed();
+
+    @GET("/users/self/followers")
+    Call<List<User>> getFollowers();
+
+    @GET("/users/{id}/followed")
+    Call<List<User>> getFollowedById(@Path("id") Long id);
+
+    @GET("/users/{id}/followers")
+    Call<List<User>> getFollowersById(@Path("id") Long id);
 
     @GET("/users/self/publications")
     Call<List<Publication>> getUserPublications();
