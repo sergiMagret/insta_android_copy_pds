@@ -25,6 +25,9 @@
     <string name="text_user_description">Description</string>
     <string name="text_user_profile_picture">User profile picture</string>
     <string name="button_logout">Log out</string>
+    <string name="button_follow">Follow user</string>
+    <string name="button_unfollow">Unfollow</string>
+    <string name="button_following">Following</string>
 
     <string name="text_home">Home</string>
     <string name="text_add">Add</string>
@@ -42,5 +45,10 @@
     <string name="item_description">Description</string>
     <string name="item_owner">Owner</string>
     <string name="item_timeline">Timeline</string>
+    <string name="item_likes">no likes</string>
+    <string name="item_list_name">List name</string>
     <string name="delete_publication">Delete</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

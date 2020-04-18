@@ -24,6 +24,21 @@
             app:layout_constraintStart_toStartOf="@+id/user_profile_picture"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <Button
+            android:id="@+id/logout_interface_button"
+            android:layout_width="80dp"
+            android:layout_height="26dp"
+            android:layout_marginEnd="8dp"
+            android:background="#61FF4444"
+            android:text="@string/button_logout"
+            android:textAllCaps="false"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@+id/guideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.62" />
+
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
             android:layout_width="wrap_content"
@@ -31,19 +46,6 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.20" />
 
-        <Button
-            android:id="@+id/logout_interface_button"
-            android:layout_width="85dp"
-            android:layout_height="26dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="8dp"
-            android:background="@android:color/white"
-            android:text="@string/button_logout"
-            android:textAllCaps="false"
-            android:textColor="@android:color/black"
-            android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="@+id/user_description"
-            app:layout_constraintTop_toBottomOf="@+id/user_description" />
         <ImageView
             android:id="@+id/user_profile_picture"
             android:layout_width="93dp"
@@ -55,11 +57,11 @@
             tools:srcCompat="@tools:sample/avatars" />
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:baselineAligned="false"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="@+id/user_profile_picture"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/user_profile_picture"
             app:layout_constraintTop_toTopOf="@+id/guideline">
@@ -101,7 +103,9 @@
                 android:id="@+id/layout_number_following"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true">
 
                 <TextView
                     android:id="@+id/user_number_following"
@@ -133,7 +137,9 @@
                 android:id="@+id/layout_number_followers"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true">
 
                 <TextView
                     android:id="@+id/user_number_followers"
@@ -187,6 +193,25 @@
             app:layout_constraintStart_toStartOf="@+id/user_profile_picture"
             app:layout_constraintTop_toBottomOf="@+id/user_profile_picture"
             tools:text="@string/text_user_name" />
+
+        <Button
+            android:id="@+id/follow_unfollow_button"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/button_follow"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="@string/button_follow"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@color/design_default_color_on_secondary"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@+id/user_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/user_profile_picture"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
