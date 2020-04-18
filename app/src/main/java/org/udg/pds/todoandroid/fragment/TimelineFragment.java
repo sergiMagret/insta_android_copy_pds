@@ -4,13 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +26,8 @@ import com.squareup.picasso.Picasso;
 
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
+import org.udg.pds.todoandroid.activity.AddComment;
+import org.udg.pds.todoandroid.activity.register;
 import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.rest.TodoApi;
 import org.udg.pds.todoandroid.util.Global;
@@ -123,6 +123,7 @@ public class TimelineFragment extends Fragment {
         TextView description;
         TextView nLikes;
         ImageView likeImage;
+        ImageView comment;
         boolean haDonatLike = false;
 
         View view;
@@ -135,6 +136,7 @@ public class TimelineFragment extends Fragment {
             description = itemView.findViewById(R.id.item_description);
             nLikes = itemView.findViewById(R.id.item_nLikes);
             likeImage = itemView.findViewById(R.id.item_likeImage);
+            comment = itemView.findViewById(R.id.comment_button);
         }
     }
 
@@ -309,6 +311,17 @@ public class TimelineFragment extends Fragment {
                     action.setIsPrivate(false);
                     action.setUserToSearch(list.get(position).userId);
                     Navigation.findNavController(view).navigate(action);
+                }
+            });
+
+            holder.comment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(getActivity(), AddComment.class);
+                    Bundle b = new Bundle();
+                    b.putLong("id",list.get(position).id);
+                    intent.putExtras(b);
+                    startActivity(intent);
                 }
             });
         }
