@@ -1,7 +1,6 @@
 package org.udg.pds.todoandroid.rest;
 
-import android.util.Pair;
-
+import org.udg.pds.todoandroid.entity.Comment;
 import org.udg.pds.todoandroid.entity.IdObject;
 import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.entity.PublicationPost;
@@ -46,6 +45,9 @@ public interface TodoApi {
 
     @GET("/users")
     Call<List<User>> getUsers(@Query("text") String text, @Query("page") Integer page, @Query("size") Integer size);
+
+    @GET("/publications/{id}/comments")
+    Call<List<Comment>> getComments(@Path("id") Long publicationId, @Query("page") Integer page, @Query("size") Integer size);
 
     @GET("/tasks/{id}")
     Call<Task> getTask(@Path("id") String id);
