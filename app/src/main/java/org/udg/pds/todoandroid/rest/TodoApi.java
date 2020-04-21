@@ -1,6 +1,7 @@
 package org.udg.pds.todoandroid.rest;
 
 import org.udg.pds.todoandroid.entity.Comment;
+import org.udg.pds.todoandroid.entity.CommentPost;
 import org.udg.pds.todoandroid.entity.IdObject;
 import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.entity.PublicationPost;
@@ -93,6 +94,9 @@ public interface TodoApi {
 
     @POST("/publications/{id}/like")
     Call <Publication> addLike(@Path("id") Long id);
+
+    @POST("/publications/{id}/comments")
+    Call <String> sendComment(@Body CommentPost c);
 
     @DELETE("/publications/{id}/delLike")
     Call <Publication> deleteLike(@Path("id") Long id);

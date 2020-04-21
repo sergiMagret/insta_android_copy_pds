@@ -7,10 +7,11 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     >
 
     <TextView
-        android:id="@+id/text_prova"
+        android:id="@+id/text_inici"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
@@ -21,13 +22,25 @@
 
     <EditText
         android:id="@+id/comment_publication"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="325dp"
+        android:layout_height="45dp"
         android:ems="10"
-        android:hint=" Add a comment..."
+        android:hint="@string/edit_text_comment"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintEnd_toStartOf="@+id/comment_button" />
+
+    <ImageButton
+        android:id="@+id/send_comment"
+        android:layout_width="38dp"
+        android:layout_height="53dp"
+        android:layout_below="@+id/item_publication"
+        android:layout_alignParentEnd="true"
+        android:background="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="20dp"
+        app:srcCompat="@mipmap/ic_send_comment" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle_view_comments"
@@ -37,7 +50,7 @@
         app:layout_constraintBottom_toTopOf="@+id/comment_publication"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_prova" />
+        app:layout_constraintTop_toBottomOf="@+id/text_inici" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
