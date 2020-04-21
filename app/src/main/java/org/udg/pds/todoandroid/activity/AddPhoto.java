@@ -18,6 +18,7 @@ import org.udg.pds.todoandroid.rest.TodoApi;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -47,10 +48,11 @@ public class AddPhoto extends AppCompatActivity {
     }
 
     public void afegir (String imatge, String comentari){
+        Calendar fecha = new GregorianCalendar();
         PublicationPost p= new PublicationPost();
         p.photo = imatge;
         p.description = comentari;
-        p.date = new Date(2020, Calendar.APRIL, 28);
+        p.date = new Date(fecha.get(Calendar.YEAR), fecha.get(Calendar.MONTH), fecha.get(Calendar.DAY_OF_MONTH));
         Call<String> call = mTodoService.postPublication(p);
         call.enqueue(new Callback<String>() {
             @Override
