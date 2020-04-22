@@ -30,6 +30,7 @@ import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,6 +41,7 @@ import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.activity.AddComment;
 import org.udg.pds.todoandroid.activity.Login;
+import org.udg.pds.todoandroid.activity.ModifyProfile;
 import org.udg.pds.todoandroid.entity.IdObject;
 import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.entity.User;
@@ -86,6 +88,7 @@ public class UserProfileFragment extends Fragment {
 
         // Configuració botó de logout
         Button logout_interface_btn = (Button) view.findViewById(R.id.logout_interface_button);
+        Button modify_profile = (Button) view.findViewById(R.id.ModifyProfileButton);
         if(private_profile){
             logout_interface_btn.setVisibility(View.VISIBLE);
             logout_interface_btn.setOnClickListener(new View.OnClickListener(){
@@ -113,6 +116,14 @@ public class UserProfileFragment extends Fragment {
                             dialog.cancel();
                         }
                     });
+                }
+            });
+            modify_profile.setVisibility(View.VISIBLE);
+            modify_profile.setOnClickListener(new View.OnClickListener(){
+                public void onClick(View view){
+                    NavDirections action =
+                        UserProfileFragmentDirections.actionActionProfileToModifyProfile();
+                    Navigation.findNavController(view).navigate(action);
                 }
             });
         }

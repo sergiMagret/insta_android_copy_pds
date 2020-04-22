@@ -56,6 +56,7 @@ public class register extends AppCompatActivity {
                 public void onResponse(Call<User> call, Response<User> response) {
                     if (response.isSuccessful()) {
                         register.this.startActivity(new Intent(register.this, NavigationActivity.class));
+                        register.this.startActivity(new Intent(register.this, ModifyProfile.class));
                         register.this.finish();
                     } else {
                         Toast toast = Toast.makeText(register.this, "Error register bad response", Toast.LENGTH_SHORT);
