@@ -1,12 +1,15 @@
 package org.udg.pds.todoandroid.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.entity.Comment;
+import org.udg.pds.todoandroid.entity.CommentPost;
 import org.udg.pds.todoandroid.entity.User;
 import org.udg.pds.todoandroid.rest.TodoApi;
 
@@ -43,8 +47,51 @@ public class AddComment extends AppCompatActivity {
         mTodoService = ((TodoApp) this.getApplication()).getAPI();
         Bundle b = getIntent().getExtras();
         publicationId = b.getLong("id");
+        ImageButton send_btn = findViewById(R.id.send_comment);
+        send_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextView comment = AddComment.this.findViewById(R.id.comment_publication);
+                AddComment.this.sendComment(comment.getText().toString(),publicationId);
+            }
+        });
         //Toast.makeText(getApplicationContext(), "id: " + publicationId, Toast.LENGTH_LONG).show();
 
+
+    }
+    void sendComment(String text, Long publicationId){
+        if(text.length()==0){
+            Toast.makeText(getApplicationContext(), "Write a comment first", Toast.LENGTH_LONG).show();
+        }
+        else {
+            CommentPost c = new CommentPost();
+            c.text = text;
+            c.publicationId = publicationId;
+            Call<String> call = mTodoService.sendComment(c);
+            call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    if(response.isSuccessful()){
+                        Intent intent = new Intent(AddComment.this, AddComment.class);
+                        Bundle b = new Bundle();
+                        b.putLong("id",publicationId);
+                        intent.putExtras(b);
+                        finish();
+                        startActivity(intent);
+                    }
+                    else{
+                        Toast toast = Toast.makeText(AddComment.this, "Error sendComment bad response", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    Toast toast = Toast.makeText(AddComment.this, "Error sendComment no response", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            });
+        }
 
     }
 
