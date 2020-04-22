@@ -3,11 +3,14 @@ package org.udg.pds.todoandroid.fragment;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Layout;
+import android.util.Base64;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -275,6 +278,7 @@ public class UserProfileFragment extends Fragment {
 
         // Per posar la foto de perfil.
         ImageView profilePicture = view.findViewById(R.id.user_profile_picture);
+
         Picasso.get().load(u.profilePicture).into(profilePicture);
 
         // Per al boto de follow/unfollow
@@ -445,7 +449,10 @@ public class UserProfileFragment extends Fragment {
                 }
             });
 
-            Picasso.get().load(list.get(position).photo).into(holder.publication);
+            byte[] decodeString = Base64.decode(list.get(position).photo, Base64.DEFAULT);
+            Bitmap decodeByte = BitmapFactory.decodeByteArray(decodeString,0,decodeString.length);
+            holder.publication.setImageBitmap(decodeByte);
+            //Picasso.get().load(list.get(position).photo).into(holder.publication);
             holder.description.setText(list.get(position).description);
             holder.owner.setText(list.get(position).userUsername);
 
