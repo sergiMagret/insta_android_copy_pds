@@ -2,8 +2,11 @@ package org.udg.pds.todoandroid.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -181,7 +184,11 @@ public class TimelineFragment extends Fragment {
                 }
             });
             holder.owner.setText(list.get(position).userUsername);
-            Picasso.get().load(list.get(position).photo).into(holder.publication);
+
+            byte[] decodeString = Base64.decode(list.get(position).photo, Base64.DEFAULT);
+            Bitmap decodeByte = BitmapFactory.decodeByteArray(decodeString,0,decodeString.length);
+            holder.publication.setImageBitmap(decodeByte);
+            //Picasso.get().load(list.get(position).photo).into(holder.publication);
             holder.description.setText(list.get(position).description);
 
             /*holder.view.setOnClickListener(new View.OnClickListener(){
