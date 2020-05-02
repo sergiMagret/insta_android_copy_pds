@@ -86,7 +86,7 @@ public interface TodoApi {
     Call<List<Publication>> getUserPublicationsByID(@Path("id") Long id);
 
     @GET("/publications")
-    Call<List<Publication>> getPublications();
+    Call<List<Publication>> getPublications(@Query("page") Integer page, @Query("size") Integer size);
 
     @POST("/publications")
     Call<String> postPublication(@Body PublicationPost p);
