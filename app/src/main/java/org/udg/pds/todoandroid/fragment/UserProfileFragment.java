@@ -3,11 +3,14 @@ package org.udg.pds.todoandroid.fragment;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Layout;
+import android.util.Base64;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +30,7 @@ import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,6 +41,7 @@ import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.activity.AddComment;
 import org.udg.pds.todoandroid.activity.Login;
+import org.udg.pds.todoandroid.activity.ModifyProfile;
 import org.udg.pds.todoandroid.entity.IdObject;
 import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.entity.User;
@@ -83,6 +88,7 @@ public class UserProfileFragment extends Fragment {
 
         // Configuració botó de logout
         Button logout_interface_btn = (Button) view.findViewById(R.id.logout_interface_button);
+        Button modify_profile = (Button) view.findViewById(R.id.ModifyProfileButton);
         if(private_profile){
             logout_interface_btn.setVisibility(View.VISIBLE);
             logout_interface_btn.setOnClickListener(new View.OnClickListener(){
@@ -110,6 +116,14 @@ public class UserProfileFragment extends Fragment {
                             dialog.cancel();
                         }
                     });
+                }
+            });
+            modify_profile.setVisibility(View.VISIBLE);
+            modify_profile.setOnClickListener(new View.OnClickListener(){
+                public void onClick(View view){
+                    NavDirections action =
+                        UserProfileFragmentDirections.actionActionProfileToModifyProfile();
+                    Navigation.findNavController(view).navigate(action);
                 }
             });
         }
@@ -275,6 +289,7 @@ public class UserProfileFragment extends Fragment {
 
         // Per posar la foto de perfil.
         ImageView profilePicture = view.findViewById(R.id.user_profile_picture);
+
         Picasso.get().load(u.profilePicture).into(profilePicture);
 
         // Per al boto de follow/unfollow
@@ -445,7 +460,10 @@ public class UserProfileFragment extends Fragment {
                 }
             });
 
-            Picasso.get().load(list.get(position).photo).into(holder.publication);
+            byte[] decodeString = Base64.decode(list.get(position).photo, Base64.DEFAULT);
+            Bitmap decodeByte = BitmapFactory.decodeByteArray(decodeString,0,decodeString.length);
+            holder.publication.setImageBitmap(decodeByte);
+            //Picasso.get().load(list.get(position).photo).into(holder.publication);
             holder.description.setText(list.get(position).description);
             holder.owner.setText(list.get(position).userUsername);
 

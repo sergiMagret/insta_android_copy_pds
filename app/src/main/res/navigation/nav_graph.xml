@@ -45,6 +45,9 @@
         <action
             android:id="@+id/action_action_profile_self"
             app:destination="@id/action_profile" />
+        <action
+            android:id="@+id/action_action_profile_to_modifyProfile"
+            app:destination="@id/modifyProfile" />
         <!-- <argument
              android:name="user_to_search"
              app:argType="Long"
@@ -100,5 +103,10 @@
             app:argType="string"
             android:defaultValue="error" />
     </fragment>
+    <activity
+        android:id="@+id/modifyProfile"
+        android:name="org.udg.pds.todoandroid.activity.ModifyProfile"
+        android:label="activity_modify_profile"
+        tools:layout="@layout/activity_modify_profile" />
 
 </navigation>

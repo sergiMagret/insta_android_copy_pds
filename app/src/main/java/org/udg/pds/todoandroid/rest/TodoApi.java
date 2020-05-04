@@ -3,6 +3,7 @@ package org.udg.pds.todoandroid.rest;
 import org.udg.pds.todoandroid.entity.Comment;
 import org.udg.pds.todoandroid.entity.CommentPost;
 import org.udg.pds.todoandroid.entity.IdObject;
+import org.udg.pds.todoandroid.entity.ModifiedData;
 import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.entity.PublicationPost;
 import org.udg.pds.todoandroid.entity.Task;
@@ -17,6 +18,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -84,7 +86,7 @@ public interface TodoApi {
     Call<List<Publication>> getUserPublicationsByID(@Path("id") Long id);
 
     @GET("/publications")
-    Call<List<Publication>> getPublications();
+    Call<List<Publication>> getPublications(@Query("page") Integer page, @Query("size") Integer size);
 
     @POST("/publications")
     Call<String> postPublication(@Body PublicationPost p);
@@ -103,5 +105,8 @@ public interface TodoApi {
 
     @DELETE("/publications/{id}")
     Call<String> deletePublication(@Path("id") Long id);
+
+    @PUT("/users/self")
+    Call<String> modifyProfile(@Body ModifiedData data);
 }
 
