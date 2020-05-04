@@ -355,7 +355,7 @@ public class UserProfileFragment extends Fragment {
 
     public void updatePublicationList(){
         Call<List<Publication>> call = null;
-        if(idToSearch == -1) {
+        if(private_profile) {
             call = mTodoService.getUserPublications();
         }else {
             call = mTodoService.getUserPublicationsByID(idToSearch);
