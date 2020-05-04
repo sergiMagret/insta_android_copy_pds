@@ -72,6 +72,7 @@ public class Login extends AppCompatActivity {
             public void onResponse(Call<User> call, Response<User> response) {
 
                 if (response.isSuccessful()) {
+                    TodoApp.loggedUserID = response.body().id; // Before launching the main app we store the user's id
                     Login.this.startActivity(new Intent(Login.this, NavigationActivity.class));
                     Login.this.finish();
                 } else {
