@@ -24,13 +24,9 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
-import com.squareup.picasso.Picasso;
-
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.activity.AddComment;
-import org.udg.pds.todoandroid.activity.register;
 import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.rest.TodoApi;
 import org.udg.pds.todoandroid.util.Global;
@@ -49,6 +45,9 @@ public class TimelineFragment extends Fragment {
     RecyclerView mRecyclerView;
     private TRAdapter mAdapter;
     NavController navController = null;
+
+    Integer elemPerPagina=20;
+    Integer elemDemanats;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
@@ -73,6 +72,35 @@ public class TimelineFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 
         updatePublicationList();
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (!recyclerView.canScrollVertically(1) && newState==RecyclerView.SCROLL_STATE_IDLE && mAdapter.getItemCount()==elemDemanats ) {
+
+                    Call<List<Publication>> call = mTodoService.getPublications((elemDemanats/elemPerPagina),elemPerPagina);
+                    elemDemanats=elemDemanats+elemPerPagina;
+
+                    call.enqueue(new Callback<List<Publication>>() {
+                        @Override
+                        public void onResponse(Call<List<Publication>> call, Response<List<Publication>> response) {
+                            if (response.isSuccessful()) {
+                                addPublicationList(response.body());
+                            } else {
+                                Toast.makeText(TimelineFragment.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<Publication>> call, Throwable t) {
+
+                        }
+                    });
+
+                }
+            }
+        });
     }
 
     @Override
@@ -101,7 +129,8 @@ public class TimelineFragment extends Fragment {
 
     public void updatePublicationList() {
         Call<List<Publication>> call = null;
-        call = mTodoService.getPublications();
+        call = mTodoService.getPublications(0,elemPerPagina);
+        elemDemanats=elemPerPagina;
 
         call.enqueue(new Callback<List<Publication>>() {
             @Override
@@ -140,6 +169,11 @@ public class TimelineFragment extends Fragment {
             nLikes = itemView.findViewById(R.id.item_nLikes);
             likeImage = itemView.findViewById(R.id.item_likeImage);
             comment = itemView.findViewById(R.id.comment_button);
+        }
+    }
+    public void addPublicationList(List<Publication> tl) {
+        for (Publication t : tl) {
+            mAdapter.add(t);
         }
     }
 
