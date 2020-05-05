@@ -26,7 +26,7 @@ import static com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKN
 public class TodoApp extends Application {
 
     TodoApi mTodoService;
-
+    public static Long loggedUserID; // With this variable we can know the userID everywhere in the app.
     @Override
     public void onCreate() {
         super.onCreate();

@@ -80,10 +80,11 @@ public class UserProfileFragment extends Fragment {
         super.onCreate(savedInstance);
         view = inflater.inflate(R.layout.fragment_user_profile, container, false);
         try {
-            private_profile = getArguments().getBoolean("is_private");
             idToSearch = getArguments().getLong("user_to_search");
+            private_profile = getArguments().getBoolean("is_private");
+            private_profile = private_profile || (idToSearch == TodoApp.loggedUserID); // Now the profile will be private IF is set to or the user to search (from another fragment) is the same as the logged user's id.
         }catch (NullPointerException e){
-            Toast.makeText(UserProfileFragment.this.getContext(), "Error loading user profile, no arguments", Toast.LENGTH_LONG).show();
+            Toast.makeText(UserProfileFragment.this.getContext(), "Error loading user profile, bad arguments", Toast.LENGTH_LONG).show();
         }
 
         // Configuració botó de logout
@@ -168,13 +169,6 @@ public class UserProfileFragment extends Fragment {
         mAdapter = new TRAdapter(this.getActivity().getApplication());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-
-        try {
-            private_profile = getArguments().getBoolean("is_private");
-            idToSearch = getArguments().getLong("user_to_search");
-        }catch (NullPointerException e){
-            Toast.makeText(UserProfileFragment.this.getContext(), "Error loading user profile, no arguments", Toast.LENGTH_LONG).show();
-        }
 
         if(private_profile) {
             Button follow_button = view.findViewById(R.id.follow_unfollow_button);
@@ -370,7 +364,7 @@ public class UserProfileFragment extends Fragment {
 
     public void updatePublicationList(){
         Call<List<Publication>> call = null;
-        if(idToSearch == -1) {
+        if(private_profile) {
             call = mTodoService.getUserPublications();
         }else {
             call = mTodoService.getUserPublicationsByID(idToSearch);
