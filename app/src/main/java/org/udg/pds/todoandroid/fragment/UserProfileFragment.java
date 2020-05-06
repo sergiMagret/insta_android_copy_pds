@@ -9,16 +9,13 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Layout;
 import android.util.Base64;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,7 +38,6 @@ import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.activity.AddComment;
 import org.udg.pds.todoandroid.activity.Login;
-import org.udg.pds.todoandroid.activity.ModifyProfile;
 import org.udg.pds.todoandroid.entity.IdObject;
 import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.entity.User;
@@ -67,6 +63,9 @@ public class UserProfileFragment extends Fragment {
 
     private boolean private_profile;
     long idToSearch;
+
+    Integer elemPerPagina=20;
+    Integer elemDemanats;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -209,12 +208,47 @@ public class UserProfileFragment extends Fragment {
         }
 
         updatePublicationList();
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (!recyclerView.canScrollVertically(1) && newState==RecyclerView.SCROLL_STATE_IDLE && mAdapter.getItemCount()==elemDemanats ) {
+
+                    Call<List<Publication>> call = mTodoService.getPublications((elemDemanats/elemPerPagina),elemPerPagina);
+                    elemDemanats=elemDemanats+elemPerPagina;
+
+                    call.enqueue(new Callback<List<Publication>>() {
+                        @Override
+                        public void onResponse(Call<List<Publication>> call, Response<List<Publication>> response) {
+                            if (response.isSuccessful()) {
+                                addPublicationList(response.body());
+                            } else {
+                                Toast.makeText(UserProfileFragment.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<Publication>> call, Throwable t) {
+
+                        }
+                    });
+
+                }
+            }
+        });
     }
 
     @Override
     public void onResume(){
         super.onResume();
         //this.updatePublicationList();
+    }
+
+    public void addPublicationList(List<Publication> tl) {
+        for (Publication t : tl) {
+            mAdapter.add(t);
+        }
     }
 
     public void showPublicationList(List<Publication> pl){
@@ -365,7 +399,8 @@ public class UserProfileFragment extends Fragment {
     public void updatePublicationList(){
         Call<List<Publication>> call = null;
         if(private_profile) {
-            call = mTodoService.getUserPublications();
+            call = mTodoService.getUserPublications(0,elemPerPagina);
+            elemDemanats=elemPerPagina;
         }else {
             call = mTodoService.getUserPublicationsByID(idToSearch);
         }

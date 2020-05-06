@@ -80,7 +80,7 @@ public interface TodoApi {
     Call<List<User>> getFollowersById(@Path("id") Long id);
 
     @GET("/users/self/publications")
-    Call<List<Publication>> getUserPublications();
+    Call<List<Publication>> getUserPublications(@Query("page") Integer page, @Query("size") Integer size);
 
     @GET("/users/{id}/publications")
     Call<List<Publication>> getUserPublicationsByID(@Path("id") Long id);
