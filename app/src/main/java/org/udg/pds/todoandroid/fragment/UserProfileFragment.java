@@ -214,8 +214,13 @@ public class UserProfileFragment extends Fragment {
                 super.onScrollStateChanged(recyclerView, newState);
 
                 if (!recyclerView.canScrollVertically(1) && newState==RecyclerView.SCROLL_STATE_IDLE && mAdapter.getItemCount()==elemDemanats ) {
-
-                    Call<List<Publication>> call = mTodoService.getPublications((elemDemanats/elemPerPagina),elemPerPagina);
+                    Call<List<Publication>> call;
+                    if((private_profile)) {
+                        call = mTodoService.getUserPublications((elemDemanats / elemPerPagina), elemPerPagina);
+                    }
+                    else {
+                        call=mTodoService.getUserPublicationsByID(idToSearch,(elemDemanats / elemPerPagina), elemPerPagina);
+                    }
                     elemDemanats=elemDemanats+elemPerPagina;
 
                     call.enqueue(new Callback<List<Publication>>() {
@@ -402,7 +407,8 @@ public class UserProfileFragment extends Fragment {
             call = mTodoService.getUserPublications(0,elemPerPagina);
             elemDemanats=elemPerPagina;
         }else {
-            call = mTodoService.getUserPublicationsByID(idToSearch);
+            call = mTodoService.getUserPublicationsByID(idToSearch, 0, elemPerPagina);
+            elemDemanats=elemPerPagina;
         }
 
         call.enqueue(new Callback<List<Publication>>() {

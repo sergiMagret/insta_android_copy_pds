@@ -41,7 +41,6 @@ public interface TodoApi {
     @POST("/tasks")
     Call<IdObject> addTask(@Body Task task);
 
-
     @GET("/tasks")
     Call<List<Task>> getTasks();
 
@@ -83,7 +82,7 @@ public interface TodoApi {
     Call<List<Publication>> getUserPublications(@Query("page") Integer page, @Query("size") Integer size);
 
     @GET("/users/{id}/publications")
-    Call<List<Publication>> getUserPublicationsByID(@Path("id") Long id);
+    Call<List<Publication>> getUserPublicationsByID(@Path("id") Long id,@Query("page") Integer page, @Query("size") Integer size);
 
     @GET("/publications")
     Call<List<Publication>> getPublications(@Query("page") Integer page, @Query("size") Integer size);
