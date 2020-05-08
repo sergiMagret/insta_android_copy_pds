@@ -154,6 +154,7 @@ public class TimelineFragment extends Fragment {
         ImageView publication;
         TextView description;
         TextView nLikes;
+        TextView nComments;
         ImageView likeImage;
         ImageView comment;
         boolean haDonatLike = false;
@@ -167,6 +168,7 @@ public class TimelineFragment extends Fragment {
             publication = itemView.findViewById(R.id.item_publication);
             description = itemView.findViewById(R.id.item_description);
             nLikes = itemView.findViewById(R.id.item_nLikes);
+            nComments = itemView.findViewById(R.id.item_nComments);
             likeImage = itemView.findViewById(R.id.item_likeImage);
             comment = itemView.findViewById(R.id.comment_button);
         }
@@ -214,6 +216,22 @@ public class TimelineFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<List<Integer>> call, Throwable t) {
+                    TimelineFragment.this.launchErrorConnectingToServer();
+                }
+            });
+
+            Call<Integer> call2 = mTodoService.getNumComments(list.get(position).id);
+
+            call2.enqueue(new Callback<Integer>() {
+                @Override
+                public void onResponse(Call<Integer> call, Response<Integer> response) {
+                    if (response.isSuccessful())
+                        holder.nComments.setText(String.valueOf(response.body()));
+                    else
+                        Toast.makeText(TimelineFragment.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
+                }
+                @Override
+                public void onFailure(Call<Integer> call, Throwable t) {
                     TimelineFragment.this.launchErrorConnectingToServer();
                 }
             });

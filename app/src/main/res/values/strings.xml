@@ -46,6 +46,7 @@
     <string name="item_owner">Owner</string>
     <string name="item_timeline">Timeline</string>
     <string name="item_likes">no likes</string>
+    <string name="item_comments">no comment</string>
     <string name="item_list_name">List name</string>
     <string name="delete_publication">Delete</string>
 
