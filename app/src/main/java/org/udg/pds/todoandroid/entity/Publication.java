@@ -16,4 +16,5 @@ public class Publication {
     public Date date;
     public Long userId;
     public String userUsername;
+    public List<String> hashtags;
 }
