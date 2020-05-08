@@ -93,6 +93,10 @@ public interface TodoApi {
     @GET("/publications/{id}/likes")
     Call <List<Integer>> getLikes(@Path("id") Long id);
 
+    @GET("/publications/{id}/nComments")
+    Call <Integer> getNumComments(@Path("id") Long id);
+
+
     @POST("/publications/{id}/like")
     Call <Publication> addLike(@Path("id") Long id);
 
