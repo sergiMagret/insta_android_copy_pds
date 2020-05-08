@@ -23,6 +23,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
@@ -70,6 +71,15 @@ public class TimelineFragment extends Fragment {
         mAdapter = new TimelineFragment.TRAdapter(this.getActivity().getApplication());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+
+        SwipeRefreshLayout swipeRefreshLayout = getView().findViewById(R.id.refresh_timeline);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updatePublicationList();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         updatePublicationList();
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
