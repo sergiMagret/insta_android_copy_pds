@@ -31,6 +31,7 @@ import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.squareup.picasso.Picasso;
 
@@ -169,44 +170,17 @@ public class UserProfileFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 
-        if(private_profile) {
-            Button follow_button = view.findViewById(R.id.follow_unfollow_button);
-            follow_button.setVisibility(View.INVISIBLE);
-            Call<User> call = mTodoService.getUserProfile();
-            call.enqueue(new Callback<User>() {
-                @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    if(response.isSuccessful() && response.body() != null){
-                        UserProfileFragment.this.updateProfileInfo(response);
-                    }else{
-                        Toast.makeText(UserProfileFragment.this.getContext(), "Error reading profile information.", Toast.LENGTH_LONG).show();
-                    }
-                }
+        SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.refresh_profile);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateProfileInfo();
+                updatePublicationList();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
-                @Override
-                public void onFailure(Call<User> call, Throwable t) {
-                    UserProfileFragment.this.launchErrorConnectingToServer();
-                }
-            });
-        }else{
-            Call<User> call = mTodoService.getUserProfileByID(idToSearch);
-            call.enqueue(new Callback<User>() {
-                @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        UserProfileFragment.this.updateProfileInfo(response);
-                    } else {
-                        Toast.makeText(UserProfileFragment.this.getContext(), "Error reading profile information.", Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<User> call, Throwable t) {
-                    UserProfileFragment.this.launchErrorConnectingToServer();
-                }
-            });
-        }
-
+        updateProfileInfo();
         updatePublicationList();
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -270,7 +244,47 @@ public class UserProfileFragment extends Fragment {
         }
     }
 
-    private void updateProfileInfo(Response<User> response){
+    private void updateProfileInfo(){
+        if(private_profile) {
+            Button follow_button = view.findViewById(R.id.follow_unfollow_button);
+            follow_button.setVisibility(View.INVISIBLE);
+            Call<User> call = mTodoService.getUserProfile();
+            call.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    if(response.isSuccessful() && response.body() != null){
+                        UserProfileFragment.this.showProfileInfo(response);
+                    }else{
+                        Toast.makeText(UserProfileFragment.this.getContext(), "Error reading profile information.", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    UserProfileFragment.this.launchErrorConnectingToServer();
+                }
+            });
+        }else{
+            Call<User> call = mTodoService.getUserProfileByID(idToSearch);
+            call.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        UserProfileFragment.this.showProfileInfo(response);
+                    } else {
+                        Toast.makeText(UserProfileFragment.this.getContext(), "Error reading profile information.", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    UserProfileFragment.this.launchErrorConnectingToServer();
+                }
+            });
+        }
+    }
+
+    private void showProfileInfo(Response<User> response){
         User u = response.body();
 
         // Per al nom de l'usuari
