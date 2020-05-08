@@ -105,7 +105,14 @@ public interface TodoApi {
     @DELETE("/publications/{id}")
     Call<String> deletePublication(@Path("id") Long id);
 
+    @DELETE("/publications/{publicationId}/delComment/{commentId}")
+    Call<String> deleteComment(@Path("publicationId") Long publicationId, @Path("commentId") Long commentId);
+
     @PUT("/users/self")
     Call<String> modifyProfile(@Body ModifiedData data);
+
+
+    @PUT("/publications/{publicationId}/editComment/{commentId}")
+    Call<Comment> editComment(@Path("publicationId") Long publicationId, @Path("commentId") Long commentId, @Body CommentPost cp);
 }
 

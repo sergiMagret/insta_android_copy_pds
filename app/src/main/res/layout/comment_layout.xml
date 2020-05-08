@@ -34,6 +34,32 @@
             android:text="TextView"
             android:textStyle="bold" />
 
+        <Button
+            android:id="@+id/edit_comment_button"
+            android:layout_width="70dp"
+            android:layout_height="25dp"
+            android:layout_below="@+id/text_text"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/transparent"
+            android:text="Edit"
+            android:textColor="@android:color/darker_gray" />
+
+        <ImageButton
+            android:id="@+id/delete_comment_button"
+            android:layout_width="wrap_content"
+            android:layout_height="22dp"
+            android:layout_below="@+id/text_text"
+            android:layout_alignParentRight="true"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="256dp"
+            android:layout_toEndOf="@+id/edit_comment_button"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_delete" />
+
 
     </RelativeLayout>
 
