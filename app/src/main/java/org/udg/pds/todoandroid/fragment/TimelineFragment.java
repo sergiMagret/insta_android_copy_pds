@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
+import android.renderscript.ScriptGroup;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import org.apache.commons.io.IOUtils;
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.activity.AddComment;
@@ -34,6 +36,12 @@ import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.rest.TodoApi;
 import org.udg.pds.todoandroid.util.Global;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -254,10 +262,11 @@ public class TimelineFragment extends Fragment {
 
             holder.owner.setText(list.get(position).userUsername);
 
+            /** VER IMAGENES **/
             byte[] decodeString = Base64.decode(list.get(position).photo, Base64.DEFAULT);
             Bitmap decodeByte = BitmapFactory.decodeByteArray(decodeString,0,decodeString.length);
             holder.publication.setImageBitmap(decodeByte);
-            //Picasso.get().load(list.get(position).photo).into(holder.publication);
+
             holder.description.setText(list.get(position).description);
 
             /*holder.view.setOnClickListener(new View.OnClickListener(){
