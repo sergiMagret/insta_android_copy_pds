@@ -67,16 +67,16 @@ public interface TodoApi {
     Call<String> deleteFollowed(@Path("id") Long user);
 
     @GET("/users/self/followed")
-    Call<List<User>> getFollowed();
+    Call<List<User>> getFollowed(@Query("page") Integer page, @Query("size") Integer size);
 
     @GET("/users/self/followers")
-    Call<List<User>> getFollowers();
+    Call<List<User>> getFollowers(@Query("page") Integer page, @Query("size") Integer size);
 
     @GET("/users/{id}/followed")
-    Call<List<User>> getFollowedById(@Path("id") Long id);
+    Call<List<User>> getFollowedById(@Path("id") Long id,@Query("page") Integer page, @Query("size") Integer size);
 
     @GET("/users/{id}/followers")
-    Call<List<User>> getFollowersById(@Path("id") Long id);
+    Call<List<User>> getFollowersById(@Path("id") Long id,@Query("page") Integer page, @Query("size") Integer size);
 
     @GET("/users/self/publications")
     Call<List<Publication>> getUserPublications(@Query("page") Integer page, @Query("size") Integer size);
