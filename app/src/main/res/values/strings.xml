@@ -48,6 +48,8 @@
     <string name="item_likes">no likes</string>
     <string name="item_list_name">List name</string>
     <string name="delete_publication">Delete</string>
+    <string name="add_username_tag">Enter username</string>
+    <string name="tag_username">Tag</string>
 
     <string name="comment">Comments</string>
     <string name="edit_text_comment"> Add a comment...</string>
