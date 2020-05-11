@@ -84,7 +84,7 @@ public class UserProfileFragment extends Fragment {
             private_profile = getArguments().getBoolean("is_private");
             private_profile = private_profile || (idToSearch == TodoApp.loggedUserID); // Now the profile will be private IF is set to or the user to search (from another fragment) is the same as the logged user's id.
         }catch (NullPointerException e){
-            Toast.makeText(UserProfileFragment.this.getContext(), "Error loading user profile, bad arguments", Toast.LENGTH_LONG).show();
+            //Toast.makeText(UserProfileFragment.this.getContext(), "Error loading user profile, bad arguments", Toast.LENGTH_LONG).show();
         }
 
         // Configuració botó de logout
@@ -658,45 +658,58 @@ public class UserProfileFragment extends Fragment {
         public void moreOptions(PublicationViewHolder holder, final int position){
             holder.more_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view){
-                    AlertDialog.Builder more_publication_dialog = new AlertDialog.Builder(holder.itemView.getContext());
-                    LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    View v = inflater.inflate(R.layout.more_publication_layout,null);
-                    Button delete_btn = (Button) v.findViewById(R.id.delete_publication_button);
-                    more_publication_dialog.setView(v);
-                    AlertDialog dialog = more_publication_dialog.create();
-                    dialog.show();
-                    dialog.getWindow().setLayout(600,220);
-                    delete_btn.setOnClickListener(new View.OnClickListener(){
-                        @Override
-                        public void onClick(View view){
-                            Call<String> call = mTodoService.deletePublication(list.get(position).id);
-                            call.enqueue(new Callback<String>() {
-                                @Override
-                                public void onResponse(Call<String> call, Response<String> response) {
+                public void onClick(View view) {
+                    try {
+                        idToSearch = getArguments().getLong("user_to_search");
+                        private_profile = getArguments().getBoolean("is_private");
+                        private_profile = private_profile || (idToSearch == TodoApp.loggedUserID); // Now the profile will be private IF is set to or the user to search (from another fragment) is the same as the logged user's id.
+                    } catch (NullPointerException e) {
+                        //Toast.makeText(UserProfileFragment.this.getContext(), "Error loading user profile, bad arguments", Toast.LENGTH_LONG).show();
+                    }
+                    if (private_profile) {
+                        AlertDialog.Builder more_publication_dialog = new AlertDialog.Builder(holder.itemView.getContext());
+                        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View v = inflater.inflate(R.layout.more_publication_layout, null);
+                        Button delete_btn = (Button) v.findViewById(R.id.delete_publication_button);
 
-                                    if (response.isSuccessful()) {
-                                        updatePublicationList();
-                                        dialog.cancel();
-                                        Toast toast = Toast.makeText(context, "Publication deleted", Toast.LENGTH_SHORT);
-                                        toast.show();
-                                    } else {
+                        more_publication_dialog.setView(v);
+
+
+                        AlertDialog dialog = more_publication_dialog.create();
+                        dialog.show();
+                        dialog.getWindow().setLayout(600, 220);
+                        delete_btn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Call<String> call = mTodoService.deletePublication(list.get(position).id);
+                                call.enqueue(new Callback<String>() {
+                                    @Override
+                                    public void onResponse(Call<String> call, Response<String> response) {
+
+                                        if (response.isSuccessful()) {
+                                            updatePublicationList();
+                                            dialog.cancel();
+                                            Toast toast = Toast.makeText(context, "Publication deleted", Toast.LENGTH_SHORT);
+                                            toast.show();
+                                        } else {
+                                            Toast toast = Toast.makeText(context, "Error deleting publication", Toast.LENGTH_SHORT);
+                                            toast.show();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<String> call, Throwable t) {
                                         Toast toast = Toast.makeText(context, "Error deleting publication", Toast.LENGTH_SHORT);
                                         toast.show();
                                     }
-                                }
+                                });
+                                remove(list.get(position));
+                            }
+                        });
 
-                                @Override
-                                public void onFailure(Call<String> call, Throwable t){
-                                    Toast toast = Toast.makeText(context, "Error deleting publication", Toast.LENGTH_SHORT);
-                                    toast.show();
-                                }
-                            });
-                            remove(list.get(position));
-                        }
-                    });
-
+                    }
                 }
+
             });
         }
 
