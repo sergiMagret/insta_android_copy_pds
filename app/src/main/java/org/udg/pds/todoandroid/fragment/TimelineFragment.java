@@ -26,6 +26,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.squareup.picasso.Picasso;
+
 import org.apache.commons.io.IOUtils;
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
@@ -42,6 +44,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -263,9 +266,9 @@ public class TimelineFragment extends Fragment {
             holder.owner.setText(list.get(position).userUsername);
 
             /** VER IMAGENES **/
-            byte[] decodeString = Base64.decode(list.get(position).photo, Base64.DEFAULT);
-            Bitmap decodeByte = BitmapFactory.decodeByteArray(decodeString,0,decodeString.length);
-            holder.publication.setImageBitmap(decodeByte);
+            String filename = list.get(position).photo;
+
+            Picasso.get().load(filename).into(holder.publication);
 
             holder.description.setText(list.get(position).description);
 

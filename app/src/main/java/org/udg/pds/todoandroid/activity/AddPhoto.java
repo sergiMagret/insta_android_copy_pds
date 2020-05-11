@@ -101,7 +101,7 @@ public class AddPhoto extends AppCompatActivity {
             MultipartBody.Part body =
                 MultipartBody.Part.createFormData("file", tempFile.getName(), requestFile);
 
-            p.photo = tempFile.getName();
+            p.photo = selectedImage.toString();
 
             Call<String> call1 = mTodoService.uploadImage(body);
             call1.enqueue(new Callback<String>() {
