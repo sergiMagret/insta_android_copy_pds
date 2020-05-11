@@ -13,7 +13,7 @@
             android:id="@+id/enterUsernameTag"
             android:layout_width="156dp"
             android:layout_height="51dp"
-            android:layout_marginStart="100dp"
+            android:layout_marginStart="124dp"
             android:layout_marginTop="340dp"
             android:ems="10"
             android:hint="@string/add_username_tag"
@@ -26,17 +26,17 @@
             android:layout_width="51dp"
             android:layout_height="44dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.221"
+            app:layout_constraintHorizontal_bias="0.471"
             app:layout_constraintStart_toEndOf="@+id/enterUsernameTag"
             app:layout_constraintTop_toTopOf="@+id/enterUsernameTag"
             app:srcCompat="@drawable/ic_person_add_black_24dp" />
 
         <ImageView
             android:id="@+id/checkFinish"
-            android:layout_width="85dp"
-            android:layout_height="47dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_width="60dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_check_black_24dp" />
@@ -46,12 +46,12 @@
             android:layout_width="144dp"
             android:layout_height="53dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="40dp"
             android:text="Tag Users"
             android:textColor="#000000"
             android:textSize="30sp"
             app:layout_constraintEnd_toStartOf="@+id/checkFinish"
-            app:layout_constraintHorizontal_bias="0.643"
+            app:layout_constraintHorizontal_bias="0.683"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

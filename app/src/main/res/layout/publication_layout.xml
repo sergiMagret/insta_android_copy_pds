@@ -68,7 +68,7 @@
             android:layout_below="@+id/item_publication"
             android:layout_alignStart="@+id/item_publication"
             android:layout_marginStart="-1dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="7dp"
             app:srcCompat="@drawable/ic_favorite_border_black_24dp" />
 
         <TextView
@@ -105,16 +105,16 @@
 
         <ImageView
             android:id="@+id/taggedUsers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="69dp"
+            android:layout_height="76dp"
             android:layout_alignBottom="@+id/item_publication"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="14dp"
-            android:layout_marginBottom="5dp"
-            android:background="#FFFFFFFF"
+            android:layout_marginStart="-4dp"
+            android:layout_marginBottom="-1dp"
+            android:background="#00FFFFFF"
             android:scaleType="fitStart"
             android:visibility="invisible"
-            app:srcCompat="@drawable/ic_account_circle_black_24dp" />
+            app:srcCompat="@drawable/ic_tagged_user_2" />
 
         <TextView
             android:id="@+id/item_nComments"

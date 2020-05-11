@@ -147,21 +147,6 @@ public class SeeTaggedUsers extends AppCompatActivity {
             holder.name.setText(users.get(position).name);
             holder.username.setText("@" + users.get(position).username);
             Picasso.get().load(users.get(position).profilePicture).into(holder.profilePicture);
-
-            holder.view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Bundle bundle = new Bundle();
-                    bundle.putBoolean("is_private", false);
-                    bundle.putLong("user_to_search", users.get(position).id);
-                    SearchFragmentDirections.ActionActionSearchToActionProfile action =
-                        SearchFragmentDirections.actionActionSearchToActionProfile();
-                    action.setIsPrivate(bundle.getBoolean("is_private"));
-                    action.setUserToSearch(bundle.getLong("user_to_search"));
-                    Navigation.findNavController(view).navigate(action);
-                }
-            });
-
             animate(holder);
         }
 
