@@ -68,16 +68,16 @@ public interface TodoApi {
     Call<String> deleteFollowed(@Path("id") Long user);
 
     @GET("/users/self/followed")
-    Call<List<User>> getFollowed();
+    Call<List<User>> getFollowed(@Query("page") Integer page, @Query("size") Integer size);
 
     @GET("/users/self/followers")
-    Call<List<User>> getFollowers();
+    Call<List<User>> getFollowers(@Query("page") Integer page, @Query("size") Integer size);
 
     @GET("/users/{id}/followed")
-    Call<List<User>> getFollowedById(@Path("id") Long id);
+    Call<List<User>> getFollowedById(@Path("id") Long id,@Query("page") Integer page, @Query("size") Integer size);
 
     @GET("/users/{id}/followers")
-    Call<List<User>> getFollowersById(@Path("id") Long id);
+    Call<List<User>> getFollowersById(@Path("id") Long id,@Query("page") Integer page, @Query("size") Integer size);
 
     @GET("/users/self/publications")
     Call<List<Publication>> getUserPublications(@Query("page") Integer page, @Query("size") Integer size);
@@ -97,6 +97,10 @@ public interface TodoApi {
     @GET("/publications/{id}/tagged")
     Call <List<User>> getTaggedUsers(@Path("id") Long id);
 
+    @GET("/publications/{id}/nComments")
+    Call <Integer> getNumComments(@Path("id") Long id);
+
+
     @POST("/publications/{id}/like")
     Call <Publication> addLike(@Path("id") Long id);
 
@@ -112,7 +116,14 @@ public interface TodoApi {
     @DELETE("/publications/{id}")
     Call<String> deletePublication(@Path("id") Long id);
 
+    @DELETE("/publications/{publicationId}/delComment/{commentId}")
+    Call<String> deleteComment(@Path("publicationId") Long publicationId, @Path("commentId") Long commentId);
+
     @PUT("/users/self")
     Call<String> modifyProfile(@Body ModifiedData data);
+
+
+    @PUT("/publications/{publicationId}/editComment/{commentId}")
+    Call<Comment> editComment(@Path("publicationId") Long publicationId, @Path("commentId") Long commentId, @Body CommentPost cp);
 }
 

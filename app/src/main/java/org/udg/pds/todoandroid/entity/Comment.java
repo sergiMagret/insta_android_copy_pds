@@ -24,4 +24,5 @@ public class Comment {
     public String getUsername() {
         return userUsername;
     }
+    public Long getId() {return id;}
 }

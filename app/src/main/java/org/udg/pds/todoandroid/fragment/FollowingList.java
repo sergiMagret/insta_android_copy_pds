@@ -2,17 +2,7 @@ package org.udg.pds.todoandroid.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +12,14 @@ import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
@@ -52,7 +50,6 @@ public class FollowingList extends Fragment {
     private boolean is_private = false;
     private long idToSearch = -1;
     private String usersToShow = null;
-
 
 
     @Override
@@ -98,13 +95,37 @@ public class FollowingList extends Fragment {
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
 
-                if (!recyclerView.canScrollVertically(1) && newState==RecyclerView.SCROLL_STATE_IDLE && mAdapter.getItemCount()==elemDemanats ) {
-
-                    //Call<List<User>> call = mTodoService.getUsers(textDemanat,(elemDemanats/elemPerPagina),elemPerPagina);
-                    //elemDemanats=elemDemanats+elemPerPagina;
-
-
+                Call<List<User>> call = null;
+                if(usersToShow.equals("followed") && is_private) {
+                    call = mTodoService.getFollowed((elemDemanats/elemPerPagina),elemPerPagina);
+                }else if(usersToShow.equals("followed") && !is_private) {
+                    call = mTodoService.getFollowedById(idToSearch, (elemDemanats/elemPerPagina) , elemPerPagina);
+                }else if(usersToShow.equals("followers") && is_private){
+                    call = mTodoService.getFollowers((elemDemanats/elemPerPagina), elemPerPagina);
+                }else if(usersToShow.equals("followers") && !is_private){
+                    call = mTodoService.getFollowersById(idToSearch, (elemDemanats/elemPerPagina) , elemPerPagina);
+                }else{
+                    Toast.makeText(FollowingList.this.getContext(), "Error making the call to the server", Toast.LENGTH_LONG).show();
                 }
+
+
+                elemDemanats=elemDemanats+elemPerPagina;
+
+                call.enqueue(new Callback<List<User>>() {
+                    @Override
+                    public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                        if (response.isSuccessful()) {
+                            FollowingList.this.addUserList(response.body());
+                        } else {
+                            Toast.makeText(FollowingList.this.getContext(), "Error reading users", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<User>> call, Throwable t) {
+
+                    }
+                });
             }
         });
     }
@@ -157,15 +178,16 @@ public class FollowingList extends Fragment {
                 launchErrorConnectingToServer();
             }
         });*/
+        elemDemanats=elemPerPagina;
         Call<List<User>> call = null;
         if(usersToShow.equals("followed") && is_private) {
-            call = mTodoService.getFollowed();
+            call = mTodoService.getFollowed(0,elemPerPagina);
         }else if(usersToShow.equals("followed") && !is_private) {
-            call = mTodoService.getFollowedById(idToSearch);
+            call = mTodoService.getFollowedById(idToSearch, 0 , elemPerPagina);
         }else if(usersToShow.equals("followers") && is_private){
-            call = mTodoService.getFollowers();
+            call = mTodoService.getFollowers(0, elemPerPagina);
         }else if(usersToShow.equals("followers") && !is_private){
-            call = mTodoService.getFollowersById(idToSearch);
+            call = mTodoService.getFollowersById(idToSearch, 0 , elemPerPagina);
         }else{
             Toast.makeText(FollowingList.this.getContext(), "Error making the call to the server", Toast.LENGTH_LONG).show();
         }

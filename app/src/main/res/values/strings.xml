@@ -46,6 +46,7 @@
     <string name="item_owner">Owner</string>
     <string name="item_timeline">Timeline</string>
     <string name="item_likes">no likes</string>
+    <string name="item_comments">no comment</string>
     <string name="item_list_name">List name</string>
     <string name="delete_publication">Delete</string>
     <string name="add_username_tag">Enter username</string>
@@ -53,6 +54,7 @@
 
     <string name="comment">Comments</string>
     <string name="edit_text_comment"> Add a comment...</string>
+    <string name="edit_comment_publicated">Edit your comment here:</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

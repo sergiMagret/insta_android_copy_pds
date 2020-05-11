@@ -23,6 +23,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
@@ -72,6 +73,15 @@ public class TimelineFragment extends Fragment {
         mAdapter = new TimelineFragment.TRAdapter(this.getActivity().getApplication());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+
+        SwipeRefreshLayout swipeRefreshLayout = getView().findViewById(R.id.refresh_timeline);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updatePublicationList();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         updatePublicationList();
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -156,6 +166,7 @@ public class TimelineFragment extends Fragment {
         ImageView publication;
         TextView description;
         TextView nLikes;
+        TextView nComments;
         ImageView likeImage;
         ImageView comment;
         ImageView taggedUsers;
@@ -171,6 +182,7 @@ public class TimelineFragment extends Fragment {
             publication = itemView.findViewById(R.id.item_publication);
             description = itemView.findViewById(R.id.item_description);
             nLikes = itemView.findViewById(R.id.item_nLikes);
+            nComments = itemView.findViewById(R.id.item_nComments);
             likeImage = itemView.findViewById(R.id.item_likeImage);
             comment = itemView.findViewById(R.id.comment_button);
             taggedUsers = itemView.findViewById(R.id.taggedUsers);
@@ -219,6 +231,22 @@ public class TimelineFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<List<Integer>> call, Throwable t) {
+                    TimelineFragment.this.launchErrorConnectingToServer();
+                }
+            });
+
+            Call<Integer> call2 = mTodoService.getNumComments(list.get(position).id);
+
+            call2.enqueue(new Callback<Integer>() {
+                @Override
+                public void onResponse(Call<Integer> call, Response<Integer> response) {
+                    if (response.isSuccessful())
+                        holder.nComments.setText(String.valueOf(response.body()));
+                    else
+                        Toast.makeText(TimelineFragment.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
+                }
+                @Override
+                public void onFailure(Call<Integer> call, Throwable t) {
                     TimelineFragment.this.launchErrorConnectingToServer();
                 }
             });

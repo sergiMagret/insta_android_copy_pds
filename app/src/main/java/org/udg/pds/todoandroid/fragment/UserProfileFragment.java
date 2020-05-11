@@ -31,6 +31,7 @@ import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.squareup.picasso.Picasso;
 
@@ -84,7 +85,7 @@ public class UserProfileFragment extends Fragment {
             private_profile = getArguments().getBoolean("is_private");
             private_profile = private_profile || (idToSearch == TodoApp.loggedUserID); // Now the profile will be private IF is set to or the user to search (from another fragment) is the same as the logged user's id.
         }catch (NullPointerException e){
-            Toast.makeText(UserProfileFragment.this.getContext(), "Error loading user profile, bad arguments", Toast.LENGTH_LONG).show();
+            //Toast.makeText(UserProfileFragment.this.getContext(), "Error loading user profile, bad arguments", Toast.LENGTH_LONG).show();
         }
 
         // Configuració botó de logout
@@ -170,44 +171,17 @@ public class UserProfileFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 
-        if(private_profile) {
-            Button follow_button = view.findViewById(R.id.follow_unfollow_button);
-            follow_button.setVisibility(View.INVISIBLE);
-            Call<User> call = mTodoService.getUserProfile();
-            call.enqueue(new Callback<User>() {
-                @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    if(response.isSuccessful() && response.body() != null){
-                        UserProfileFragment.this.updateProfileInfo(response);
-                    }else{
-                        Toast.makeText(UserProfileFragment.this.getContext(), "Error reading profile information.", Toast.LENGTH_LONG).show();
-                    }
-                }
+        SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.refresh_profile);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateProfileInfo();
+                updatePublicationList();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
-                @Override
-                public void onFailure(Call<User> call, Throwable t) {
-                    UserProfileFragment.this.launchErrorConnectingToServer();
-                }
-            });
-        }else{
-            Call<User> call = mTodoService.getUserProfileByID(idToSearch);
-            call.enqueue(new Callback<User>() {
-                @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        UserProfileFragment.this.updateProfileInfo(response);
-                    } else {
-                        Toast.makeText(UserProfileFragment.this.getContext(), "Error reading profile information.", Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<User> call, Throwable t) {
-                    UserProfileFragment.this.launchErrorConnectingToServer();
-                }
-            });
-        }
-
+        updateProfileInfo();
         updatePublicationList();
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -271,7 +245,47 @@ public class UserProfileFragment extends Fragment {
         }
     }
 
-    private void updateProfileInfo(Response<User> response){
+    private void updateProfileInfo(){
+        if(private_profile) {
+            Button follow_button = view.findViewById(R.id.follow_unfollow_button);
+            follow_button.setVisibility(View.INVISIBLE);
+            Call<User> call = mTodoService.getUserProfile();
+            call.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    if(response.isSuccessful() && response.body() != null){
+                        UserProfileFragment.this.showProfileInfo(response);
+                    }else{
+                        Toast.makeText(UserProfileFragment.this.getContext(), "Error reading profile information.", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    UserProfileFragment.this.launchErrorConnectingToServer();
+                }
+            });
+        }else{
+            Call<User> call = mTodoService.getUserProfileByID(idToSearch);
+            call.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        UserProfileFragment.this.showProfileInfo(response);
+                    } else {
+                        Toast.makeText(UserProfileFragment.this.getContext(), "Error reading profile information.", Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    UserProfileFragment.this.launchErrorConnectingToServer();
+                }
+            });
+        }
+    }
+
+    private void showProfileInfo(Response<User> response){
         User u = response.body();
 
         // Per al nom de l'usuari
@@ -453,7 +467,6 @@ public class UserProfileFragment extends Fragment {
             likeImage = itemView.findViewById(R.id.item_likeImage);
             more_btn = itemView.findViewById(R.id.more_publication_button);
             comment = itemView.findViewById(R.id.comment_button);
-            taggedUsers = itemView.findViewById(R.id.taggedUsers);
         }
     }
 
@@ -654,56 +667,65 @@ public class UserProfileFragment extends Fragment {
         public void moreOptions(PublicationViewHolder holder, final int position){
             holder.more_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view){
-                    AlertDialog.Builder more_publication_dialog = new AlertDialog.Builder(holder.itemView.getContext());
-                    LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                    View v = inflater.inflate(R.layout.more_publication_layout,null);
-                    Button tagPeople_button = (Button) v.findViewById(R.id.tagPeople);
-                    Button delete_btn = (Button) v.findViewById(R.id.delete_publication_button);
-                    more_publication_dialog.setView(v);
-                    AlertDialog dialog = more_publication_dialog.create();
-                    dialog.show();
-                    dialog.getWindow().setLayout(600,380);
-                    tagPeople_button.setOnClickListener(new View.OnClickListener(){
-                        @Override
-                        public void onClick(View view){
-                            Intent intent = new Intent(getActivity(), TagPeople.class);
-                            Bundle b = new Bundle();
-                            b.putLong("id",list.get(position).id);
-                            intent.putExtras(b);
-                            startActivity(intent);
-                        }
-                    });
-                    delete_btn.setOnClickListener(new View.OnClickListener(){
-                        @Override
-                        public void onClick(View view){
-                            Call<String> call = mTodoService.deletePublication(list.get(position).id);
-                            call.enqueue(new Callback<String>() {
-                                @Override
-                                public void onResponse(Call<String> call, Response<String> response) {
+                public void onClick(View view) {
+                    try {
+                        idToSearch = getArguments().getLong("user_to_search");
+                        private_profile = getArguments().getBoolean("is_private");
+                        private_profile = private_profile || (idToSearch == TodoApp.loggedUserID); // Now the profile will be private IF is set to or the user to search (from another fragment) is the same as the logged user's id.
+                    } catch (NullPointerException e) {
+                        //Toast.makeText(UserProfileFragment.this.getContext(), "Error loading user profile, bad arguments", Toast.LENGTH_LONG).show();
+                    }
+                    if (private_profile) {
+                        AlertDialog.Builder more_publication_dialog = new AlertDialog.Builder(holder.itemView.getContext());
+                        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View v = inflater.inflate(R.layout.more_publication_layout,null);
+                        Button tagPeople_button = (Button) v.findViewById(R.id.tagPeople);
+                        Button delete_btn = (Button) v.findViewById(R.id.delete_publication_button);
+                        more_publication_dialog.setView(v);
+                        AlertDialog dialog = more_publication_dialog.create();
+                        dialog.show();
+                        dialog.getWindow().setLayout(600,380);
+                        tagPeople_button.setOnClickListener(new View.OnClickListener(){
+                            @Override
+                            public void onClick(View view){
+                                Intent intent = new Intent(getActivity(), TagPeople.class);
+                                Bundle b = new Bundle();
+                                b.putLong("id",list.get(position).id);
+                                intent.putExtras(b);
+                                startActivity(intent);
+                            }
+                        });
+                        delete_btn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Call<String> call = mTodoService.deletePublication(list.get(position).id);
+                                call.enqueue(new Callback<String>() {
+                                    @Override
+                                    public void onResponse(Call<String> call, Response<String> response) {
+                                        if (response.isSuccessful()) {
+                                            updatePublicationList();
+                                            dialog.cancel();
+                                            Toast toast = Toast.makeText(context, "Publication deleted", Toast.LENGTH_SHORT);
+                                            toast.show();
+                                        } else {
+                                            Toast toast = Toast.makeText(context, "Error deleting publication", Toast.LENGTH_SHORT);
+                                            toast.show();
+                                        }
+                                    }
 
-                                    if (response.isSuccessful()) {
-                                        updatePublicationList();
-                                        dialog.cancel();
-                                        Toast toast = Toast.makeText(context, "Publication deleted", Toast.LENGTH_SHORT);
-                                        toast.show();
-                                    } else {
+                                    @Override
+                                    public void onFailure(Call<String> call, Throwable t) {
                                         Toast toast = Toast.makeText(context, "Error deleting publication", Toast.LENGTH_SHORT);
                                         toast.show();
                                     }
-                                }
+                                });
+                                remove(list.get(position));
+                            }
+                        });
 
-                                @Override
-                                public void onFailure(Call<String> call, Throwable t){
-                                    Toast toast = Toast.makeText(context, "Error deleting publication", Toast.LENGTH_SHORT);
-                                    toast.show();
-                                }
-                            });
-                            remove(list.get(position));
-                        }
-                    });
-
+                    }
                 }
+
             });
         }
 
