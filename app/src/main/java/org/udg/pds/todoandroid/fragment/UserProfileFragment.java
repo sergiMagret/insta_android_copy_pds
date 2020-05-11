@@ -130,6 +130,7 @@ public class UserProfileFragment extends Fragment {
         }
         else{
             logout_interface_btn.setVisibility(View.GONE);
+            modify_profile.setVisibility(View.GONE);
         }
 
         return view;
