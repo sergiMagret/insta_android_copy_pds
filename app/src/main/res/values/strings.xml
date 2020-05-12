@@ -54,6 +54,9 @@
     <string name="edit_text_comment"> Add a comment...</string>
     <string name="edit_comment_publicated">Edit your comment here:</string>
 
+    <string name="modify_profile">Modify profile</string>
+    <string name="hastag">#hastag</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -118,5 +118,8 @@ public interface TodoApi {
 
     @PUT("/publications/{publicationId}/editComment/{commentId}")
     Call<Comment> editComment(@Path("publicationId") Long publicationId, @Path("commentId") Long commentId, @Body CommentPost cp);
+
+    @GET("/hashtags/{id}/publications")
+    Call<List<Publication>> getHastagPublicationsByName(@Path("name") String Name,@Query("page") Integer page, @Query("size") Integer size);
 }
 
