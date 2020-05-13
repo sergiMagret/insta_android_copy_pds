@@ -54,6 +54,7 @@ public class Hastags extends Fragment {
 
     NavController navController = null;
 
+    //Long id;
     String HastagName;
     Integer elemPerPagina = 20;
     Integer elemDemanats;
@@ -72,7 +73,7 @@ public class Hastags extends Fragment {
         try {
             HastagName = getArguments().getString("tag");
         } catch (NullPointerException e) {
-            Toast.makeText(Hastags.this.getContext(), "Error loading user profile, bad arguments", Toast.LENGTH_LONG).show();
+            Toast.makeText(Hastags.this.getContext(), "Error loading, bad arguments", Toast.LENGTH_LONG).show();
         }
 
         return view;
@@ -81,6 +82,23 @@ public class Hastags extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        //id=1L;
+        /*Call<Long> callName;
+        callName = mTodoService.getHashtagID(HastagName);
+        callName.enqueue(new Callback<Long>() {
+            @Override
+            public void onResponse(Call<Long> callName, Response<Long> response) {
+                if(response.isSuccessful()) {id = response.body();}
+                else {Toast.makeText(Hastags.this.getContext(), "Error reading hastag", Toast.LENGTH_LONG).show();}
+            }
+            @Override
+            public void onFailure(Call<Long> callName, Throwable t) {
+                Toast.makeText(Hastags.this.getContext(), "Fail", Toast.LENGTH_LONG).show();
+            }
+        });*/
+
+
         mTodoService = ((TodoApp) this.getActivity().getApplication()).getAPI();
         mRecyclerView = getView().findViewById(R.id.recycler_view_hastag);
         mAdapter = new TRAdapter(this.getActivity().getApplication());
@@ -98,6 +116,8 @@ public class Hastags extends Fragment {
 
         updatePublicationList();
         TextView hashtag = view.findViewById(R.id.HastagName);
+
+
         String h = "#" + HastagName;
         hashtag.setText(h);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -107,7 +127,7 @@ public class Hastags extends Fragment {
 
                 if(!recyclerView.canScrollVertically(1)&& newState==RecyclerView.SCROLL_STATE_IDLE && mAdapter.getItemCount()==elemDemanats){
                     Call<List<Publication>> call;
-                    call = mTodoService.getHastagPublicationsByName(HastagName,(elemDemanats / elemPerPagina), elemPerPagina);
+                    call = mTodoService.getPublicationsByName(HastagName,(elemDemanats / elemPerPagina), elemPerPagina);
                     elemDemanats=elemDemanats+elemPerPagina;
                     call.enqueue(new Callback<List<Publication>>() {
                         @Override
@@ -153,7 +173,7 @@ public class Hastags extends Fragment {
 
     public void updatePublicationList(){
         Call<List<Publication>> call = null;
-        call = mTodoService.getHastagPublicationsByName(HastagName, 0, elemPerPagina);
+        call = mTodoService.getPublicationsByName(HastagName, 0, elemPerPagina);
         elemDemanats=elemPerPagina;
 
 
@@ -163,7 +183,7 @@ public class Hastags extends Fragment {
                 if (response.isSuccessful()) {
                     Hastags.this.showPublicationList(response.body());
                 } else {
-                    Toast.makeText(Hastags.this.getContext(), "Error reading user publications", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Hastags.this.getContext(), "No publications yet", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -181,6 +201,7 @@ public class Hastags extends Fragment {
         TextView owner;
         TextView nLikes;
         ImageView likeImage;
+        TextView nComments;
         ImageView comment;
         boolean haDonatLike = false;
         ImageButton more_btn;
@@ -197,6 +218,7 @@ public class Hastags extends Fragment {
             likeImage = itemView.findViewById(R.id.item_likeImage);
             more_btn = itemView.findViewById(R.id.more_publication_button);
             comment = itemView.findViewById(R.id.comment_button);
+            nComments = itemView.findViewById(R.id.item_nComments);
         }
     }
 
@@ -238,6 +260,22 @@ public class Hastags extends Fragment {
 
                 @Override
                 public void onFailure(Call<List<Integer>> call, Throwable t) {
+                    Hastags.this.launchErrorConnectingToServer();
+                }
+            });
+
+            Call<Integer> call2 = mTodoService.getNumComments(list.get(position).id);
+
+            call2.enqueue(new Callback<Integer>() {
+                @Override
+                public void onResponse(Call<Integer> call, Response<Integer> response) {
+                    if (response.isSuccessful())
+                        holder.nComments.setText(String.valueOf(response.body()));
+                    else
+                        Toast.makeText(Hastags.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
+                }
+                @Override
+                public void onFailure(Call<Integer> call, Throwable t) {
                     Hastags.this.launchErrorConnectingToServer();
                 }
             });

@@ -245,6 +245,8 @@ public class TimelineFragment extends Fragment {
                     TimelineFragment.this.launchErrorConnectingToServer();
                 }
             });
+
+
             holder.owner.setText(list.get(position).userUsername);
 
             byte[] decodeString = Base64.decode(list.get(position).photo, Base64.DEFAULT);

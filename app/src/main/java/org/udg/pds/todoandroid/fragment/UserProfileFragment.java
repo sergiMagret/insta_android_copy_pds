@@ -450,6 +450,7 @@ public class UserProfileFragment extends Fragment {
         TextView nLikes;
         ImageView likeImage;
         ImageView comment;
+        TextView nComments;
         boolean haDonatLike = false;
         ImageButton more_btn;
 
@@ -465,6 +466,7 @@ public class UserProfileFragment extends Fragment {
             likeImage = itemView.findViewById(R.id.item_likeImage);
             more_btn = itemView.findViewById(R.id.more_publication_button);
             comment = itemView.findViewById(R.id.comment_button);
+            nComments = itemView.findViewById(R.id.item_nComments);
         }
     }
 
@@ -506,6 +508,23 @@ public class UserProfileFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<List<Integer>> call, Throwable t) {
+                    UserProfileFragment.this.launchErrorConnectingToServer();
+                }
+            });
+
+
+            Call<Integer> call2 = mTodoService.getNumComments(list.get(position).id);
+
+            call2.enqueue(new Callback<Integer>() {
+                @Override
+                public void onResponse(Call<Integer> call, Response<Integer> response) {
+                    if (response.isSuccessful())
+                        holder.nComments.setText(String.valueOf(response.body()));
+                    else
+                        Toast.makeText(UserProfileFragment.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
+                }
+                @Override
+                public void onFailure(Call<Integer> call, Throwable t) {
                     UserProfileFragment.this.launchErrorConnectingToServer();
                 }
             });

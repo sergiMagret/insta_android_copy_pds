@@ -11,8 +11,16 @@
         android:id="@+id/action_search"
         android:layout_width="343dp"
         android:layout_height="wrap_content"
-        android:orderInCategory="100" />
+        android:orderInCategory="100" >
 
+    </SearchView>
+
+
+    <Button
+        android:id="@+id/ButtonHastag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/SearchHastag" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView1"
