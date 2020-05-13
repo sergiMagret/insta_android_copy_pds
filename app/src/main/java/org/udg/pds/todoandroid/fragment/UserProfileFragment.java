@@ -39,6 +39,8 @@ import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.activity.AddComment;
 import org.udg.pds.todoandroid.activity.Login;
+import org.udg.pds.todoandroid.activity.SeeTaggedUsers;
+import org.udg.pds.todoandroid.activity.TagPeople;
 import org.udg.pds.todoandroid.entity.IdObject;
 import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.entity.User;
@@ -450,8 +452,10 @@ public class UserProfileFragment extends Fragment {
         TextView nLikes;
         ImageView likeImage;
         ImageView comment;
+        ImageView taggedUsers;
         TextView nComments;
         boolean haDonatLike = false;
+        boolean haApretatUnCop = false;
         ImageButton more_btn;
 
         View view;
@@ -466,6 +470,7 @@ public class UserProfileFragment extends Fragment {
             likeImage = itemView.findViewById(R.id.item_likeImage);
             more_btn = itemView.findViewById(R.id.more_publication_button);
             comment = itemView.findViewById(R.id.comment_button);
+            taggedUsers = itemView.findViewById(R.id.taggedUsers);
             nComments = itemView.findViewById(R.id.item_nComments);
         }
     }
@@ -553,7 +558,24 @@ public class UserProfileFragment extends Fragment {
                         @Override
                         public void run() {
                             if (i == 1){
-                                Toast.makeText(UserProfileFragment.this.getContext(), "Double click to like", Toast.LENGTH_LONG).show();
+                                if(holder.haApretatUnCop == false){
+                                    holder.taggedUsers.setVisibility(View.VISIBLE);
+                                    holder.haApretatUnCop=true;
+                                    holder.taggedUsers.setOnClickListener(new View.OnClickListener(){
+                                        @Override
+                                        public void onClick(View view){
+                                            Intent intent = new Intent(getActivity(), SeeTaggedUsers.class);
+                                            Bundle b = new Bundle();
+                                            b.putLong("id",list.get(position).id);
+                                            intent.putExtras(b);
+                                            startActivity(intent);
+                                        }
+                                    });
+                                }
+                                else{
+                                    holder.taggedUsers.setVisibility(View.INVISIBLE);
+                                    holder.haApretatUnCop=false;
+                                }
                             } else if (i == 2){
                                 if(! holder.haDonatLike) {
                                     Call<Publication> call = null;
@@ -688,15 +710,23 @@ public class UserProfileFragment extends Fragment {
                     if (private_profile) {
                         AlertDialog.Builder more_publication_dialog = new AlertDialog.Builder(holder.itemView.getContext());
                         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        View v = inflater.inflate(R.layout.more_publication_layout, null);
+                        View v = inflater.inflate(R.layout.more_publication_layout,null);
+                        Button tagPeople_button = (Button) v.findViewById(R.id.tagPeople);
                         Button delete_btn = (Button) v.findViewById(R.id.delete_publication_button);
-
                         more_publication_dialog.setView(v);
-
-
                         AlertDialog dialog = more_publication_dialog.create();
                         dialog.show();
-                        dialog.getWindow().setLayout(600, 220);
+                        dialog.getWindow().setLayout(600,380);
+                        tagPeople_button.setOnClickListener(new View.OnClickListener(){
+                            @Override
+                            public void onClick(View view){
+                                Intent intent = new Intent(getActivity(), TagPeople.class);
+                                Bundle b = new Bundle();
+                                b.putLong("id",list.get(position).id);
+                                intent.putExtras(b);
+                                startActivity(intent);
+                            }
+                        });
                         delete_btn.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -704,7 +734,6 @@ public class UserProfileFragment extends Fragment {
                                 call.enqueue(new Callback<String>() {
                                     @Override
                                     public void onResponse(Call<String> call, Response<String> response) {
-
                                         if (response.isSuccessful()) {
                                             updatePublicationList();
                                             dialog.cancel();
