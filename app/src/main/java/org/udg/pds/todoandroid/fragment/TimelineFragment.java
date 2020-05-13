@@ -28,6 +28,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.activity.AddComment;
+import org.udg.pds.todoandroid.activity.SeeTaggedUsers;
+import org.udg.pds.todoandroid.activity.TagPeople;
 import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.rest.TodoApi;
 import org.udg.pds.todoandroid.util.Global;
@@ -167,7 +169,9 @@ public class TimelineFragment extends Fragment {
         TextView nComments;
         ImageView likeImage;
         ImageView comment;
+        ImageView taggedUsers;
         boolean haDonatLike = false;
+        boolean haApretatUnCop = false;
 
         View view;
 
@@ -181,6 +185,7 @@ public class TimelineFragment extends Fragment {
             nComments = itemView.findViewById(R.id.item_nComments);
             likeImage = itemView.findViewById(R.id.item_likeImage);
             comment = itemView.findViewById(R.id.comment_button);
+            taggedUsers = itemView.findViewById(R.id.taggedUsers);
         }
     }
     public void addPublicationList(List<Publication> tl) {
@@ -270,7 +275,24 @@ public class TimelineFragment extends Fragment {
                         @Override
                         public void run() {
                             if (i == 1){
-                                Toast.makeText(TimelineFragment.this.getContext(), "Double click to like", Toast.LENGTH_LONG).show();
+                                if(holder.haApretatUnCop == false){
+                                    holder.taggedUsers.setVisibility(View.VISIBLE);
+                                    holder.haApretatUnCop=true;
+                                    holder.taggedUsers.setOnClickListener(new View.OnClickListener(){
+                                        @Override
+                                        public void onClick(View view){
+                                            Intent intent = new Intent(getActivity(), SeeTaggedUsers.class);
+                                            Bundle b = new Bundle();
+                                            b.putLong("id",list.get(position).id);
+                                            intent.putExtras(b);
+                                            startActivity(intent);
+                                        }
+                                    });
+                                }
+                                else{
+                                    holder.taggedUsers.setVisibility(View.INVISIBLE);
+                                    holder.haApretatUnCop=false;
+                                }
                             } else if (i == 2){
                                 if(! holder.haDonatLike) {
                                     Call<Publication> call = null;

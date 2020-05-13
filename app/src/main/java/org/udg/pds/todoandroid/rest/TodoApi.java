@@ -12,6 +12,7 @@ import org.udg.pds.todoandroid.entity.UserLogin;
 import org.udg.pds.todoandroid.entity.UserToReg;
 
 import java.util.List;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -88,10 +89,13 @@ public interface TodoApi {
     Call<List<Publication>> getPublications(@Query("page") Integer page, @Query("size") Integer size);
 
     @POST("/publications")
-    Call<String> postPublication(@Body PublicationPost p);
+    Call<Long> postPublication(@Body PublicationPost p);
 
     @GET("/publications/{id}/likes")
     Call <List<Integer>> getLikes(@Path("id") Long id);
+
+    @GET("/publications/{id}/tagged")
+    Call <List<User>> getTaggedUsers(@Path("id") Long id);
 
     @GET("/publications/{id}/nComments")
     Call <Integer> getNumComments(@Path("id") Long id);
@@ -102,6 +106,9 @@ public interface TodoApi {
 
     @POST("/publications/{id}/comments")
     Call <String> sendComment(@Body CommentPost c);
+
+    @POST("/publications/{id}/{username}/tag")
+    Call <Integer> tagUser (@Path("id") Long id, @Path("username") String username);
 
     @DELETE("/publications/{id}/delLike")
     Call <Publication> deleteLike(@Path("id") Long id);

@@ -78,13 +78,16 @@ public class AddPhoto extends AppCompatActivity {
         p.photo = imatge;
         p.description = comentari;
         p.date = new Date();
-        Call<String> call = mTodoService.postPublication(p);
-        call.enqueue(new Callback<String>() {
+        Call<Long> call = mTodoService.postPublication(p);
+        call.enqueue(new Callback<Long>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(Call<Long> call, Response<Long> response) {
                 if(response.isSuccessful()){
-                    AddPhoto.this.startActivity(new Intent(AddPhoto.this, NavigationActivity.class));
-                    AddPhoto.this.finish();
+                    Intent intent = new Intent(AddPhoto.this, TagPeople.class);
+                    Bundle b = new Bundle();
+                    b.putLong("id",response.body());
+                    intent.putExtras(b);
+                    startActivity(intent);
                 }
                 else{
                     Toast toast = Toast.makeText(AddPhoto.this, "Error AddPhoto bad response", Toast.LENGTH_SHORT);
@@ -93,7 +96,7 @@ public class AddPhoto extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<Long> call, Throwable t) {
                 Toast toast = Toast.makeText(AddPhoto.this, "Error addPhoto no response", Toast.LENGTH_SHORT);
                 toast.show();
             }
