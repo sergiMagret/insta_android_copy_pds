@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -99,6 +100,20 @@ public class SearchFragment extends Fragment {
 
                 updateUserList(query);
                 return false;
+            }
+        });
+
+        Button hastagButton = getView().findViewById(R.id.ButtonHastag);
+        hastagButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("tag",textDemanat);
+                SearchFragmentDirections.ActionActionSearchToHastags action =
+                    SearchFragmentDirections.actionActionSearchToHastags(bundle.getString("tag"));
+                action.setTag(bundle.getString("tag"));
+                Navigation.findNavController(view).navigate(action);
+
             }
         });
 

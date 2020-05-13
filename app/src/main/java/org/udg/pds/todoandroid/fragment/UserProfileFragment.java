@@ -132,6 +132,7 @@ public class UserProfileFragment extends Fragment {
         }
         else{
             logout_interface_btn.setVisibility(View.GONE);
+            modify_profile.setVisibility(View.GONE);
         }
 
         return view;
@@ -452,6 +453,7 @@ public class UserProfileFragment extends Fragment {
         ImageView likeImage;
         ImageView comment;
         ImageView taggedUsers;
+        TextView nComments;
         boolean haDonatLike = false;
         boolean haApretatUnCop = false;
         ImageButton more_btn;
@@ -469,6 +471,7 @@ public class UserProfileFragment extends Fragment {
             more_btn = itemView.findViewById(R.id.more_publication_button);
             comment = itemView.findViewById(R.id.comment_button);
             taggedUsers = itemView.findViewById(R.id.taggedUsers);
+            nComments = itemView.findViewById(R.id.item_nComments);
         }
     }
 
@@ -510,6 +513,23 @@ public class UserProfileFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<List<Integer>> call, Throwable t) {
+                    UserProfileFragment.this.launchErrorConnectingToServer();
+                }
+            });
+
+
+            Call<Integer> call2 = mTodoService.getNumComments(list.get(position).id);
+
+            call2.enqueue(new Callback<Integer>() {
+                @Override
+                public void onResponse(Call<Integer> call, Response<Integer> response) {
+                    if (response.isSuccessful())
+                        holder.nComments.setText(String.valueOf(response.body()));
+                    else
+                        Toast.makeText(UserProfileFragment.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
+                }
+                @Override
+                public void onFailure(Call<Integer> call, Throwable t) {
                     UserProfileFragment.this.launchErrorConnectingToServer();
                 }
             });

@@ -49,6 +49,9 @@ public interface TodoApi {
     @GET("/users")
     Call<List<User>> getUsers(@Query("text") String text, @Query("page") Integer page, @Query("size") Integer size);
 
+    @GET("/hashtags/self")
+    Call<Long> getHashtagID(@Query("name") String name);
+
     @GET("/publications/{id}/comments")
     Call<List<Comment>> getComments(@Path("id") Long publicationId, @Query("page") Integer page, @Query("size") Integer size);
 
@@ -125,5 +128,11 @@ public interface TodoApi {
 
     @PUT("/publications/{publicationId}/editComment/{commentId}")
     Call<Comment> editComment(@Path("publicationId") Long publicationId, @Path("commentId") Long commentId, @Body CommentPost cp);
+
+    @GET("/hashtags/{id}/publications")
+    Call<List<Publication>> getPublications(@Path("id") Long id,@Query("page") Integer page, @Query("size") Integer size);
+
+    @GET("/hashtags/self/publications")
+    Call<List<Publication>> getPublicationsByName(@Query("id") String name,@Query("page") Integer page, @Query("size") Integer size);
 }
 

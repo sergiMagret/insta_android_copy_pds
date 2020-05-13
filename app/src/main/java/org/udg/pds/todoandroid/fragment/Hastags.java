@@ -1,5 +1,6 @@
 package org.udg.pds.todoandroid.fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,15 +27,14 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import org.udg.pds.todoandroid.activity.SeeTaggedUsers;
+import org.udg.pds.todoandroid.activity.TagPeople;
 
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.activity.AddComment;
-import org.udg.pds.todoandroid.activity.SeeTaggedUsers;
-import org.udg.pds.todoandroid.activity.TagPeople;
 import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.rest.TodoApi;
-import org.udg.pds.todoandroid.util.Global;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,23 +43,23 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TimelineFragment extends Fragment {
+
+public class Hastags extends Fragment {
+
     TodoApi mTodoService;
     View view;
 
     RecyclerView mRecyclerView;
+
     private TRAdapter mAdapter;
+
+
     NavController navController = null;
 
-    Integer elemPerPagina=20;
+    //Long id;
+    String HastagName;
+    Integer elemPerPagina = 20;
     Integer elemDemanats;
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
-        super.onCreate(savedInstance);
-        view = inflater.inflate(R.layout.fragment_timeline, container, false);
-        return view;
-    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -65,16 +67,47 @@ public class TimelineFragment extends Fragment {
         navController = Navigation.findNavController(view);
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        view = inflater.inflate(R.layout.fragment_hastags, container, false);
+        try {
+            HastagName = getArguments().getString("tag");
+        } catch (NullPointerException e) {
+            Toast.makeText(Hastags.this.getContext(), "Error loading, bad arguments", Toast.LENGTH_LONG).show();
+        }
+
+        return view;
+    }
+
     @Override
     public void onStart() {
         super.onStart();
+
+        //id=1L;
+        /*Call<Long> callName;
+        callName = mTodoService.getHashtagID(HastagName);
+        callName.enqueue(new Callback<Long>() {
+            @Override
+            public void onResponse(Call<Long> callName, Response<Long> response) {
+                if(response.isSuccessful()) {id = response.body();}
+                else {Toast.makeText(Hastags.this.getContext(), "Error reading hastag", Toast.LENGTH_LONG).show();}
+            }
+            @Override
+            public void onFailure(Call<Long> callName, Throwable t) {
+                Toast.makeText(Hastags.this.getContext(), "Fail", Toast.LENGTH_LONG).show();
+            }
+        });*/
+
+
         mTodoService = ((TodoApp) this.getActivity().getApplication()).getAPI();
-        mRecyclerView = getView().findViewById(R.id.RecyclerView_timeline);
-        mAdapter = new TimelineFragment.TRAdapter(this.getActivity().getApplication());
+        mRecyclerView = getView().findViewById(R.id.recycler_view_hastag);
+        mAdapter = new TRAdapter(this.getActivity().getApplication());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
 
-        SwipeRefreshLayout swipeRefreshLayout = getView().findViewById(R.id.refresh_timeline);
+        SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.refresh_hastag);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -84,24 +117,27 @@ public class TimelineFragment extends Fragment {
         });
 
         updatePublicationList();
+        TextView hashtag = view.findViewById(R.id.HastagName);
+
+
+        String h = "#" + HastagName;
+        hashtag.setText(h);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
 
-                if (!recyclerView.canScrollVertically(1) && newState==RecyclerView.SCROLL_STATE_IDLE && mAdapter.getItemCount()==elemDemanats ) {
-
-                    Call<List<Publication>> call = mTodoService.getPublications((elemDemanats/elemPerPagina),elemPerPagina);
+                if(!recyclerView.canScrollVertically(1)&& newState==RecyclerView.SCROLL_STATE_IDLE && mAdapter.getItemCount()==elemDemanats){
+                    Call<List<Publication>> call;
+                    call = mTodoService.getPublicationsByName(HastagName,(elemDemanats / elemPerPagina), elemPerPagina);
                     elemDemanats=elemDemanats+elemPerPagina;
-
                     call.enqueue(new Callback<List<Publication>>() {
                         @Override
                         public void onResponse(Call<List<Publication>> call, Response<List<Publication>> response) {
-                            if (response.isSuccessful()) {
+                            if(response.isSuccessful()) {
                                 addPublicationList(response.body());
-                            } else {
-                                Toast.makeText(TimelineFragment.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
                             }
+                            else  {Toast.makeText(Hastags.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();}
                         }
 
                         @Override
@@ -116,9 +152,14 @@ public class TimelineFragment extends Fragment {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
-        //this.updatePublicationList();
+    }
+
+    public void addPublicationList(List<Publication> tl) {
+        for (Publication t : tl) {
+            mAdapter.add(t);
+        }
     }
 
     public void showPublicationList(List<Publication> pl){
@@ -128,50 +169,46 @@ public class TimelineFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode == Global.RQ_ADD_TASK){
-            //this.updatePublicationList();
-        }
+    private void launchErrorConnectingToServer(){
+        Toast.makeText(Hastags.this.getContext(), "Error connecting to server.", Toast.LENGTH_LONG).show();
     }
 
-    public void launchErrorConnectingToServer(){
-        Toast.makeText(TimelineFragment.this.getContext(), "Error connecting to server.", Toast.LENGTH_LONG).show();
-    }
-
-    public void updatePublicationList() {
+    public void updatePublicationList(){
         Call<List<Publication>> call = null;
-        call = mTodoService.getPublications(0,elemPerPagina);
+        call = mTodoService.getPublicationsByName(HastagName, 0, elemPerPagina);
         elemDemanats=elemPerPagina;
+
 
         call.enqueue(new Callback<List<Publication>>() {
             @Override
             public void onResponse(Call<List<Publication>> call, Response<List<Publication>> response) {
                 if (response.isSuccessful()) {
-                    TimelineFragment.this.showPublicationList(response.body());
+                    Hastags.this.showPublicationList(response.body());
                 } else {
-                    Toast.makeText(TimelineFragment.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
+                    Toast.makeText(Hastags.this.getContext(), "No publications yet", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Publication>> call, Throwable t) {
-                TimelineFragment.this.launchErrorConnectingToServer();
+                Hastags.this.launchErrorConnectingToServer();
             }
         });
     }
 
-    class PublicationViewHolder extends RecyclerView.ViewHolder {
-        TextView owner;
+
+    static class PublicationViewHolder extends RecyclerView.ViewHolder {
         ImageView publication;
         TextView description;
+        TextView owner;
         TextView nLikes;
-        TextView nComments;
         ImageView likeImage;
-        ImageView comment;
         ImageView taggedUsers;
+        TextView nComments;
+        ImageView comment;
         boolean haDonatLike = false;
         boolean haApretatUnCop = false;
+        ImageButton more_btn;
 
         View view;
 
@@ -182,19 +219,15 @@ public class TimelineFragment extends Fragment {
             publication = itemView.findViewById(R.id.item_publication);
             description = itemView.findViewById(R.id.item_description);
             nLikes = itemView.findViewById(R.id.item_nLikes);
-            nComments = itemView.findViewById(R.id.item_nComments);
             likeImage = itemView.findViewById(R.id.item_likeImage);
+            more_btn = itemView.findViewById(R.id.more_publication_button);
             comment = itemView.findViewById(R.id.comment_button);
             taggedUsers = itemView.findViewById(R.id.taggedUsers);
-        }
-    }
-    public void addPublicationList(List<Publication> tl) {
-        for (Publication t : tl) {
-            mAdapter.add(t);
+            nComments = itemView.findViewById(R.id.item_nComments);
         }
     }
 
-    class TRAdapter extends RecyclerView.Adapter<TimelineFragment.PublicationViewHolder>{
+    class TRAdapter extends RecyclerView.Adapter<UserProfileFragment.PublicationViewHolder>{
         List<Publication> list = new ArrayList<>();
         Context context;
 
@@ -203,15 +236,16 @@ public class TimelineFragment extends Fragment {
         }
 
         @Override
-        public TimelineFragment.PublicationViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+        public UserProfileFragment.PublicationViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.publication_layout, parent, false);
-            TimelineFragment.PublicationViewHolder holder = new TimelineFragment.PublicationViewHolder(v);
+            UserProfileFragment.PublicationViewHolder holder = new UserProfileFragment.PublicationViewHolder(v);
 
             return holder;
         }
 
         @Override
-        public void onBindViewHolder(TimelineFragment.PublicationViewHolder holder, final int position){
+        public void onBindViewHolder(UserProfileFragment.PublicationViewHolder holder, final int position){
+            boolean haFetLike=false;
             Call<List<Integer>> call = null;
             call = mTodoService.getLikes(list.get(position).id);
 
@@ -220,18 +254,18 @@ public class TimelineFragment extends Fragment {
                 public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
                     if (response.isSuccessful()) {
                         holder.nLikes.setText(String.valueOf(response.body().get(0)));
-                        if(response.body().get(1)==1) {
+                        if(response.body().get(1)==1){
                             holder.likeImage.setImageResource(R.drawable.ic_like_pink_24dp);
-                            holder.haDonatLike=true;
-                       }
+                            holder.haDonatLike = true;
+                        }
                     } else {
-                        Toast.makeText(TimelineFragment.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
+                        Toast.makeText(Hastags.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<List<Integer>> call, Throwable t) {
-                    TimelineFragment.this.launchErrorConnectingToServer();
+                    Hastags.this.launchErrorConnectingToServer();
                 }
             });
 
@@ -243,22 +277,20 @@ public class TimelineFragment extends Fragment {
                     if (response.isSuccessful())
                         holder.nComments.setText(String.valueOf(response.body()));
                     else
-                        Toast.makeText(TimelineFragment.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
+                        Toast.makeText(Hastags.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
                 }
                 @Override
                 public void onFailure(Call<Integer> call, Throwable t) {
-                    TimelineFragment.this.launchErrorConnectingToServer();
+                    Hastags.this.launchErrorConnectingToServer();
                 }
             });
-
-
-            holder.owner.setText(list.get(position).userUsername);
 
             byte[] decodeString = Base64.decode(list.get(position).photo, Base64.DEFAULT);
             Bitmap decodeByte = BitmapFactory.decodeByteArray(decodeString,0,decodeString.length);
             holder.publication.setImageBitmap(decodeByte);
             //Picasso.get().load(list.get(position).photo).into(holder.publication);
             holder.description.setText(list.get(position).description);
+            holder.owner.setText(list.get(position).userUsername);
 
             /*holder.view.setOnClickListener(new View.OnClickListener(){
                 @Override
@@ -291,9 +323,9 @@ public class TimelineFragment extends Fragment {
                                         }
                                     });
                                 }
-                                else{
+                                else {
                                     holder.taggedUsers.setVisibility(View.INVISIBLE);
-                                    holder.haApretatUnCop=false;
+                                    holder.haApretatUnCop = false;
                                 }
                             } else if (i == 2){
                                 if(! holder.haDonatLike) {
@@ -306,13 +338,13 @@ public class TimelineFragment extends Fragment {
                                             if (response.isSuccessful()) {
                                                 Publication pb = response.body();
                                             } else {
-                                                Toast.makeText(TimelineFragment.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
+                                                Toast.makeText(Hastags.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
                                             }
                                         }
 
                                         @Override
                                         public void onFailure(Call<Publication> call, Throwable t) {
-                                            TimelineFragment.this.launchErrorConnectingToServer();
+                                            Hastags.this.launchErrorConnectingToServer();
                                         }
                                     });
                                 }
@@ -324,18 +356,18 @@ public class TimelineFragment extends Fragment {
                                         @Override
                                         public void onResponse(Call<Publication> call, Response<Publication> response) {
                                             if (response.isSuccessful()) {
-                                                Toast.makeText(TimelineFragment.this.getContext(), "You have unliked this post", Toast.LENGTH_LONG).show();
+                                                Toast.makeText(Hastags.this.getContext(), "You have unliked this post", Toast.LENGTH_LONG).show();
                                                 Publication pb = response.body();
                                                 holder.haDonatLike = false;
                                                 holder.likeImage.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                                             } else {
-                                                Toast.makeText(TimelineFragment.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
+                                                Toast.makeText(Hastags.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
                                             }
                                         }
 
                                         @Override
                                         public void onFailure(Call<Publication> call, Throwable t) {
-                                            TimelineFragment.this.launchErrorConnectingToServer();
+                                            Hastags.this.launchErrorConnectingToServer();
                                         }
                                     });
                                 }
@@ -360,13 +392,13 @@ public class TimelineFragment extends Fragment {
                                 if (response.isSuccessful()) {
                                     Publication pb = response.body();
                                 } else {
-                                    Toast.makeText(TimelineFragment.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(Hastags.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
                                 }
                             }
 
                             @Override
                             public void onFailure(Call<Publication> call, Throwable t) {
-                                TimelineFragment.this.launchErrorConnectingToServer();
+                                Hastags.this.launchErrorConnectingToServer();
                             }
                         });
                     }
@@ -378,32 +410,22 @@ public class TimelineFragment extends Fragment {
                             @Override
                             public void onResponse(Call<Publication> call, Response<Publication> response) {
                                 if (response.isSuccessful()) {
-                                    Toast.makeText(TimelineFragment.this.getContext(), "You have unliked this post", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(Hastags.this.getContext(), "You have unliked this post", Toast.LENGTH_LONG).show();
                                     Publication pb = response.body();
                                     holder.haDonatLike = false;
                                     holder.likeImage.setImageResource(R.drawable.ic_favorite_border_black_24dp);
                                 } else {
-                                    Toast.makeText(TimelineFragment.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(Hastags.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
                                 }
                             }
 
                             @Override
                             public void onFailure(Call<Publication> call, Throwable t) {
-                                TimelineFragment.this.launchErrorConnectingToServer();
+                                Hastags.this.launchErrorConnectingToServer();
                             }
                         });
                     }
                     updatePublicationList();
-                }
-            });
-
-            holder.owner.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View view) {
-                    TimelineFragmentDirections.ActionActionHomeToActionProfile action = TimelineFragmentDirections.actionActionHomeToActionProfile();
-                    action.setIsPrivate(false);
-                    action.setUserToSearch(list.get(position).userId);
-                    Navigation.findNavController(view).navigate(action);
                 }
             });
 
@@ -417,7 +439,13 @@ public class TimelineFragment extends Fragment {
                     startActivity(intent);
                 }
             });
+
+
+
+            //animate(holder);
+
         }
+
 
         @Override
         public int getItemCount(){

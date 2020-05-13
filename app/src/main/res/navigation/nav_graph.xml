@@ -73,8 +73,11 @@
                  app:nullable="true"
                  android:defaultValue="@null" /> -->
          </action>
+        <action
+            android:id="@+id/action_action_search_to_hastags"
+            app:destination="@id/hastags" />
 
-     </fragment>
+    </fragment>
     <activity
         android:id="@+id/action_add"
         android:name="org.udg.pds.todoandroid.activity.AddPhoto"
@@ -108,5 +111,17 @@
         android:name="org.udg.pds.todoandroid.activity.ModifyProfile"
         android:label="activity_modify_profile"
         tools:layout="@layout/activity_modify_profile" />
+    <fragment
+        android:id="@+id/hastags"
+        android:name="org.udg.pds.todoandroid.fragment.Hastags"
+        android:label="fragment_hastags"
+        tools:layout="@layout/fragment_hastags" >
+        <argument
+            android:name="tag"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_hastags_to_action_profile"
+            app:destination="@id/action_profile" />
+    </fragment>
 
 </navigation>
