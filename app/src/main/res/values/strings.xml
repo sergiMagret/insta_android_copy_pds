@@ -51,6 +51,8 @@
     <string name="delete_publication">Delete</string>
     <string name="add_username_tag">Enter username</string>
     <string name="tag_username">Tag</string>
+    <string name="channel_name">Instagram</string>
+    <string name="channel_description">PDS</string>
 
     <string name="comment">Comments</string>
     <string name="edit_text_comment"> Add a comment...</string>
