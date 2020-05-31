@@ -230,8 +230,8 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/refresh_profile"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/publications_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -239,15 +239,42 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profile_info_layout">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_publication"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="8dp"
+        <TextView
+            android:id="@+id/not_following_warning"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:text="@string/warning_not_following"
+            android:textAlignment="center"
+            android:textColor="#FF7B7B"
+            app:layout_constraintBottom_toBottomOf="@+id/refresh_profile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/refresh_profile"
+            app:layout_constraintVertical_bias="0.32" />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/refresh_profile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profile_info_layout" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_publication"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/profile_info_layout" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

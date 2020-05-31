@@ -3,8 +3,10 @@ package org.udg.pds.todoandroid.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
@@ -12,11 +14,16 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
+import org.udg.pds.todoandroid.entity.User;
 import org.udg.pds.todoandroid.fragment.SearchFragment;
 import org.udg.pds.todoandroid.fragment.TaskList;
 import org.udg.pds.todoandroid.fragment.TimelineFragment;
 import org.udg.pds.todoandroid.fragment.UserProfileFragment;
 import org.udg.pds.todoandroid.rest.TodoApi;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 // FragmentActivity is a base class for activities that want to use the support-based Fragment and Loader APIs.
 // http://developer.android.com/reference/android/support/v4/app/FragmentActivity.html
@@ -33,48 +40,40 @@ public class NavigationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         setUpNavigation();
-
-        //mTodoService = ((TodoApp) this.getApplication()).getAPI();
-        /*BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        bottomNavigationView.addOnDestinationChangedListener(
-            item -> {
-                switchView(item.getItemId());
-                return true;
-            });
-
-        switchView(bottomNavigationView.getSelectedItemId());*/
+        mTodoService = ((TodoApp)getApplication()).getAPI();
     }
 
-    /*private void switchView(int itemId) { //Definim que fa quan s'apreten els botons home, add, search i profile del menu
-        final FrameLayout content = findViewById(R.id.main_content);
-        switch (itemId) {
-           /* case R.id.action_home: //On anem quan s'apreta home
-                content.removeAllViews();
-                getFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.main_content, new TimelineFragment())
-                    .commit();
-                break;
-            case R.id.action_add://On anem quan s'apreta add
-                content.removeAllViews();
-                NavigationActivity.this.startActivity(new Intent(NavigationActivity.this, AddPhoto.class));
-                break;
-        }
-    }*/
+
+    @Override
+    protected void onResume() {
+        /* When returning to the main activity (that means returning to any of the fragments that
+        * are shown inside this activity) ask for the user's profile to keep the variable
+        * TodoApp.loggedUserID updated, and to check if there's connection with the server. */
+        super.onResume();
+
+        Call<User> call = mTodoService.getUserProfile();
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response.isSuccessful() && response.body() != null){
+                    TodoApp.loggedUserID = response.body().id;
+                }else{
+                    Toast.makeText(NavigationActivity.this, "Error reading profile information.", Toast.LENGTH_LONG).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(NavigationActivity.this, "Server not responding. Closing app...", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
+    }
 
     public void setUpNavigation(){
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         NavHostFragment navHostFragment = (NavHostFragment)getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         NavigationUI.setupWithNavController(bottomNavigationView,navHostFragment.getNavController());
-       /* navHostFragment.getNavController().addOnDestinationChangedListener(((controller, destination, arguments) -> {
-            if(destination.getId()==R.id.action_add){
-                final FrameLayout content = findViewById(R.id.nav_host_fragment);
-                content.removeAllViews();
-                Intent i = new Intent(NavigationActivity.this, AddPhoto.class);
-                startActivity(i);
-                NavigationActivity.this.finish();
-            }
-        }));*/
     }
 }
