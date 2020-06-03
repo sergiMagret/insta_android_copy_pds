@@ -42,15 +42,25 @@
         android:layout_marginEnd="20dp"
         app:srcCompat="@mipmap/ic_send_comment" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycle_view_comments"
-        android:layout_width="0dp"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_comments"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toTopOf="@+id/comment_publication"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_inici" />
+        app:layout_constraintTop_toBottomOf="@+id/text_inici">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycle_view_comments"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/comment_publication"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_inici" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -28,6 +28,7 @@
     <string name="button_follow">Follow user</string>
     <string name="button_unfollow">Unfollow</string>
     <string name="button_following">Following</string>
+    <string name="warning_not_following">You are not following this user, please <b>follow</b> to see publications.</string>
 
     <string name="text_home">Home</string>
     <string name="text_add">Add</string>

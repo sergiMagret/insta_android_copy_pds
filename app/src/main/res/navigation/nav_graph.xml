@@ -14,8 +14,10 @@
             app:destination="@id/action_profile" >
             <argument
                 android:name="is_private"
-                app:argType="boolean"
-                android:defaultValue="true" />
+                android:defaultValue="false"
+                app:argType="boolean" />
+            <argument android:defaultValue="1L"
+                android:name="user_to_search" />
             <!-- <argument
                  android:name="user_to_search"
                  app:argType="Long"
@@ -34,17 +36,24 @@
         <argument
             android:name="is_private"
             app:argType="boolean"
-            android:defaultValue="true" />
+            android:defaultValue="true"
+            app:nullable="false"/>
         <argument
             android:name="user_to_search"
             app:argType="long"
-            android:defaultValue="1L" />
+            android:defaultValue="1L"
+            app:nullable="false"/>
         <action
             android:id="@+id/action_action_profile_to_followingList"
             app:destination="@id/followingList" />
         <action
             android:id="@+id/action_action_profile_self"
-            app:destination="@id/action_profile" />
+            app:destination="@id/action_profile" >
+            <argument android:defaultValue="false"
+                android:name="is_private" />
+            <argument android:defaultValue="1L"
+                android:name="user_to_search" />
+        </action>
         <action
             android:id="@+id/action_action_profile_to_modifyProfile"
             app:destination="@id/modifyProfile" />
@@ -67,6 +76,8 @@
                 android:name="is_private"
                 app:argType="boolean"
                 android:defaultValue="true" />
+            <argument android:defaultValue="1L"
+                android:name="user_to_search" />
             <!-- <argument
                  android:name="user_to_search"
                  app:argType="Long"
@@ -92,7 +103,12 @@
 
         <action
             android:id="@+id/action_followingList_to_action_profile"
-            app:destination="@id/action_profile" />
+            app:destination="@id/action_profile" >
+            <argument android:defaultValue="false"
+                android:name="is_private" />
+            <argument android:defaultValue="1L"
+                android:name="user_to_search" />
+        </action>
         <argument
             android:name="is_private"
             app:argType="boolean"
@@ -121,7 +137,12 @@
             app:argType="string" />
         <action
             android:id="@+id/action_hastags_to_action_profile"
-            app:destination="@id/action_profile" />
+            app:destination="@id/action_profile" >
+            <argument android:defaultValue="false"
+                android:name="is_private" />
+            <argument android:defaultValue="1L"
+                android:name="user_to_search" />
+        </action>
     </fragment>
 
 </navigation>
