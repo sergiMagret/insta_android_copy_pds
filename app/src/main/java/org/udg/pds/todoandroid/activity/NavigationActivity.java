@@ -12,6 +12,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.udg.pds.todoandroid.MyFirebaseMessagingService;
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.entity.User;
@@ -41,14 +42,17 @@ public class NavigationActivity extends AppCompatActivity {
         setContentView(R.layout.main);
         setUpNavigation();
         mTodoService = ((TodoApp)getApplication()).getAPI();
+        MyFirebaseMessagingService messagingService = new MyFirebaseMessagingService(mTodoService);
+        messagingService.sendRegistrationToServer();
     }
 
 
     @Override
     protected void onResume() {
         /* When returning to the main activity (that means returning to any of the fragments that
-        * are shown inside this activity) ask for the user's profile to keep the variable
-        * TodoApp.loggedUserID updated, and to check if there's connection with the server. */
+         * are shown inside this activity) ask for the user's profile to keep the variable
+         * TodoApp.loggedUserID updated, and to check if there's connection with the server.
+         * Also the FCM token is sent to the server.*/
         super.onResume();
 
         Call<User> call = mTodoService.getUserProfile();
@@ -69,6 +73,10 @@ public class NavigationActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        // Send token to server
+        MyFirebaseMessagingService messagingService = new MyFirebaseMessagingService(mTodoService);
+        messagingService.sendRegistrationToServer();
     }
 
     public void setUpNavigation(){
