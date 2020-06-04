@@ -7,6 +7,7 @@ import org.udg.pds.todoandroid.entity.ModifiedData;
 import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.entity.PublicationPost;
 import org.udg.pds.todoandroid.entity.Task;
+import org.udg.pds.todoandroid.entity.Token;
 import org.udg.pds.todoandroid.entity.User;
 import org.udg.pds.todoandroid.entity.UserLogin;
 import org.udg.pds.todoandroid.entity.UserToReg;
@@ -134,5 +135,8 @@ public interface TodoApi {
 
     @GET("/hashtags/self/publications")
     Call<List<Publication>> getPublicationsByName(@Query("id") String name,@Query("page") Integer page, @Query("size") Integer size);
+
+    @POST("/users/token")
+    Call<String> sendToken(@Body Token t);
 }
 
