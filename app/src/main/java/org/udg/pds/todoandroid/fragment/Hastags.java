@@ -26,6 +26,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.squareup.picasso.Picasso;
+
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.activity.AddComment;
@@ -265,10 +267,7 @@ public class Hastags extends Fragment {
                 }
             });
 
-            byte[] decodeString = Base64.decode(list.get(position).photo, Base64.DEFAULT);
-            Bitmap decodeByte = BitmapFactory.decodeByteArray(decodeString,0,decodeString.length);
-            holder.publication.setImageBitmap(decodeByte);
-            //Picasso.get().load(list.get(position).photo).into(holder.publication);
+            Picasso.get().load(list.get(position).photo).into(holder.publication);
             holder.description.setText(list.get(position).description);
             holder.owner.setText(list.get(position).userUsername);
 
