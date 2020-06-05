@@ -149,6 +149,7 @@ public class UserProfileFragment extends Fragment {
 
                 if (response.isSuccessful()) {
                     UserProfileFragment.this.startActivity(new Intent(getContext(), Login.class));
+                    getActivity().finish();
 
                 } else {
                     Toast toast = Toast.makeText(getContext(), "Error logging out", Toast.LENGTH_SHORT);
