@@ -1,6 +1,5 @@
 package org.udg.pds.todoandroid.fragment;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,12 +25,11 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import org.udg.pds.todoandroid.activity.SeeTaggedUsers;
-import org.udg.pds.todoandroid.activity.TagPeople;
 
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.activity.AddComment;
+import org.udg.pds.todoandroid.activity.SeeTaggedUsers;
 import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.rest.TodoApi;
 
@@ -46,20 +43,19 @@ import retrofit2.Response;
 
 public class Hastags extends Fragment {
 
-    TodoApi mTodoService;
-    View view;
+    private TodoApi mTodoService;
+    private View view;
 
-    RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView;
 
     private TRAdapter mAdapter;
 
 
-    NavController navController = null;
+    private NavController navController = null;
 
-    //Long id;
-    String HastagName;
-    Integer elemPerPagina = 20;
-    Integer elemDemanats;
+    private String HastagName;
+    private Integer elemPerPagina = 20;
+    private Integer elemDemanats;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -84,22 +80,6 @@ public class Hastags extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        //id=1L;
-        /*Call<Long> callName;
-        callName = mTodoService.getHashtagID(HastagName);
-        callName.enqueue(new Callback<Long>() {
-            @Override
-            public void onResponse(Call<Long> callName, Response<Long> response) {
-                if(response.isSuccessful()) {id = response.body();}
-                else {Toast.makeText(Hastags.this.getContext(), "Error reading hastag", Toast.LENGTH_LONG).show();}
-            }
-            @Override
-            public void onFailure(Call<Long> callName, Throwable t) {
-                Toast.makeText(Hastags.this.getContext(), "Fail", Toast.LENGTH_LONG).show();
-            }
-        });*/
-
 
         mTodoService = ((TodoApp) this.getActivity().getApplication()).getAPI();
         mRecyclerView = getView().findViewById(R.id.recycler_view_hastag);
@@ -134,7 +114,7 @@ public class Hastags extends Fragment {
                     call.enqueue(new Callback<List<Publication>>() {
                         @Override
                         public void onResponse(Call<List<Publication>> call, Response<List<Publication>> response) {
-                            if(response.isSuccessful()) {
+                            if(response.isSuccessful() && response.body() != null) {
                                 addPublicationList(response.body());
                             }
                             else  {Toast.makeText(Hastags.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();}
@@ -156,13 +136,13 @@ public class Hastags extends Fragment {
         super.onResume();
     }
 
-    public void addPublicationList(List<Publication> tl) {
+    private void addPublicationList(List<Publication> tl) {
         for (Publication t : tl) {
             mAdapter.add(t);
         }
     }
 
-    public void showPublicationList(List<Publication> pl){
+    private void showPublicationList(List<Publication> pl){
         mAdapter.clear();
         for(Publication p : pl){
             mAdapter.add(p);
@@ -173,7 +153,7 @@ public class Hastags extends Fragment {
         Toast.makeText(Hastags.this.getContext(), "Error connecting to server.", Toast.LENGTH_LONG).show();
     }
 
-    public void updatePublicationList(){
+    private void updatePublicationList(){
         Call<List<Publication>> call = null;
         call = mTodoService.getPublicationsByName(HastagName, 0, elemPerPagina);
         elemDemanats=elemPerPagina;
@@ -182,7 +162,7 @@ public class Hastags extends Fragment {
         call.enqueue(new Callback<List<Publication>>() {
             @Override
             public void onResponse(Call<List<Publication>> call, Response<List<Publication>> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     Hastags.this.showPublicationList(response.body());
                 } else {
                     Toast.makeText(Hastags.this.getContext(), "No publications yet", Toast.LENGTH_LONG).show();
@@ -292,13 +272,6 @@ public class Hastags extends Fragment {
             holder.description.setText(list.get(position).description);
             holder.owner.setText(list.get(position).userUsername);
 
-            /*holder.view.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View view){
-                    Toast.makeText(context, "Hey! I'm publication " + position,  Toast.LENGTH_LONG).show();
-                }
-            });*/
-
             holder.publication.setOnClickListener(new View.OnClickListener(){
                 int i = 0;
                 public void onClick(View view){
@@ -309,7 +282,7 @@ public class Hastags extends Fragment {
                         @Override
                         public void run() {
                             if (i == 1){
-                                if(holder.haApretatUnCop == false){
+                                if(!holder.haApretatUnCop){
                                     holder.taggedUsers.setVisibility(View.VISIBLE);
                                     holder.haApretatUnCop=true;
                                     holder.taggedUsers.setOnClickListener(new View.OnClickListener(){

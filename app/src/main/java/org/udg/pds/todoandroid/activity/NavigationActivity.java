@@ -1,12 +1,9 @@
 package org.udg.pds.todoandroid.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
@@ -16,10 +13,6 @@ import org.udg.pds.todoandroid.MyFirebaseMessagingService;
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.entity.User;
-import org.udg.pds.todoandroid.fragment.SearchFragment;
-import org.udg.pds.todoandroid.fragment.TaskList;
-import org.udg.pds.todoandroid.fragment.TimelineFragment;
-import org.udg.pds.todoandroid.fragment.UserProfileFragment;
 import org.udg.pds.todoandroid.rest.TodoApi;
 
 import retrofit2.Call;
@@ -29,8 +22,6 @@ import retrofit2.Response;
 // FragmentActivity is a base class for activities that want to use the support-based Fragment and Loader APIs.
 // http://developer.android.com/reference/android/support/v4/app/FragmentActivity.html
 public class NavigationActivity extends AppCompatActivity {
-
-    private TaskList mTaskList;
 
     private BottomNavigationView bottomNavigationView;
 

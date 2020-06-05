@@ -12,17 +12,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.navigation.Navigation;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import com.squareup.picasso.Picasso;
 
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.entity.User;
-import org.udg.pds.todoandroid.fragment.SearchFragmentDirections;
 import org.udg.pds.todoandroid.rest.TodoApi;
 
 import java.util.ArrayList;
@@ -96,7 +94,7 @@ public class SeeTaggedUsers extends AppCompatActivity {
         call.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     SeeTaggedUsers.this.showTaggedList(response.body());
                 } else {
                     Toast.makeText(getApplicationContext(), "Error reading tagged users", Toast.LENGTH_LONG).show();
@@ -130,16 +128,14 @@ public class SeeTaggedUsers extends AppCompatActivity {
         Context context;
 
 
-        public TRAdapter(Context context) {
+        private TRAdapter(Context context) {
             this.context = context;
         }
 
         @Override
         public SeeTaggedUsers.TaggedUsersHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_layout, parent, false);
-            TaggedUsersHolder holder = new TaggedUsersHolder(v);
-
-            return holder;
+            return new TaggedUsersHolder(v);
         }
 
         @Override
@@ -174,7 +170,7 @@ public class SeeTaggedUsers extends AppCompatActivity {
         }
 
 
-        public void animate(RecyclerView.ViewHolder viewHolder) {
+        private void animate(RecyclerView.ViewHolder viewHolder) {
             final Animation animAnticipateOvershoot = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
             viewHolder.itemView.setAnimation(animAnticipateOvershoot);
         }

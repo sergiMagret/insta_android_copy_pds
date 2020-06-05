@@ -60,7 +60,6 @@ public class AddComment extends AppCompatActivity {
                 AddComment.this.sendComment(comment.getText().toString(),publicationId);
             }
         });
-        //Toast.makeText(getApplicationContext(), "id: " + publicationId, Toast.LENGTH_LONG).show();
 
 
     }
@@ -171,24 +170,6 @@ public class AddComment extends AppCompatActivity {
                 mAdapter.add(t);
             }
         }
-/*
-        @Override
-        public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            if (requestCode == Global.RQ_ADD_TASK) {
-                this.updateCommentList();
-            }
-        }*/
-        // Button b = getView().findViewById(R.id.b_add_task_rv);
-        // This is the listener to the "Add Task" button
-        /*b.setOnClickListener(view -> {
-            // When we press the "Add Task" button, the AddTask activity is called, where
-            // we can introduce the data of the new task
-            Intent i = new Intent(TaskList.this.getContext(), AddTask.class);
-            // We launch the activity with startActivityForResult because we want to know when
-            // the launched activity has finished. In this case, when the AddTask activity has finished
-            // we will update the list to show the new task.
-            startActivityForResult(i, Global.RQ_ADD_TASK);
-        });*/
 
     public void getSelfUsername(){
         Call<User> call = mTodoService.getUserProfile();
@@ -250,7 +231,6 @@ public class AddComment extends AppCompatActivity {
 
     class TRAdapter extends RecyclerView.Adapter<CommentViewHolder>   {
 
-        //List<User> list = new ArrayList<>();
         List<Comment> listFiltered = new ArrayList<>();
         Context context;
 
@@ -274,32 +254,11 @@ public class AddComment extends AppCompatActivity {
 
             holder.username.setText("@" + listFiltered.get(position).userUsername + ":"); //list.get(position).username
 
-            if(!selfUsername.equals(listFiltered.get(position).getUsername())) {
+            if(!selfUsername.equals(listFiltered.get(position).userUsername)) {
                 holder.delete_comment_btn.setVisibility(View.GONE);
                 holder.edit_comment_btn.setVisibility(View.GONE);
             }
-           /* else{
-                holder.delete_comment_btn.setVisibility(View.VISIBLE);
-                holder.edit_comment_btn.setVisibility(View.VISIBLE);
-            }*/
 
-            /*
-            holder.view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    Bundle bundle = new Bundle();
-                    bundle.putBoolean("is_private", false);
-                    bundle.putLong("user_to_search", listFiltered.get(position).id);
-                    SearchFragmentDirections.ActionActionSearchToActionProfile action =
-                        SearchFragmentDirections.actionActionSearchToActionProfile();
-                    action.setIsPrivate(bundle.getBoolean("is_private"));
-                    action.setUserToSearch(bundle.getLong("user_to_search"));
-                    Navigation.findNavController(view).navigate(action);
-                }
-            });
-
-               */
             holder.delete_comment_btn.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     deleteComment(position);
@@ -329,7 +288,7 @@ public class AddComment extends AppCompatActivity {
 
 
         public void deleteComment(int position){
-            Call<String> call = mTodoService.deleteComment(publicationId,listFiltered.get(position).getId());
+            Call<String> call = mTodoService.deleteComment(publicationId,listFiltered.get(position).id);
             call.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
@@ -358,7 +317,7 @@ public class AddComment extends AppCompatActivity {
             edit_dialog.setView(dialog_view);
 
             EditText new_comment = dialog_view.findViewById(R.id.comment_edited);
-            new_comment.setText(listFiltered.get(position).getText());
+            new_comment.setText(listFiltered.get(position).text);
 
             Button edit_btn = dialog_view.findViewById(R.id.comment_edited_button);
             edit_btn.setOnClickListener(new View.OnClickListener() {
@@ -372,7 +331,7 @@ public class AddComment extends AppCompatActivity {
                         CommentPost cp = new CommentPost();
                         cp.text = new_text;
                         cp.publicationId = publicationId;
-                        Long commentId = listFiltered.get(position).getId();
+                        Long commentId = listFiltered.get(position).id;
                         Call<Comment> call = mTodoService.editComment(publicationId,commentId,cp);
                         call.enqueue(new Callback<Comment>() {
                             @Override
@@ -417,15 +376,12 @@ public class AddComment extends AppCompatActivity {
 
         // Insert a new item to the RecyclerView
         public void insert(int position, Comment data) {
-            //list.add(position, data);
             listFiltered.add(position, data);
             notifyItemInserted(position);
         }
 
         // Remove a RecyclerView item containing the Data object
         public void remove(User data) {
-            //int position = list.indexOf(data);
-            //list.remove(position);
             int position = listFiltered.indexOf(data);
             listFiltered.remove(position);
             notifyItemRemoved(position);
@@ -439,14 +395,12 @@ public class AddComment extends AppCompatActivity {
         }
 
         public void add(Comment t) {
-            //list.add(t);
             listFiltered.add(t);
             this.notifyItemInserted(listFiltered.size() - 1);
         }
 
         public void clear() {
             int size = listFiltered.size();
-            //list.clear();
             listFiltered.clear();
             this.notifyItemRangeRemoved(0, size);
         }
