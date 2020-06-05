@@ -81,6 +81,7 @@ public class Hastags extends Fragment {
     public void onStart() {
         super.onStart();
 
+
         mTodoService = ((TodoApp) this.getActivity().getApplication()).getAPI();
         mRecyclerView = getView().findViewById(R.id.recycler_view_hastag);
         mAdapter = new TRAdapter(this.getActivity().getApplication());

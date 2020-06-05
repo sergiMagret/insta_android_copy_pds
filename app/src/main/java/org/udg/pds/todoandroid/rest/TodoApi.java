@@ -122,8 +122,8 @@ public interface TodoApi {
     @GET("/hashtags/{id}/publications")
     Call<List<Publication>> getPublications(@Path("id") Long id,@Query("page") Integer page, @Query("size") Integer size);
 
-    @GET("/hashtags/self/publications")
-    Call<List<Publication>> getPublicationsByName(@Query("id") String name,@Query("page") Integer page, @Query("size") Integer size);
+    @GET("/hashtags/name/{name}/publications")
+    Call<List<Publication>> getPublicationsByName(@Path("name") String name,@Query("page") Integer page, @Query("size") Integer size);
 
     @POST("/users/token")
     Call<String> sendToken(@Body Token t);
