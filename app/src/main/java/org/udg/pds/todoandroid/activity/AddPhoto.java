@@ -2,13 +2,8 @@ package org.udg.pds.todoandroid.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.util.Base64;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -22,8 +17,6 @@ import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.entity.PublicationPost;
 import org.udg.pds.todoandroid.rest.TodoApi;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -46,9 +39,7 @@ public class AddPhoto extends AppCompatActivity {
     private Uri selectedImage = null;
     private String imatge;
     private static final int SELECT_FILE = 1;
-    private static final int TAKE_PHOTO = 2;
     TodoApi mTodoService;
-    private File photoFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,26 +50,15 @@ public class AddPhoto extends AppCompatActivity {
 
         Button add = findViewById(R.id.add_button);
         Button choose = findViewById(R.id.choose);
-        Button take = findViewById(R.id.take);
-        i = (ImageView) findViewById(R.id.imatge);
 
         choose.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(intent,  SELECT_FILE);
+                startActivityForResult(Intent.createChooser(intent, "Choose a Photo"), SELECT_FILE);
             }
         });
-        /**
-        take.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, TAKE_PHOTO);
-            }
-        });
-         **/
 
         add.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -172,22 +152,14 @@ public class AddPhoto extends AppCompatActivity {
                             } catch (FileNotFoundException e) {
                                 e.printStackTrace();
                             }
+                            i = (ImageView) findViewById(R.id.imatge);
                             selectedImage = imageReturnedIntent.getData();
                             i.setImageURI(selectedImage);
                         }
+
                     }
                 }
                 break;
-            /**case TAKE_PHOTO:
-                if(resultCode == Activity.RESULT_OK){
-                    Bundle extra = imageReturnedIntent.getExtras();
-                    Bitmap btm = (Bitmap) extra.get("data");
-                    i.setImageBitmap(btm);
-                }
-                break;
-             **/
         }
     }
-
-
 }
