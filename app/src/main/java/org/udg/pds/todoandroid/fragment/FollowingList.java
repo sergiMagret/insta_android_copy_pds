@@ -114,7 +114,7 @@ public class FollowingList extends Fragment {
                 call.enqueue(new Callback<List<User>>() {
                     @Override
                     public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                        if (response.isSuccessful()) {
+                        if (response.isSuccessful() && response.body() != null) {
                             FollowingList.this.addUserList(response.body());
                         } else {
                             Toast.makeText(FollowingList.this.getContext(), "Error reading users", Toast.LENGTH_LONG).show();
@@ -133,7 +133,7 @@ public class FollowingList extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        this.updateUserList("");
+        this.updateUserList();
     }
 
     public void showUserList(List<User> tl) {
@@ -152,32 +152,12 @@ public class FollowingList extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Global.RQ_ADD_TASK) {
-            this.updateUserList("");
+            this.updateUserList();
         }
     }
 
 
-    private void updateUserList(String text) {
-        /*textDemanat=text;
-        elemDemanats=elemPerPagina;
-        Call<List<User>> call = mTodoService.getUsers(text,0,elemPerPagina);
-
-
-        call.enqueue(new Callback<List<User>>() {
-            @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                if (response.isSuccessful()) {
-                    FollowingList.this.showUserList(response.body());
-                } else {
-                    Toast.makeText(FollowingList.this.getContext(), "Error reading users", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
-                launchErrorConnectingToServer();
-            }
-        });*/
+    private void updateUserList() {
         elemDemanats=elemPerPagina;
         Call<List<User>> call = null;
         if(usersToShow.equals("followed") && is_private) {
@@ -195,7 +175,7 @@ public class FollowingList extends Fragment {
         call.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     FollowingList.this.addUserList(response.body());
                 } else {
                     Toast.makeText(FollowingList.this.getContext(), "Error reading users", Toast.LENGTH_LONG).show();
@@ -235,27 +215,24 @@ public class FollowingList extends Fragment {
     static class TRAdapter extends RecyclerView.Adapter<FollowingList.UserViewHolder>  {
 
         List<User> list = new ArrayList<>();
-        //List<User> listFiltered = new ArrayList<>();
         Context context;
 
 
-        public TRAdapter(Context context) {
+        private TRAdapter(Context context) {
             this.context = context;
         }
 
         @Override
         public FollowingList.UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_layout, parent, false);
-            FollowingList.UserViewHolder holder = new FollowingList.UserViewHolder(v);
-
-            return holder;
+            return new FollowingList.UserViewHolder(v);
         }
 
         @Override
         public void onBindViewHolder(FollowingList.UserViewHolder holder, final int position) {
 
-            holder.name.setText(list.get(position).name); //list.get(position).username
-            holder.username.setText("@" + list.get(position).username); //list.get(position).username
+            holder.name.setText(list.get(position).name);
+            holder.username.setText("@" + list.get(position).username);
             Picasso.get().load(list.get(position).profilePicture).into(holder.profilePicture);
 
 
@@ -286,7 +263,6 @@ public class FollowingList extends Fragment {
         // Insert a new item to the RecyclerView
         public void insert(int position, User data) {
             list.add(position, data);
-            //listFiltered.add(position, data);
             notifyItemInserted(position);
         }
 
@@ -294,8 +270,6 @@ public class FollowingList extends Fragment {
         public void remove(User data) {
             int position = list.indexOf(data);
             list.remove(position);
-            //int position = listFiltered.indexOf(data);
-            //listFiltered.remove(position);
             notifyItemRemoved(position);
         }
 
@@ -306,14 +280,12 @@ public class FollowingList extends Fragment {
 
         public void add(User t) {
             list.add(t);
-            //listFiltered.add(t);
             this.notifyItemInserted(list.size() - 1);
         }
 
         public void clear() {
             int size = list.size();
             list.clear();
-            //listFiltered.clear();
             this.notifyItemRangeRemoved(0, size);
         }
 

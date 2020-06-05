@@ -14,8 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,12 +21,8 @@ import com.squareup.picasso.Picasso;
 
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
-import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.entity.User;
-import org.udg.pds.todoandroid.fragment.SearchFragment;
-import org.udg.pds.todoandroid.fragment.SearchFragmentDirections;
 import org.udg.pds.todoandroid.rest.TodoApi;
-import org.udg.pds.todoandroid.util.Global;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,16 +47,7 @@ public class TagPeople extends AppCompatActivity {
         mTodoService = ((TodoApp) this.getApplication()).getAPI();
         Bundle b = getIntent().getExtras();
         publicationId = b.getLong("id");
-        /*ImageView tagImage = findViewById(R.id.tagImage);
-        tagImage.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                TextView username = TagPeople.this.findViewById(R.id.enterUsernameTag);
-                String name = username.getText().toString();
-                username.setText("");
-                TagPeople.this.tagUser(name,publicationId);
-            }
-        });*/
+
         ImageView finish = findViewById(R.id.checkFinish);
         finish.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -79,7 +64,7 @@ public class TagPeople extends AppCompatActivity {
             call.enqueue(new Callback<Integer>() {
                 @Override
                 public void onResponse(Call<Integer> call, Response<Integer> response) {
-                    if (response.isSuccessful()) {
+                    if (response.isSuccessful() && response.body() != null) {
                         if (response.body() == 0) {
                             Toast toast = Toast.makeText(TagPeople.this, "User " + username + " tagged successfully", Toast.LENGTH_SHORT);
                             toast.show();
@@ -155,7 +140,7 @@ public class TagPeople extends AppCompatActivity {
                     call.enqueue(new Callback<List<User>>() {
                         @Override
                         public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                            if (response.isSuccessful()) {
+                            if (response.isSuccessful() && response.body() != null) {
                                 TagPeople.this.addUserList(response.body());
                             } else {
                                 Toast.makeText(TagPeople.this, "Error reading users", Toast.LENGTH_LONG).show();
@@ -192,13 +177,6 @@ public class TagPeople extends AppCompatActivity {
         }
     }
 
-    /*@Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Global.RQ_ADD_TASK) {
-            this.updateUserList("");
-        }
-    }*/
-
     public void updateUserList(String text) {
         textDemanat=text;
         elemDemanats=elemPerPagina;
@@ -208,7 +186,7 @@ public class TagPeople extends AppCompatActivity {
         call.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     TagPeople.this.showUserList(response.body());
                 } else {
                     Toast.makeText(TagPeople.this, "Error reading users", Toast.LENGTH_LONG).show();
@@ -243,16 +221,14 @@ public class TagPeople extends AppCompatActivity {
         Context context;
 
 
-        public TRAdapter(Context context) {
+        private TRAdapter(Context context) {
             this.context = context;
         }
 
         @Override
         public UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_layout, parent, false);
-            UserViewHolder holder = new UserViewHolder(v);
-
-            return holder;
+            return new UserViewHolder(v);
         }
 
         @Override
@@ -288,35 +264,30 @@ public class TagPeople extends AppCompatActivity {
 
         // Insert a new item to the RecyclerView
         public void insert(int position, User data) {
-            //list.add(position, data);
             listFiltered.add(position, data);
             notifyItemInserted(position);
         }
 
         // Remove a RecyclerView item containing the Data object
         public void remove(User data) {
-            //int position = list.indexOf(data);
-            //list.remove(position);
             int position = listFiltered.indexOf(data);
             listFiltered.remove(position);
             notifyItemRemoved(position);
         }
 
 
-        public void animate(RecyclerView.ViewHolder viewHolder) {
+        private void animate(RecyclerView.ViewHolder viewHolder) {
             final Animation animAnticipateOvershoot = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
             viewHolder.itemView.setAnimation(animAnticipateOvershoot);
         }
 
         public void add(User t) {
-            //list.add(t);
             listFiltered.add(t);
             this.notifyItemInserted(listFiltered.size() - 1);
         }
 
         public void clear() {
             int size = listFiltered.size();
-            //list.clear();
             listFiltered.clear();
             this.notifyItemRangeRemoved(0, size);
         }

@@ -2,7 +2,6 @@ package org.udg.pds.todoandroid.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import org.udg.pds.todoandroid.MyFirebaseMessagingService;
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
-import org.udg.pds.todoandroid.entity.Token;
 import org.udg.pds.todoandroid.entity.User;
 import org.udg.pds.todoandroid.entity.UserLogin;
 import org.udg.pds.todoandroid.rest.TodoApi;
@@ -54,7 +52,7 @@ public class Login extends AppCompatActivity {
         });
 
         Button r = findViewById(R.id.register_button);
-        // This is teh listener that will be used when the user presses the "Login" button
+        // This is teh listener that will be used when the user presses the "Register" button
         r.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent i = new Intent(Login.this, register.class);
