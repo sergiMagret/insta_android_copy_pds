@@ -38,18 +38,23 @@
             android:layout_width="331dp"
             android:layout_height="58dp"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="160dp"
+            android:layout_marginTop="56dp"
+            android:background="#00FFFFFF"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_tagUsers" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/RecyclerView_TagUser"
-            android:layout_width="329dp"
-            android:layout_height="363dp"
+            android:layout_width="331dp"
+            android:layout_height="492dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/searchView_TagUser"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/searchView_TagUser"
-            app:layout_constraintTop_toBottomOf="@+id/searchView_TagUser" />
+            app:layout_constraintTop_toBottomOf="@+id/searchView_TagUser"
+            app:layout_constraintVertical_bias="0.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
