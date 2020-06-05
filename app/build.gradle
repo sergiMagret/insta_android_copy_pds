@@ -72,4 +72,5 @@ dependencies {
     implementation "androidx.navigation:navigation-ui:$nav_version"
     implementation 'com.google.firebase:firebase-messaging:17.3.4'
     implementation 'androidx.work:work-runtime:2.3.4'
+    implementation "commons-io:commons-io:2.6"
 }

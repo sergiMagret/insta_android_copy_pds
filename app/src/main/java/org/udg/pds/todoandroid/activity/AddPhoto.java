@@ -107,24 +107,25 @@ public class AddPhoto extends AppCompatActivity {
                 public void onResponse(Call<String> call, Response<String> response) {
                     if (response.isSuccessful()) {
                         p.photo = response.body();
-                        Call<String> call2 = mTodoService.postPublication(p);
-                        call2.enqueue(new Callback<String>() {
+                        Call<Long> call2 = mTodoService.postPublication(p);
+                        call2.enqueue(new Callback<Long>() {
                             @Override
-                            public void onResponse(Call<String> call, Response<String> response) {
-                                if (response.isSuccessful()) {
+                            public void onResponse(Call<Long> call, Response<Long> response) {
+                                if(response.isSuccessful()){
                                     Intent intent = new Intent(AddPhoto.this, TagPeople.class);
                                     Bundle b = new Bundle();
                                     b.putLong("id",response.body());
                                     intent.putExtras(b);
                                     startActivity(intent);
-                                } else {
+                                }
+                                else{
                                     Toast toast = Toast.makeText(AddPhoto.this, "Error AddPhoto bad response", Toast.LENGTH_SHORT);
                                     toast.show();
                                 }
                             }
 
                             @Override
-                            public void onFailure(Call<String> call, Throwable t) {
+                            public void onFailure(Call<Long> call, Throwable t) {
                                 Toast toast = Toast.makeText(AddPhoto.this, "Error addPhoto no response", Toast.LENGTH_SHORT);
                                 toast.show();
                             }
