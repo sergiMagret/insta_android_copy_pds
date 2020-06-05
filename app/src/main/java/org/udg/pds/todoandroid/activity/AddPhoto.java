@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -44,7 +46,9 @@ public class AddPhoto extends AppCompatActivity {
     private Uri selectedImage = null;
     private String imatge;
     private static final int SELECT_FILE = 1;
+    private static final int TAKE_PHOTO = 2;
     TodoApi mTodoService;
+    private File photoFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,15 +59,26 @@ public class AddPhoto extends AppCompatActivity {
 
         Button add = findViewById(R.id.add_button);
         Button choose = findViewById(R.id.choose);
+        Button take = findViewById(R.id.take);
+        i = (ImageView) findViewById(R.id.imatge);
 
         choose.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Choose a Photo"), SELECT_FILE);
+                startActivityForResult(intent,  SELECT_FILE);
             }
         });
+        /**
+        take.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent, TAKE_PHOTO);
+            }
+        });
+         **/
 
         add.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -157,36 +172,22 @@ public class AddPhoto extends AppCompatActivity {
                             } catch (FileNotFoundException e) {
                                 e.printStackTrace();
                             }
-                            i = (ImageView) findViewById(R.id.imatge);
                             selectedImage = imageReturnedIntent.getData();
                             i.setImageURI(selectedImage);
                         }
-
-                        if (requestCode == SELECT_FILE) {
-                            if (resultCode == Activity.RESULT_OK) {
-                                selectedImage = imageReturnedIntent.getData();
-                                String selectedPath = selectedImage.getPath();
-                                if (selectedPath != null) {
-                                    InputStream imageStream = null;
-                                    try {
-                                        imageStream = getContentResolver().openInputStream(selectedImage);
-                                    } catch (FileNotFoundException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                    Bitmap bmp = BitmapFactory.decodeStream(imageStream);
-                                    i = findViewById(R.id.imatge);
-                                    i.setImageBitmap(bmp);
-
-                                    ByteArrayOutputStream array = new ByteArrayOutputStream();
-                                    bmp.compress(Bitmap.CompressFormat.PNG, 100, array);
-                                    byte[] byteFormat = array.toByteArray();
-                                    imatge = Base64.encodeToString(byteFormat, Base64.NO_WRAP);
-                                }
-                            }
-                        }
                     }
                 }
+                break;
+            /**case TAKE_PHOTO:
+                if(resultCode == Activity.RESULT_OK){
+                    Bundle extra = imageReturnedIntent.getExtras();
+                    Bitmap btm = (Bitmap) extra.get("data");
+                    i.setImageBitmap(btm);
+                }
+                break;
+             **/
         }
     }
+
+
 }
