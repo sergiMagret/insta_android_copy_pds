@@ -101,38 +101,46 @@ public class AddPhoto extends AppCompatActivity {
             MultipartBody.Part body =
                 MultipartBody.Part.createFormData("file", tempFile.getName(), requestFile);
 
-            p.photo = selectedImage.toString();
-
-            Call<String> call1 = mTodoService.uploadImage(body);
-            call1.enqueue(new Callback<String>() {
+            Call<String> call = mTodoService.uploadImage(body);
+            call.enqueue(new Callback<String>() {
                 @Override
                 public void onResponse(Call<String> call, Response<String> response) {
-                    Call<String> call2 = mTodoService.postPublication(p);
-                    call2.enqueue(new Callback<String>() {
-                        @Override
-                        public void onResponse(Call<String> call, Response<String> response) {
-                            if (response.isSuccessful()) {
-                                AddPhoto.this.startActivity(new Intent(AddPhoto.this, NavigationActivity.class));
-                                AddPhoto.this.finish();
-                            } else {
-                                Toast toast = Toast.makeText(AddPhoto.this, "Error AddPhoto bad response", Toast.LENGTH_SHORT);
+                    if (response.isSuccessful()) {
+                        p.photo = response.body();
+                        Call<String> call2 = mTodoService.postPublication(p);
+                        call2.enqueue(new Callback<String>() {
+                            @Override
+                            public void onResponse(Call<String> call, Response<String> response) {
+                                if (response.isSuccessful()) {
+                                    Intent intent = new Intent(AddPhoto.this, TagPeople.class);
+                                    Bundle b = new Bundle();
+                                    b.putLong("id",response.body());
+                                    intent.putExtras(b);
+                                    startActivity(intent);
+                                } else {
+                                    Toast toast = Toast.makeText(AddPhoto.this, "Error AddPhoto bad response", Toast.LENGTH_SHORT);
+                                    toast.show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<String> call, Throwable t) {
+                                Toast toast = Toast.makeText(AddPhoto.this, "Error addPhoto no response", Toast.LENGTH_SHORT);
                                 toast.show();
                             }
-                        }
-
-                        @Override
-                        public void onFailure(Call<String> call, Throwable t) {
-                            Toast toast = Toast.makeText(AddPhoto.this, "Error addPhoto no response", Toast.LENGTH_SHORT);
-                            toast.show();
-                        }
-                    });
+                        });
+                    }
+                    else
+                        Toast.makeText(AddPhoto.this, "Response error !", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onFailure(Call<String> call, Throwable t) {
-
+                    Toast.makeText(AddPhoto.this, "Failure !", Toast.LENGTH_SHORT).show();
                 }
             });
+
+
         }
         catch (Exception e){
             Toast toast = Toast.makeText(AddPhoto.this, e.getMessage(), Toast.LENGTH_SHORT);
