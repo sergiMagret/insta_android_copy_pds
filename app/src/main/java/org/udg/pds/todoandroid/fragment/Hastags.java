@@ -43,20 +43,19 @@ import retrofit2.Response;
 
 public class Hastags extends Fragment {
 
-    TodoApi mTodoService;
-    View view;
+    private TodoApi mTodoService;
+    private View view;
 
-    RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView;
 
     private TRAdapter mAdapter;
 
 
-    NavController navController = null;
+    private NavController navController = null;
 
-    //Long id;
-    String HastagName;
-    Integer elemPerPagina = 20;
-    Integer elemDemanats;
+    private String HastagName;
+    private Integer elemPerPagina = 20;
+    private Integer elemDemanats;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -116,7 +115,7 @@ public class Hastags extends Fragment {
                     call.enqueue(new Callback<List<Publication>>() {
                         @Override
                         public void onResponse(Call<List<Publication>> call, Response<List<Publication>> response) {
-                            if(response.isSuccessful()) {
+                            if(response.isSuccessful() && response.body() != null) {
                                 addPublicationList(response.body());
                             }
                             else  {Toast.makeText(Hastags.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();}
@@ -138,13 +137,13 @@ public class Hastags extends Fragment {
         super.onResume();
     }
 
-    public void addPublicationList(List<Publication> tl) {
+    private void addPublicationList(List<Publication> tl) {
         for (Publication t : tl) {
             mAdapter.add(t);
         }
     }
 
-    public void showPublicationList(List<Publication> pl){
+    private void showPublicationList(List<Publication> pl){
         mAdapter.clear();
         for(Publication p : pl){
             mAdapter.add(p);
@@ -155,7 +154,7 @@ public class Hastags extends Fragment {
         Toast.makeText(Hastags.this.getContext(), "Error connecting to server.", Toast.LENGTH_LONG).show();
     }
 
-    public void updatePublicationList(){
+    private void updatePublicationList(){
         Call<List<Publication>> call = null;
         call = mTodoService.getPublicationsByName(HastagName, 0, elemPerPagina);
         elemDemanats=elemPerPagina;
@@ -164,7 +163,7 @@ public class Hastags extends Fragment {
         call.enqueue(new Callback<List<Publication>>() {
             @Override
             public void onResponse(Call<List<Publication>> call, Response<List<Publication>> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     Hastags.this.showPublicationList(response.body());
                 } else {
                     Toast.makeText(Hastags.this.getContext(), "No publications yet", Toast.LENGTH_LONG).show();
@@ -274,13 +273,6 @@ public class Hastags extends Fragment {
             holder.description.setText(list.get(position).description);
             holder.owner.setText(list.get(position).userUsername);
 
-            /*holder.view.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View view){
-                    Toast.makeText(context, "Hey! I'm publication " + position,  Toast.LENGTH_LONG).show();
-                }
-            });*/
-
             holder.publication.setOnClickListener(new View.OnClickListener(){
                 int i = 0;
                 public void onClick(View view){
@@ -291,7 +283,7 @@ public class Hastags extends Fragment {
                         @Override
                         public void run() {
                             if (i == 1){
-                                if(holder.haApretatUnCop == false){
+                                if(!holder.haApretatUnCop){
                                     holder.taggedUsers.setVisibility(View.VISIBLE);
                                     holder.haApretatUnCop=true;
                                     holder.taggedUsers.setOnClickListener(new View.OnClickListener(){

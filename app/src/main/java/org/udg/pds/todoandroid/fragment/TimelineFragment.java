@@ -25,15 +25,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.squareup.picasso.Picasso;
+
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.activity.AddComment;
 import org.udg.pds.todoandroid.activity.SeeTaggedUsers;
-import org.udg.pds.todoandroid.activity.TagPeople;
 import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.rest.TodoApi;
-import org.udg.pds.todoandroid.util.Global;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,15 +41,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class TimelineFragment extends Fragment {
-    TodoApi mTodoService;
-    View view;
+    private TodoApi mTodoService;
+    private View view;
 
-    RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView;
     private TRAdapter mAdapter;
-    NavController navController = null;
+    private NavController navController = null;
 
-    Integer elemPerPagina=20;
-    Integer elemDemanats;
+    private Integer elemPerPagina=20;
+    private Integer elemDemanats;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance){
@@ -97,7 +96,7 @@ public class TimelineFragment extends Fragment {
                     call.enqueue(new Callback<List<Publication>>() {
                         @Override
                         public void onResponse(Call<List<Publication>> call, Response<List<Publication>> response) {
-                            if (response.isSuccessful()) {
+                            if (response.isSuccessful() && response.body() != null) {
                                 addPublicationList(response.body());
                             } else {
                                 Toast.makeText(TimelineFragment.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
@@ -118,28 +117,20 @@ public class TimelineFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        //this.updatePublicationList();
     }
 
-    public void showPublicationList(List<Publication> pl){
+    private void showPublicationList(List<Publication> pl){
         mAdapter.clear();
         for(Publication p : pl){
             mAdapter.add(p);
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode == Global.RQ_ADD_TASK){
-            //this.updatePublicationList();
-        }
-    }
-
-    public void launchErrorConnectingToServer(){
+    private void launchErrorConnectingToServer(){
         Toast.makeText(TimelineFragment.this.getContext(), "Error connecting to server.", Toast.LENGTH_LONG).show();
     }
 
-    public void updatePublicationList() {
+    private void updatePublicationList() {
         Call<List<Publication>> call = null;
         call = mTodoService.getPublications(0,elemPerPagina);
         elemDemanats=elemPerPagina;
@@ -147,7 +138,7 @@ public class TimelineFragment extends Fragment {
         call.enqueue(new Callback<List<Publication>>() {
             @Override
             public void onResponse(Call<List<Publication>> call, Response<List<Publication>> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     TimelineFragment.this.showPublicationList(response.body());
                 } else {
                     Toast.makeText(TimelineFragment.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
@@ -188,7 +179,7 @@ public class TimelineFragment extends Fragment {
             taggedUsers = itemView.findViewById(R.id.taggedUsers);
         }
     }
-    public void addPublicationList(List<Publication> tl) {
+    private void addPublicationList(List<Publication> tl) {
         for (Publication t : tl) {
             mAdapter.add(t);
         }
@@ -198,16 +189,14 @@ public class TimelineFragment extends Fragment {
         List<Publication> list = new ArrayList<>();
         Context context;
 
-        public TRAdapter(Context context){
+        private TRAdapter(Context context){
             this.context = context;
         }
 
         @Override
         public TimelineFragment.PublicationViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.publication_layout, parent, false);
-            TimelineFragment.PublicationViewHolder holder = new TimelineFragment.PublicationViewHolder(v);
-
-            return holder;
+            return new TimelineFragment.PublicationViewHolder(v);
         }
 
         @Override
@@ -254,18 +243,18 @@ public class TimelineFragment extends Fragment {
 
             holder.owner.setText(list.get(position).userUsername);
 
+<<<<<<< HEAD
+            /** VER IMAGENES **/
+            String filename = list.get(position).photo;
+
+            Picasso.get().load(filename).into(holder.publication);
+
+=======
             byte[] decodeString = Base64.decode(list.get(position).photo, Base64.DEFAULT);
             Bitmap decodeByte = BitmapFactory.decodeByteArray(decodeString,0,decodeString.length);
             holder.publication.setImageBitmap(decodeByte);
-            //Picasso.get().load(list.get(position).photo).into(holder.publication);
+>>>>>>> 964f8109254cc3054fdcedc241f485f8865264a7
             holder.description.setText(list.get(position).description);
-
-            /*holder.view.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View view){
-                    Toast.makeText(context, "Hey! I'm publication " + position,  Toast.LENGTH_LONG).show();
-                }
-            });*/
 
             holder.publication.setOnClickListener(new View.OnClickListener(){
                 int i = 0;
@@ -277,7 +266,7 @@ public class TimelineFragment extends Fragment {
                         @Override
                         public void run() {
                             if (i == 1){
-                                if(holder.haApretatUnCop == false){
+                                if(!holder.haApretatUnCop){
                                     holder.taggedUsers.setVisibility(View.VISIBLE);
                                     holder.haApretatUnCop=true;
                                     holder.taggedUsers.setOnClickListener(new View.OnClickListener(){
