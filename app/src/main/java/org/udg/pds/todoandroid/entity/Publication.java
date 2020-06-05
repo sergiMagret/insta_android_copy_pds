@@ -1,5 +1,8 @@
 package org.udg.pds.todoandroid.entity;
 
+import android.net.Uri;
+import android.widget.ImageView;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
