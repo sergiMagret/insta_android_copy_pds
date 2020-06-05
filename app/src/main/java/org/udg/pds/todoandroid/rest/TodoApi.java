@@ -6,14 +6,12 @@ import org.udg.pds.todoandroid.entity.IdObject;
 import org.udg.pds.todoandroid.entity.ModifiedData;
 import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.entity.PublicationPost;
-import org.udg.pds.todoandroid.entity.Task;
 import org.udg.pds.todoandroid.entity.Token;
 import org.udg.pds.todoandroid.entity.User;
 import org.udg.pds.todoandroid.entity.UserLogin;
 import org.udg.pds.todoandroid.entity.UserToReg;
 
 import java.util.List;
-import java.util.Set;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -43,13 +41,6 @@ public interface TodoApi {
     @GET("/users/check")
     Call<String> check();
 
-    @POST("/tasks")
-    Call<IdObject> addTask(@Body Task task);
-
-    @GET("/tasks")
-    Call<List<Task>> getTasks();
-
-
     @GET("/users")
     Call<List<User>> getUsers(@Query("text") String text, @Query("page") Integer page, @Query("size") Integer size);
 
@@ -58,9 +49,6 @@ public interface TodoApi {
 
     @GET("/publications/{id}/comments")
     Call<List<Comment>> getComments(@Path("id") Long publicationId, @Query("page") Integer page, @Query("size") Integer size);
-
-    @GET("/tasks/{id}")
-    Call<Task> getTask(@Path("id") String id);
 
     @GET("/users/self")
     Call<User> getUserProfile();
@@ -107,7 +95,6 @@ public interface TodoApi {
     @GET("/publications/{id}/nComments")
     Call <Integer> getNumComments(@Path("id") Long id);
 
-
     @POST("/publications/{id}/like")
     Call <Publication> addLike(@Path("id") Long id);
 
@@ -128,7 +115,6 @@ public interface TodoApi {
 
     @PUT("/users/self")
     Call<String> modifyProfile(@Body ModifiedData data);
-
 
     @PUT("/publications/{publicationId}/editComment/{commentId}")
     Call<Comment> editComment(@Path("publicationId") Long publicationId, @Path("commentId") Long commentId, @Body CommentPost cp);

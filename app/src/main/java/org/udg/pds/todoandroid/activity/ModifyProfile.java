@@ -1,12 +1,14 @@
 package org.udg.pds.todoandroid.activity;
 
+<<<<<<< HEAD
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+=======
+>>>>>>> 964f8109254cc3054fdcedc241f485f8865264a7
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -14,11 +16,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+<<<<<<< HEAD
 import org.apache.commons.io.IOUtils;
+=======
+import androidx.appcompat.app.AppCompatActivity;
+
+>>>>>>> 964f8109254cc3054fdcedc241f485f8865264a7
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.entity.ModifiedData;
-import org.udg.pds.todoandroid.entity.User;
 import org.udg.pds.todoandroid.rest.TodoApi;
 
 import java.io.File;

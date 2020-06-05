@@ -18,7 +18,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,19 +56,19 @@ import retrofit2.Response;
 
 
 public class UserProfileFragment extends Fragment {
-    TodoApi mTodoService;
-    View view;
+    private TodoApi mTodoService;
+    private View view;
 
-    RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView;
     private TRAdapter mAdapter;
 
-    NavController navController = null;
+    private NavController navController = null;
 
     private boolean private_profile;
     private long idToSearch;
 
-    Integer elemPerPagina=20;
-    Integer elemDemanats;
+    private Integer elemPerPagina=20;
+    private Integer elemDemanats;
 
     private User userProfile=null;
 
@@ -204,7 +203,7 @@ public class UserProfileFragment extends Fragment {
                     call.enqueue(new Callback<List<Publication>>() {
                         @Override
                         public void onResponse(Call<List<Publication>> call, Response<List<Publication>> response) {
-                            if (response.isSuccessful()) {
+                            if (response.isSuccessful() && response.body() != null) {
                                 addPublicationList(response.body());
                             } else {
                                 Toast.makeText(UserProfileFragment.this.getContext(), "Error reading publications", Toast.LENGTH_LONG).show();
@@ -225,26 +224,18 @@ public class UserProfileFragment extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        //this.updatePublicationList();
     }
 
-    public void addPublicationList(List<Publication> tl) {
+    private void addPublicationList(List<Publication> tl) {
         for (Publication t : tl) {
             mAdapter.add(t);
         }
     }
 
-    public void showPublicationList(List<Publication> pl){
+    private void showPublicationList(List<Publication> pl){
         mAdapter.clear();
         for(Publication p : pl){
             mAdapter.add(p);
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode == Global.RQ_ADD_TASK){
-            //this.updatePublicationList();
         }
     }
 
@@ -423,7 +414,7 @@ public class UserProfileFragment extends Fragment {
         Toast.makeText(UserProfileFragment.this.getContext(), "Error connecting to server.", Toast.LENGTH_LONG).show();
     }
 
-    public void updatePublicationList(){
+    private void updatePublicationList(){
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_publication);
         TextView warning = view.findViewById(R.id.not_following_warning);
 
@@ -443,7 +434,7 @@ public class UserProfileFragment extends Fragment {
             call.enqueue(new Callback<List<Publication>>() {
                 @Override
                 public void onResponse(Call<List<Publication>> call, Response<List<Publication>> response) {
-                    if (response.isSuccessful()) {
+                    if (response.isSuccessful() && response.body() != null) {
                         UserProfileFragment.this.showPublicationList(response.body());
                     } else {
                         Toast.makeText(UserProfileFragment.this.getContext(), "Error reading user publications", Toast.LENGTH_LONG).show();
@@ -495,16 +486,14 @@ public class UserProfileFragment extends Fragment {
         List<Publication> list = new ArrayList<>();
         Context context;
 
-        public TRAdapter(Context context){
+        private TRAdapter(Context context){
             this.context = context;
         }
 
         @Override
         public PublicationViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.publication_layout, parent, false);
-            PublicationViewHolder holder = new PublicationViewHolder(v);
-
-            return holder;
+            return new PublicationViewHolder(v);
         }
 
         @Override
@@ -557,13 +546,6 @@ public class UserProfileFragment extends Fragment {
             holder.description.setText(list.get(position).description);
             holder.owner.setText(list.get(position).userUsername);
 
-            /*holder.view.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View view){
-                    Toast.makeText(context, "Hey! I'm publication " + position,  Toast.LENGTH_LONG).show();
-                }
-            });*/
-
             holder.publication.setOnClickListener(new View.OnClickListener(){
                 int i = 0;
                 public void onClick(View view){
@@ -574,7 +556,7 @@ public class UserProfileFragment extends Fragment {
                         @Override
                         public void run() {
                             if (i == 1){
-                                if(holder.haApretatUnCop == false){
+                                if(!holder.haApretatUnCop){
                                     holder.taggedUsers.setVisibility(View.VISIBLE);
                                     holder.haApretatUnCop=true;
                                     holder.taggedUsers.setOnClickListener(new View.OnClickListener(){
@@ -707,12 +689,10 @@ public class UserProfileFragment extends Fragment {
 
             moreOptions(holder,position);
 
-            //animate(holder);
-
         }
 
 
-        public void moreOptions(PublicationViewHolder holder, final int position){
+        private void moreOptions(PublicationViewHolder holder, final int position){
             holder.more_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

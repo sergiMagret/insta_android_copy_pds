@@ -43,13 +43,12 @@ import retrofit2.Response;
 public class SearchFragment extends Fragment {
 
     static TodoApi mTodoService;
-    SearchView mSearchView;
-    View view;
-    Integer elemDemanats;
-    String textDemanat;
-    NavController navController = null;
-    Integer elemPerPagina=20;
-    RecyclerView mRecyclerView;
+    private View view;
+    private Integer elemDemanats;
+    private String textDemanat;
+    private NavController navController = null;
+    private Integer elemPerPagina=20;
+    private RecyclerView mRecyclerView;
     private TRAdapter mAdapter;
 
 
@@ -130,7 +129,7 @@ public class SearchFragment extends Fragment {
                     call.enqueue(new Callback<List<User>>() {
                         @Override
                         public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                            if (response.isSuccessful()) {
+                            if (response.isSuccessful() && response.body() != null) {
                                 SearchFragment.this.addUserList(response.body());
                             } else {
                                 Toast.makeText(SearchFragment.this.getContext(), "Error reading users", Toast.LENGTH_LONG).show();
@@ -146,19 +145,6 @@ public class SearchFragment extends Fragment {
                 }
             }
         });
-
-
-       // Button b = getView().findViewById(R.id.b_add_task_rv);
-        // This is the listener to the "Add Task" button
-        /*b.setOnClickListener(view -> {
-            // When we press the "Add Task" button, the AddTask activity is called, where
-            // we can introduce the data of the new task
-            Intent i = new Intent(TaskList.this.getContext(), AddTask.class);
-            // We launch the activity with startActivityForResult because we want to know when
-            // the launched activity has finished. In this case, when the AddTask activity has finished
-            // we will update the list to show the new task.
-            startActivityForResult(i, Global.RQ_ADD_TASK);
-        });*/
     }
 
     @Override
@@ -167,14 +153,14 @@ public class SearchFragment extends Fragment {
         this.updateUserList("");
     }
 
-    public void showUserList(List<User> tl) {
+    private void showUserList(List<User> tl) {
         mAdapter.clear();
         for (User t : tl) {
             mAdapter.add(t);
         }
     }
 
-    public void addUserList(List<User> tl) {
+    private void addUserList(List<User> tl) {
         for (User t : tl) {
             mAdapter.add(t);
         }
@@ -190,7 +176,7 @@ public class SearchFragment extends Fragment {
 
 
 
-    public void updateUserList(String text) {
+    private void updateUserList(String text) {
         textDemanat=text;
         elemDemanats=elemPerPagina;
         Call<List<User>> call = mTodoService.getUsers(text,0,elemPerPagina);
@@ -199,7 +185,7 @@ public class SearchFragment extends Fragment {
         call.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     SearchFragment.this.showUserList(response.body());
                 } else {
                     Toast.makeText(SearchFragment.this.getContext(), "Error reading users", Toast.LENGTH_LONG).show();
@@ -234,21 +220,18 @@ public class SearchFragment extends Fragment {
 
     static class TRAdapter extends RecyclerView.Adapter<UserViewHolder>  {
 
-        //List<User> list = new ArrayList<>();
         List<User> listFiltered = new ArrayList<>();
         Context context;
 
 
-        public TRAdapter(Context context) {
+        private TRAdapter(Context context) {
             this.context = context;
         }
 
         @Override
         public UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_layout, parent, false);
-            UserViewHolder holder = new UserViewHolder(v);
-
-            return holder;
+            return new UserViewHolder(v);
         }
 
         @Override
@@ -262,16 +245,6 @@ public class SearchFragment extends Fragment {
             holder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    /*Activity activity  = (Activity) view.getContext();
-                    Bundle bundle = new Bundle();
-                    bundle.putBoolean("is_private", false);
-                    bundle.putLong("user_to_search", listFiltered.get(position).id);
-                    UserProfileFragment userProf = new UserProfileFragment();
-                    userProf.setArguments(bundle);
-                    NavDirections action =
-                        SearchFragmentDirections
-                            .actionActionSearchToActionProfile();
-                    Navigation.findNavController(view).navigate(action);*/
                     Bundle bundle = new Bundle();
                     bundle.putBoolean("is_private", false);
                     bundle.putLong("user_to_search", listFiltered.get(position).id);
@@ -300,15 +273,12 @@ public class SearchFragment extends Fragment {
 
         // Insert a new item to the RecyclerView
         public void insert(int position, User data) {
-            //list.add(position, data);
             listFiltered.add(position, data);
             notifyItemInserted(position);
         }
 
         // Remove a RecyclerView item containing the Data object
         public void remove(User data) {
-            //int position = list.indexOf(data);
-            //list.remove(position);
             int position = listFiltered.indexOf(data);
             listFiltered.remove(position);
             notifyItemRemoved(position);
@@ -322,14 +292,12 @@ public class SearchFragment extends Fragment {
         }
 
         public void add(User t) {
-            //list.add(t);
             listFiltered.add(t);
             this.notifyItemInserted(listFiltered.size() - 1);
         }
 
         public void clear() {
             int size = listFiltered.size();
-            //list.clear();
             listFiltered.clear();
             this.notifyItemRangeRemoved(0, size);
         }
