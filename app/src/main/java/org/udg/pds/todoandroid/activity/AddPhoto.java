@@ -41,9 +41,9 @@ import retrofit2.Response;
 public class AddPhoto extends AppCompatActivity {
     public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     private ImageView i;
-    private Uri selectedImage = null ;
+    private Uri selectedImage = null;
     private String imatge;
-    private static final int SELECT_FILE  = 1;
+    private static final int SELECT_FILE = 1;
     TodoApi mTodoService;
 
     @Override
@@ -56,8 +56,8 @@ public class AddPhoto extends AppCompatActivity {
         Button add = findViewById(R.id.add_button);
         Button choose = findViewById(R.id.choose);
 
-        choose.setOnClickListener(new View.OnClickListener(){
-            public void onClick (View v){
+        choose.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -65,16 +65,16 @@ public class AddPhoto extends AppCompatActivity {
             }
         });
 
-        add.setOnClickListener(new View.OnClickListener(){
-            public void onClick (View v){
+        add.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
                 EditText c = AddPhoto.this.findViewById(R.id.comentari);
                 AddPhoto.this.afegir(c.getText().toString());
             }
         });
     }
 
-    public void afegir (String comentari){
-        PublicationPost p= new PublicationPost();
+    public void afegir(String comentari) {
+        PublicationPost p = new PublicationPost();
         p.description = comentari;
         p.date = new Date();
 
@@ -102,14 +102,13 @@ public class AddPhoto extends AppCompatActivity {
                         call2.enqueue(new Callback<Long>() {
                             @Override
                             public void onResponse(Call<Long> call, Response<Long> response) {
-                                if(response.isSuccessful()){
+                                if (response.isSuccessful()) {
                                     Intent intent = new Intent(AddPhoto.this, TagPeople.class);
                                     Bundle b = new Bundle();
-                                    b.putLong("id",response.body());
+                                    b.putLong("id", response.body());
                                     intent.putExtras(b);
                                     startActivity(intent);
-                                }
-                                else{
+                                } else {
                                     Toast toast = Toast.makeText(AddPhoto.this, "Error AddPhoto bad response", Toast.LENGTH_SHORT);
                                     toast.show();
                                 }
@@ -121,8 +120,7 @@ public class AddPhoto extends AppCompatActivity {
                                 toast.show();
                             }
                         });
-                    }
-                    else
+                    } else
                         Toast.makeText(AddPhoto.this, "Response error !", Toast.LENGTH_SHORT).show();
                 }
 
@@ -133,8 +131,7 @@ public class AddPhoto extends AppCompatActivity {
             });
 
 
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             Toast toast = Toast.makeText(AddPhoto.this, e.getMessage(), Toast.LENGTH_SHORT);
             toast.show();
         }
@@ -142,22 +139,22 @@ public class AddPhoto extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
-        super.onActivityResult(requestCode,resultCode,imageReturnedIntent);
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         Uri selectedImageUri = null;
 
         String filePath = null;
 
-        switch(requestCode){
+        switch (requestCode) {
             case SELECT_FILE:
-                if (resultCode == Activity.RESULT_OK){
+                if (resultCode == Activity.RESULT_OK) {
                     selectedImage = imageReturnedIntent.getData();
                     String selectedPath = selectedImage.getPath();
-                    if(requestCode == SELECT_FILE){
-                        if (selectedPath != null){
+                    if (requestCode == SELECT_FILE) {
+                        if (selectedPath != null) {
                             InputStream imageStream = null;
-                            try{
+                            try {
                                 imageStream = getContentResolver().openInputStream(selectedImage);
-                            } catch(FileNotFoundException e){
+                            } catch (FileNotFoundException e) {
                                 e.printStackTrace();
                             }
                             i = (ImageView) findViewById(R.id.imatge);
@@ -165,28 +162,31 @@ public class AddPhoto extends AppCompatActivity {
                             i.setImageURI(selectedImage);
                         }
 
-        if (requestCode == SELECT_FILE) {
-            if (resultCode == Activity.RESULT_OK) {
-                selectedImage = imageReturnedIntent.getData();
-                String selectedPath = selectedImage.getPath();
-                if (selectedPath != null) {
-                    InputStream imageStream = null;
-                    try {
-                        imageStream = getContentResolver().openInputStream(selectedImage);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
+                        if (requestCode == SELECT_FILE) {
+                            if (resultCode == Activity.RESULT_OK) {
+                                selectedImage = imageReturnedIntent.getData();
+                                String selectedPath = selectedImage.getPath();
+                                if (selectedPath != null) {
+                                    InputStream imageStream = null;
+                                    try {
+                                        imageStream = getContentResolver().openInputStream(selectedImage);
+                                    } catch (FileNotFoundException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    Bitmap bmp = BitmapFactory.decodeStream(imageStream);
+                                    i = findViewById(R.id.imatge);
+                                    i.setImageBitmap(bmp);
+
+                                    ByteArrayOutputStream array = new ByteArrayOutputStream();
+                                    bmp.compress(Bitmap.CompressFormat.PNG, 100, array);
+                                    byte[] byteFormat = array.toByteArray();
+                                    imatge = Base64.encodeToString(byteFormat, Base64.NO_WRAP);
+                                }
+                            }
+                        }
                     }
-
-                    Bitmap bmp = BitmapFactory.decodeStream(imageStream);
-                    i = findViewById(R.id.imatge);
-                    i.setImageBitmap(bmp);
-
-                    ByteArrayOutputStream array = new ByteArrayOutputStream();
-                    bmp.compress(Bitmap.CompressFormat.PNG, 100, array);
-                    byte[] byteFormat = array.toByteArray();
-                    imatge = Base64.encodeToString(byteFormat, Base64.NO_WRAP);
                 }
-            }
         }
     }
 }
