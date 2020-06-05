@@ -245,7 +245,6 @@ public class TimelineFragment extends Fragment {
 
             /** VER IMAGENES **/
             String filename = list.get(position).photo;
-
             Picasso.get().load(filename).into(holder.publication);
             holder.description.setText(list.get(position).description);
 
