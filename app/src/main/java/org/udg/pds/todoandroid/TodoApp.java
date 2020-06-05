@@ -27,6 +27,7 @@ public class TodoApp extends Application {
 
     TodoApi mTodoService;
     public static Long loggedUserID; // With this variable we can know the userID everywhere in the app.
+    public static String tokenFCM; // Token for the Firebase Cloud Messaging
     @Override
     public void onCreate() {
         super.onCreate();

@@ -19,6 +19,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
@@ -110,6 +111,15 @@ public class AddComment extends AppCompatActivity {
         mAdapter = new TRAdapter(this.getApplication());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.refresh_comments);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateCommentList();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

@@ -18,6 +18,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,10 +66,12 @@ public class UserProfileFragment extends Fragment {
     NavController navController = null;
 
     private boolean private_profile;
-    long idToSearch;
+    private long idToSearch;
 
     Integer elemPerPagina=20;
     Integer elemDemanats;
+
+    private User userProfile=null;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -81,12 +84,13 @@ public class UserProfileFragment extends Fragment {
 
         super.onCreate(savedInstance);
         view = inflater.inflate(R.layout.fragment_user_profile, container, false);
-        try {
-            idToSearch = getArguments().getLong("user_to_search");
-            private_profile = getArguments().getBoolean("is_private");
+
+        if(getArguments() == null){
+            Toast.makeText(UserProfileFragment.this.getContext(), "Error loading user profile, bad arguments", Toast.LENGTH_LONG).show();
+        }else{
+            idToSearch = UserProfileFragmentArgs.fromBundle(getArguments()).getUserToSearch();
+            private_profile = UserProfileFragmentArgs.fromBundle(getArguments()).getIsPrivate();
             private_profile = private_profile || (idToSearch == TodoApp.loggedUserID); // Now the profile will be private IF is set to or the user to search (from another fragment) is the same as the logged user's id.
-        }catch (NullPointerException e){
-            //Toast.makeText(UserProfileFragment.this.getContext(), "Error loading user profile, bad arguments", Toast.LENGTH_LONG).show();
         }
 
         // Configuració botó de logout
@@ -104,7 +108,7 @@ public class UserProfileFragment extends Fragment {
                     logout_btn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            UserProfileFragment.this.checkCredentials();
+                            UserProfileFragment.this.logOut();
                         }
                     });
 
@@ -138,7 +142,7 @@ public class UserProfileFragment extends Fragment {
         return view;
     }
 
-    public void checkCredentials() {
+    private void logOut() {
         Call<String> call = mTodoService.logout();
         call.enqueue(new Callback<String>() {
             @Override
@@ -178,27 +182,24 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onRefresh() {
                 updateProfileInfo();
-                updatePublicationList();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
 
         updateProfileInfo();
-        updatePublicationList();
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
 
-                if (!recyclerView.canScrollVertically(1) && newState==RecyclerView.SCROLL_STATE_IDLE && mAdapter.getItemCount()==elemDemanats ) {
+                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE && mAdapter.getItemCount() == elemDemanats) {
                     Call<List<Publication>> call;
-                    if((private_profile)) {
+                    if ((private_profile)) {
                         call = mTodoService.getUserPublications((elemDemanats / elemPerPagina), elemPerPagina);
+                    } else {
+                        call = mTodoService.getUserPublicationsByID(idToSearch, (elemDemanats / elemPerPagina), elemPerPagina);
                     }
-                    else {
-                        call=mTodoService.getUserPublicationsByID(idToSearch,(elemDemanats / elemPerPagina), elemPerPagina);
-                    }
-                    elemDemanats=elemDemanats+elemPerPagina;
+                    elemDemanats = elemDemanats + elemPerPagina;
 
                     call.enqueue(new Callback<List<Publication>>() {
                         @Override
@@ -256,7 +257,9 @@ public class UserProfileFragment extends Fragment {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
                     if(response.isSuccessful() && response.body() != null){
-                        UserProfileFragment.this.showProfileInfo(response);
+                        userProfile = response.body();
+                        UserProfileFragment.this.showProfileInfo();
+                        UserProfileFragment.this.updatePublicationList();
                     }else{
                         Toast.makeText(UserProfileFragment.this.getContext(), "Error reading profile information.", Toast.LENGTH_LONG).show();
                     }
@@ -267,13 +270,15 @@ public class UserProfileFragment extends Fragment {
                     UserProfileFragment.this.launchErrorConnectingToServer();
                 }
             });
-        }else{
+        }else {
             Call<User> call = mTodoService.getUserProfileByID(idToSearch);
             call.enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
                     if (response.isSuccessful() && response.body() != null) {
-                        UserProfileFragment.this.showProfileInfo(response);
+                        userProfile = response.body();
+                        UserProfileFragment.this.showProfileInfo();
+                        UserProfileFragment.this.updatePublicationList();
                     } else {
                         Toast.makeText(UserProfileFragment.this.getContext(), "Error reading profile information.", Toast.LENGTH_LONG).show();
                     }
@@ -287,8 +292,8 @@ public class UserProfileFragment extends Fragment {
         }
     }
 
-    private void showProfileInfo(Response<User> response){
-        User u = response.body();
+    private void showProfileInfo(){
+        User u = userProfile;
 
         // Per al nom de l'usuari
         TextView userName = view.findViewById(R.id.user_name);
@@ -419,30 +424,41 @@ public class UserProfileFragment extends Fragment {
     }
 
     public void updatePublicationList(){
-        Call<List<Publication>> call = null;
-        if(private_profile) {
-            call = mTodoService.getUserPublications(0,elemPerPagina);
-            elemDemanats=elemPerPagina;
-        }else {
-            call = mTodoService.getUserPublicationsByID(idToSearch, 0, elemPerPagina);
-            elemDemanats=elemPerPagina;
-        }
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view_publication);
+        TextView warning = view.findViewById(R.id.not_following_warning);
 
-        call.enqueue(new Callback<List<Publication>>() {
-            @Override
-            public void onResponse(Call<List<Publication>> call, Response<List<Publication>> response) {
-                if (response.isSuccessful()) {
-                    UserProfileFragment.this.showPublicationList(response.body());
-                } else {
-                    Toast.makeText(UserProfileFragment.this.getContext(), "Error reading user publications", Toast.LENGTH_LONG).show();
+        if(userProfile.followsUser || private_profile) { // Only if you are following the user or you are watching your own profile you should see the publications
+            recyclerView.setVisibility(View.VISIBLE); // Show the recyclerview of the publications
+            warning.setVisibility(View.GONE); // Hide the text warning the user to follow the account
+
+            Call<List<Publication>> call = null;
+            if(private_profile) {
+                call = mTodoService.getUserPublications(0,elemPerPagina);
+                elemDemanats=elemPerPagina;
+            }else {
+                call = mTodoService.getUserPublicationsByID(idToSearch, 0, elemPerPagina);
+                elemDemanats=elemPerPagina;
+            }
+
+            call.enqueue(new Callback<List<Publication>>() {
+                @Override
+                public void onResponse(Call<List<Publication>> call, Response<List<Publication>> response) {
+                    if (response.isSuccessful()) {
+                        UserProfileFragment.this.showPublicationList(response.body());
+                    } else {
+                        Toast.makeText(UserProfileFragment.this.getContext(), "Error reading user publications", Toast.LENGTH_LONG).show();
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<List<Publication>> call, Throwable t) {
-                UserProfileFragment.this.launchErrorConnectingToServer();
-            }
-        });
+                @Override
+                public void onFailure(Call<List<Publication>> call, Throwable t) {
+                    UserProfileFragment.this.launchErrorConnectingToServer();
+                }
+            });
+        }else{ // If you are not following them, then a message is shown
+            recyclerView.setVisibility(View.GONE); // Hide the recyclerview of the publications
+            warning.setVisibility(View.VISIBLE); // Show the text warning the user to follow the account
+        }
     }
 
     static class PublicationViewHolder extends RecyclerView.ViewHolder {

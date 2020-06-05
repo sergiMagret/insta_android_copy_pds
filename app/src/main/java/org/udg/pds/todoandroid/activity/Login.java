@@ -2,6 +2,7 @@ package org.udg.pds.todoandroid.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -9,8 +10,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.udg.pds.todoandroid.MyFirebaseMessagingService;
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
+import org.udg.pds.todoandroid.entity.Token;
 import org.udg.pds.todoandroid.entity.User;
 import org.udg.pds.todoandroid.entity.UserLogin;
 import org.udg.pds.todoandroid.rest.TodoApi;
@@ -71,8 +74,10 @@ public class Login extends AppCompatActivity {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
 
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     TodoApp.loggedUserID = response.body().id; // Before launching the main app we store the user's id
+                    MyFirebaseMessagingService messagingService = new MyFirebaseMessagingService(mTodoService);
+                    messagingService.sendRegistrationToServer(); // And send the token to the server to keep it updated
                     Login.this.startActivity(new Intent(Login.this, NavigationActivity.class));
                     Login.this.finish();
                 } else {
