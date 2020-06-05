@@ -243,17 +243,10 @@ public class TimelineFragment extends Fragment {
 
             holder.owner.setText(list.get(position).userUsername);
 
-<<<<<<< HEAD
             /** VER IMAGENES **/
             String filename = list.get(position).photo;
 
             Picasso.get().load(filename).into(holder.publication);
-
-=======
-            byte[] decodeString = Base64.decode(list.get(position).photo, Base64.DEFAULT);
-            Bitmap decodeByte = BitmapFactory.decodeByteArray(decodeString,0,decodeString.length);
-            holder.publication.setImageBitmap(decodeByte);
->>>>>>> 964f8109254cc3054fdcedc241f485f8865264a7
             holder.description.setText(list.get(position).description);
 
             holder.publication.setOnClickListener(new View.OnClickListener(){
