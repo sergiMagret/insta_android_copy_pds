@@ -13,7 +13,6 @@ import org.udg.pds.todoandroid.entity.UserLogin;
 import org.udg.pds.todoandroid.entity.UserToReg;
 
 import java.util.List;
-import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -133,8 +132,8 @@ public interface TodoApi {
     @GET("/hashtags/{id}/publications")
     Call<List<Publication>> getPublications(@Path("id") Long id,@Query("page") Integer page, @Query("size") Integer size);
 
-    @GET("/hashtags/self/publications")
-    Call<List<Publication>> getPublicationsByName(@Query("id") String name,@Query("page") Integer page, @Query("size") Integer size);
+    @GET("/hashtags/name/{name}/publications")
+    Call<List<Publication>> getPublicationsByName(@Path("name") String name,@Query("page") Integer page, @Query("size") Integer size);
 
     @POST("/users/token")
     Call<String> sendToken(@Body Token t);

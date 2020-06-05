@@ -1,6 +1,5 @@
 package org.udg.pds.todoandroid.fragment;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,12 +25,11 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import org.udg.pds.todoandroid.activity.SeeTaggedUsers;
-import org.udg.pds.todoandroid.activity.TagPeople;
 
 import org.udg.pds.todoandroid.R;
 import org.udg.pds.todoandroid.TodoApp;
 import org.udg.pds.todoandroid.activity.AddComment;
+import org.udg.pds.todoandroid.activity.SeeTaggedUsers;
 import org.udg.pds.todoandroid.entity.Publication;
 import org.udg.pds.todoandroid.rest.TodoApi;
 
@@ -84,21 +81,6 @@ public class Hastags extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
-        //id=1L;
-        /*Call<Long> callName;
-        callName = mTodoService.getHashtagID(HastagName);
-        callName.enqueue(new Callback<Long>() {
-            @Override
-            public void onResponse(Call<Long> callName, Response<Long> response) {
-                if(response.isSuccessful()) {id = response.body();}
-                else {Toast.makeText(Hastags.this.getContext(), "Error reading hastag", Toast.LENGTH_LONG).show();}
-            }
-            @Override
-            public void onFailure(Call<Long> callName, Throwable t) {
-                Toast.makeText(Hastags.this.getContext(), "Fail", Toast.LENGTH_LONG).show();
-            }
-        });*/
 
 
         mTodoService = ((TodoApp) this.getActivity().getApplication()).getAPI();
